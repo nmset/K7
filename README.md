@@ -22,7 +22,7 @@ make CONF=Release #linked to wtfcgi
 INSTALLING AND RUNNING
 
 Please see Wt's manuals about the modes of installing and running Wt applications.
-In particular, K7 needs the enviromment variable WT_APP_ROOT that should point to the directory containing configuration and translation files. In the project's tree, it's WTAPPROOT/K7.
+In particular, K7 needs the environment variable WT_APP_ROOT that should point to the directory containing configuration and translation files. In the project's tree, it's WTAPPROOT/K7.
 
 MAIN CONFIGURATION FILE
 
