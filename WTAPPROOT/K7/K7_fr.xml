@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <messages>
+
+   <message id='NoJS'>Javascript or AJAX manquant dans le navigateur</message>
+   <message id='NoAuth'>Le navigateur ne s'est pas authentifié</message>
+   <message id='Search'>Rechercher</message>
+   <message id='Upload'>Télécharger</message>
+   <message id='Import'>Importer</message>
+   <message id='Delete'>Supprimer</message>
+   <message id='SignKey'>Signer</message>
+   <message id='TTTSearch'>Rechercher des clés correspondant au motif</message>
+   <message id='TTTUpload'>Télécharger une nouvelle clé</message>
+   <message id='TTTImport'>Ajouter une nouvelle clé au porte clés</message>
+   <message id='TTTDelete'>Supprimer la clé sélectionnée</message>
+   <message id='TTTSignKey'>Signer la clé sélectionnée avec votre clé secrète si elle est disponible</message>
+   <message id='CantUpload'>Ne peut télécharger</message>
+   
+   <message id='CantLoadConfig'>Ne peut charger le fichier de configuration</message>
+   <message id='CantParseJson'>Ne peur traiter le fichier de configuration</message>
+   <message id='CNObjectMissing'>Ne peut trouver les certificats d'identité dans le fichier de configuration</message>
+   <message id='BadConfigKeyId'> dans le fichier de configuration n'est pas un identifiant de clé valide</message>
+   <message id='AccessDenied'>Accès non autorisé</message>
+   
+   <message id='KeyRing'>Porte clés</message>
+   <message id='Key'>Clé</message>
+   <message id='Keys'>Clés</message>
+   <message id='Public'>Publique</message>
+   <message id='Publics'>Publiques</message>
+   <message id='Secret'>Secrète</message>
+   <message id='Secrets'>Secrètes</message>
+   <message id='Fpr'>Empreinte</message>
+   
+   <message id='ID'>Identifiant</message>
+   <message id='UID'>Identifiant utilisateur</message>
+   <message id='UIDs'>Identifiants utilisateur</message>
+   <message id='Email'>Courriel</message>
+   <message id='Validity'>Validité</message>
+   <message id='Trust'>Confiance</message>
+   
+   <message id='UidFull'>Complète</message>
+   <message id='UidMarginal'>Marginale</message>
+   <message id='UidNever'>Jamais</message>
+   <message id='UidUltimate'>Ultime</message>
+   <message id='UidUndefined'>Non définie</message>
+   <message id='UidUnknown'>Inconnue</message>
+   <message id='Comment'>Commentaires</message>
+   <message id='Signers'>Signataires</message>
+   <message id='Expiration'>Expiration</message>
+   <message id='Never'>Jamais</message>
+   
+   <message id='SubKeys'>Sous-clés</message>
+   <message id='Ids'>IDs</message>
+   <message id='Usage'>Utilisation</message>
+   
+   <message id='Yes'>Oui</message>
+   <message id='No'>Non</message>
+   <message id='CriteriaTooShort'>Au moins 3 caractères requis, ou aucin critère pour sélectionner vos clés privées si elles sont déclarées</message>
+
+    <message id='Confirm'>Confirmer</message>
+    <message id='ReConfirm'>Reconfirmer</message>
+    <message id='FileTooLarge'>Fichier trop volumineux</message>
+    <message id='ImportSuccess'>Importation réussie : </message>
+    <message id='ImportError'>Le fichier téléchargé n'a pu être importé dans le trousseau</message>
+    <message id='DeleteSuccess'>Suppression réussie : </message>
+ </messages>

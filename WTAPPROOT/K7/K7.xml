@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <messages>
+
+   <message id='NoJS'>Browser does not provide Javascript or AJAX</message>
+   <message id='NoAuth'>Browser does not send a client certificate</message>
+   <message id='Search'>Search</message>
+   <message id='Upload'>Upload</message>
+   <message id='Import'>Import</message>
+   <message id='Delete'>Delete</message>
+   <message id='SignKey'>Sign key</message>
+   <message id='TTTSearch'>Find keys with this pattern</message>
+   <message id='TTTUpload'>Upload a new key</message>
+   <message id='TTTImport'>Add a new key</message>
+   <message id='TTTDelete'>Delete selected key</message>
+   <message id='TTTSignKey'>Sign selected key with your secret key if available</message>
+   <message id='CantUpload'>Can't upload</message>
+   
+   <message id='CantLoadConfig'>Can't load config file</message>
+   <message id='CantParseJson'>Can't parse json file</message>
+   <message id='CNObjectMissing'>Can't identify certificates in config file</message>
+   <message id='BadConfigKeyId'> in configuration file is not a valid key identifier</message>
+   <message id='AccessDenied'>Access denied</message>
+   
+   <message id='KeyRing'>Keyring</message>
+   <message id='Key'>Key</message>
+   <message id='Keys'>Keys</message>
+   <message id='Public'>Public</message>
+   <message id='Publics'>Public</message>
+   <message id='Secret'>Secret</message>
+   <message id='Secrets'>Secret</message>
+   <message id='Fpr'>Fingerprint</message>
+   
+   <message id='ID'>ID</message>
+   <message id='UID'>User ID</message>
+   <message id='UIDs'>User IDs</message>
+   <message id='Email'>Email</message>
+   <message id='Validity'>Validity</message>
+   <message id='Trust'>Trust</message>
+   
+   <message id='UidFull'>Full</message>
+   <message id='UidMarginal'>Marginal</message>
+   <message id='UidNever'>Never</message>
+   <message id='UidUltimate'>Ultimate</message>
+   <message id='UidUndefined'>Undefined</message>
+   <message id='UidUnknown'>Unknown</message>
+   <message id='Comment'>Comment</message>
+   <message id='Signers'>Signers</message>
+   <message id='Expiration'>Expiration</message>
+   <message id='Never'>Never</message>
+   
+   <message id='SubKeys'>Subkeys</message>
+   <message id='Ids'>IDs</message>
+   <message id='Usage'>Usage</message>
+   
+   <message id='Yes'>Yes</message>
+   <message id='No'>No</message>
+   <message id='CriteriaTooShort'>At least 3 characters required, or use an empty criteria to list your private keys if any</message>
+
+    <message id='Confirm'>Confirm</message>
+    <message id='ReConfirm'>Confirm again</message>
+    <message id='FileTooLarge'>File is too big</message>
+    <message id='ImportSuccess'>Import success : </message>
+    <message id='ImportError'>Uploaded file could not be imported in the keyring</message>
+    <message id='DeleteSuccess'>Delete success : </message>
+ </messages>

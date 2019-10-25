@@ -1,0 +1,15 @@
+{
+    "sCommonName" : {
+        "user1" : {
+            "canImport" : true,
+            "canDelete" : true,
+            "privKeyIds" : [
+                "FullKeyId1",
+                "FullKeyId2"
+            ]
+        },
+        "user2" : {
+            "canImport" : true
+        }
+    }
+}

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <platform>2</platform>
+      </toolsSet>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_options>
+          <DebugOptions>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
+      <runprofile version="9">
+        <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" --docroot . --https-address localhost --https-port 8080 --ssl-client-verification required --ssl-ca-certificates /home/user/tmp/ca.crt --ssl-certificate /home/user/tmp/cert.pem --ssl-private-key /home/user/tmp/cert.key --ssl-tmp-dh /home/user/tmp/dh.pem</runcommandpicklistitem>
+        </runcommandpicklist>
+        <runcommand>"${OUTPUT_PATH}" --docroot . --https-address localhost --https-port 8080 --ssl-client-verification required --ssl-ca-certificates /home/user/tmp/ca.crt --ssl-certificate /home/user/tmp/cert.pem --ssl-private-key /home/user/tmp/cert.key --ssl-tmp-dh /home/user/tmp/dh.pem</runcommand>
+        <rundir></rundir>
+        <buildfirst>true</buildfirst>
+        <terminal-type>0</terminal-type>
+        <remove-instrumentation>0</remove-instrumentation>
+        <environment>
+          <variable name="LD_LIBRARY_PATH" value="/usr/local/Wt-Debug/lib"/>
+          <variable name="WT_APP_ROOT" value="./WTAPPROOT/K7"/>
+        </environment>
+      </runprofile>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <platform>2</platform>
+      </toolsSet>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_options>
+          <DebugOptions>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
+      <runprofile version="9">
+        <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" --docroot . --https-address localhost --https-port 8080 --ssl-client-verification required --ssl-ca-certificates /home/user/tmp/ca.crt --ssl-certificate /home/user/tmp/cert.pem --ssl-private-key /home/user/tmp/cert.key --ssl-tmp-dh /home/user/tmp/dh.pem</runcommandpicklistitem>
+        </runcommandpicklist>
+        <runcommand>"${OUTPUT_PATH}" --docroot . --https-address localhost --https-port 8080 --ssl-client-verification required --ssl-ca-certificates /home/user/tmp/ca.crt --ssl-certificate /home/user/tmp/cert.pem --ssl-private-key /home/user/tmp/cert.key --ssl-tmp-dh /home/user/tmp/dh.pem</runcommand>
+        <rundir></rundir>
+        <buildfirst>true</buildfirst>
+        <terminal-type>0</terminal-type>
+        <remove-instrumentation>0</remove-instrumentation>
+        <environment>
+          <variable name="LD_LIBRARY_PATH" value="/usr/local/Wt/lib"/>
+          <variable name="WT_APP_ROOT" value="./WTAPPROOT/K7"/>
+        </environment>
+      </runprofile>
+    </conf>
+    <conf name="ARM-Release" type="1">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <platform>2</platform>
+      </toolsSet>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_options>
+          <DebugOptions>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
+      <runprofile version="9">
+        <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" --docroot . --https-address localhost --https-port 8080 --ssl-client-verification required --ssl-ca-certificates /home/user/tmp/ca.crt --ssl-certificate /home/user/tmp/cert.pem --ssl-private-key /home/user/tmp/cert.key --ssl-tmp-dh /home/user/tmp/dh.pem</runcommandpicklistitem>
+        </runcommandpicklist>
+        <runcommand>"${OUTPUT_PATH}" --docroot . --https-address localhost --https-port 8080 --ssl-client-verification required --ssl-ca-certificates /home/user/tmp/ca.crt --ssl-certificate /home/user/tmp/cert.pem --ssl-private-key /home/user/tmp/cert.key --ssl-tmp-dh /home/user/tmp/dh.pem</runcommand>
+        <rundir></rundir>
+        <buildfirst>true</buildfirst>
+        <terminal-type>0</terminal-type>
+        <remove-instrumentation>0</remove-instrumentation>
+        <environment>
+          <variable name="LD_LIBRARY_PATH" value="/usr/local/Wt/lib"/>
+          <variable name="WT_APP_ROOT" value="./WTAPPROOT/K7"/>
+        </environment>
+      </runprofile>
+    </conf>
+  </confs>
+</configurationDescriptor>
