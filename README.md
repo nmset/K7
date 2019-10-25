@@ -12,8 +12,11 @@ These keys can then be used by other Wt applications, or applications based on o
 BUILDING
 
 As a NetBeans project, a Makefile exists in the project root.
+
 cd /path/to/K7
+
 make CONF=Debug #linked to wthttp here
+
 make CONF=Release #linked to wtfcgi
 
 INSTALLING AND RUNNING
