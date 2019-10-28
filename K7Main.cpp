@@ -25,6 +25,7 @@ K7Main::K7Main(const WEnvironment& env)
 : WApplication(env)
 {
     m_config = NULL;
+    m_btnUpload = NULL; m_btnImport = NULL; m_btnDelete = NULL;
     WApplication::setTitle(_APPNAME_);
     const WString bundle = WApplication::appRoot() + _APPNAME_;
     WApplication::instance()->messageResourceBundle().use(bundle.toUTF8());
@@ -147,6 +148,8 @@ void K7Main::Search()
         return;
     }
 #endif
+    if (m_btnDelete)
+        m_btnDelete->hide();
     m_ttbSubKeys->hide();
     m_ttbUids->hide();
     Error e;
