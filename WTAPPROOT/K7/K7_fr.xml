@@ -54,7 +54,7 @@
    
    <message id='Yes'>Oui</message>
    <message id='No'>Non</message>
-   <message id='CriteriaTooShort'>Au moins 3 caractères requis, ou aucin critère pour sélectionner vos clés privées si elles sont déclarées</message>
+   <message id='CriteriaTooShort'>Au moins 3 caractères requis, ou aucun critère pour sélectionner vos clés privées si elles sont déclarées</message>
 
     <message id='Confirm'>Confirmer</message>
     <message id='ReConfirm'>Reconfirmer</message>

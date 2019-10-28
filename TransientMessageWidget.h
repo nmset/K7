@@ -1,6 +1,6 @@
 /* 
  * File:   TransientMessageWidget.h
- * Author: SET - nmset@netcourrier.com
+ * Author: SET - nmset@yandex.com
  * License : LGPL v2.1
  * Copyright SET - © 2019
  *
