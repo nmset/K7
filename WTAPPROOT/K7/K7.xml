@@ -29,6 +29,7 @@
    <message id='Secret'>Secret</message>
    <message id='Secrets'>Secret</message>
    <message id='Fpr'>Fingerprint</message>
+   <message id='OwnerTrust'>Certification trust</message>
    
    <message id='ID'>ID</message>
    <message id='UID'>User ID</message>

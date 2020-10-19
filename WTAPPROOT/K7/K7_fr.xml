@@ -29,6 +29,7 @@
    <message id='Secret'>Secrète</message>
    <message id='Secrets'>Secrètes</message>
    <message id='Fpr'>Empreinte</message>
+   <message id='OwnerTrust'>Confiance dans la certification</message>
    
    <message id='ID'>Identifiant</message>
    <message id='UID'>Identifiant utilisateur</message>

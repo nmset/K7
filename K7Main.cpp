@@ -47,6 +47,13 @@ K7Main::K7Main(const WEnvironment& env)
     UidValidities[UserID::Validity::Ultimate] = TR("UidUltimate");
     UidValidities[UserID::Validity::Undefined] = TR("UidUndefined");
     UidValidities[UserID::Validity::Unknown] = TR("UidUnknown");
+    
+    OwnerTrustLevel[GpgME::Key::OwnerTrust::Full] = TR("UidFull");
+    OwnerTrustLevel[GpgME::Key::OwnerTrust::Marginal] = TR("UidMarginal");
+    OwnerTrustLevel[GpgME::Key::OwnerTrust::Never] = TR("UidNever");
+    OwnerTrustLevel[GpgME::Key::OwnerTrust::Ultimate] = TR("UidUltimate");
+    OwnerTrustLevel[GpgME::Key::OwnerTrust::Undefined] = TR("UidUndefined");
+    OwnerTrustLevel[GpgME::Key::OwnerTrust::Unknown] = TR("UidUnknown");
     m_uploader = NULL; m_deleter = NULL;
 }
 
@@ -202,6 +209,7 @@ void K7Main::Search()
 
     if (m_ttbKeys->columnCount() == 1) {
         m_ttbKeys->addColumn(TR("ID"), 120);
+        m_ttbKeys->addColumn(TR("OwnerTrust"), 210);
         m_ttbKeys->addColumn(TR("Fpr"), 300);
     }
     // The previous tree root is auto deleted by the use of smart pointers !!
@@ -247,7 +255,8 @@ void K7Main::DisplayKeys(const vector<GpgME::Key>& kList, const WString& grpLabe
         anc->setAttributeValue("hasSecret", k.hasSecret() ? "1" : "0");
         anc->clicked().connect(std::bind(&K7Main::OnKeyAnchorClicked, this, anc));
         keyNode->setColumnWidget(1, unique_ptr<WAnchor> (anc));
-        keyNode->setColumnWidget(2, cpp14::make_unique<WText> (k.primaryFingerprint()));
+        keyNode->setColumnWidget(2, cpp14::make_unique<WText> (OwnerTrustLevel[k.ownerTrust()]));
+        keyNode->setColumnWidget(3, cpp14::make_unique<WText> (k.primaryFingerprint()));
         grpNode->addChildNode(unique_ptr<WTreeTableNode> (keyNode));
     }
     if (expand)

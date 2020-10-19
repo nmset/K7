@@ -41,6 +41,8 @@ private:
      */
     typedef map<int, WString> UidValidityMap;
     UidValidityMap UidValidities;
+    typedef map<int, WString> OwnerTrustMap;
+    OwnerTrustMap OwnerTrustLevel;
     AppConfig * m_config;
     WGridLayout * m_grlMain;
     WContainerWidget * m_cwMain;
