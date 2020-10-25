@@ -8,6 +8,7 @@
       <itemPath>GpgMECWorker.h</itemPath>
       <itemPath>GpgMEWorker.h</itemPath>
       <itemPath>K7Main.h</itemPath>
+      <itemPath>KeyEdit.h</itemPath>
       <itemPath>PopupDeleter.h</itemPath>
       <itemPath>PopupUploader.h</itemPath>
       <itemPath>TransientMessageWidget.h</itemPath>
@@ -26,6 +27,7 @@
       <itemPath>GpgMECWorker.cpp</itemPath>
       <itemPath>GpgMEWorker.cpp</itemPath>
       <itemPath>K7Main.cpp</itemPath>
+      <itemPath>KeyEdit.cpp</itemPath>
       <itemPath>PopupDeleter.cpp</itemPath>
       <itemPath>PopupUploader.cpp</itemPath>
       <itemPath>TransientMessageWidget.cpp</itemPath>
@@ -55,6 +57,7 @@
         <ccTool>
           <incDir>
             <pElem>/usr/local/Wt-Debug/include</pElem>
+            <pElem>/usr/include/gpgme++</pElem>
           </incDir>
           <commandLine>-Wno-deprecated -Wno-deprecated-declarations</commandLine>
           <preprocessorList>
@@ -88,6 +91,10 @@
       <item path="K7Main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="K7Main.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KeyEdit.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="KeyEdit.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="PopupDeleter.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -126,6 +133,7 @@
           <stripSymbols>true</stripSymbols>
           <incDir>
             <pElem>/usr/local/Wt/include</pElem>
+            <pElem>/usr/include/gpgme++</pElem>
           </incDir>
           <commandLine>-Wno-deprecated -Wno-deprecated-declarations</commandLine>
         </ccTool>
@@ -164,6 +172,10 @@
       </item>
       <item path="K7Main.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="KeyEdit.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="KeyEdit.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="PopupDeleter.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PopupDeleter.h" ex="false" tool="3" flavor2="0">
@@ -201,6 +213,7 @@
           <stripSymbols>true</stripSymbols>
           <incDir>
             <pElem>/usr/local/Wt/include</pElem>
+            <pElem>/usr/include/gpgme++</pElem>
           </incDir>
           <commandLine>-Wno-deprecated -Wno-deprecated-declarations</commandLine>
           <preprocessorList>
@@ -242,6 +255,10 @@
       <item path="K7Main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="K7Main.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KeyEdit.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="KeyEdit.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="PopupDeleter.cpp" ex="false" tool="1" flavor2="0">
       </item>

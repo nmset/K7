@@ -78,3 +78,14 @@ const string GpgMEWorker::ImportKey(const char * filePath, Error& e)
     fclose(kFp);
     return keyid;
 }
+
+const Error GpgMEWorker::EditOwnerTrust(const char* anyFullId, GpgME::Key::OwnerTrust trustLevel)
+{
+    Error e;
+    Key k = FindKey(anyFullId, e, false);
+    if (e.code() != 0)
+        return e;
+    SetOwnerTrustEditInteractor * interactor = new SetOwnerTrustEditInteractor(trustLevel);
+    GpgME::Data d; // Internal processing data
+    return m_ctx->edit(k, std::unique_ptr<SetOwnerTrustEditInteractor> (interactor), d);
+}

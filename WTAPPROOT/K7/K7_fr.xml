@@ -63,4 +63,9 @@
     <message id='ImportSuccess'>Importation réussie : </message>
     <message id='ImportError'>Le fichier téléchargé n'a pu être importé dans le trousseau</message>
     <message id='DeleteSuccess'>Suppression réussie : </message>
+    
+    <message id='TTTDoubleCLick'>Double cliquez pour éditer</message>
+    <message id='TTTYourKey'>C'est votre clé</message>
+    <message id='OwnerTrustSuccess'>Confiance dans la certification changée avec succès</message>
+    <message id='OwnerTrustFailure'>Échec de changement de la confiance dans la certification</message>
  </messages>

@@ -39,6 +39,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/GpgMECWorker.o \
 	${OBJECTDIR}/GpgMEWorker.o \
 	${OBJECTDIR}/K7Main.o \
+	${OBJECTDIR}/KeyEdit.o \
 	${OBJECTDIR}/PopupDeleter.o \
 	${OBJECTDIR}/PopupUploader.o \
 	${OBJECTDIR}/TransientMessageWidget.o \
@@ -72,42 +73,47 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/k7: ${OBJECTFILES}
 ${OBJECTDIR}/AppConfig.o: AppConfig.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/AppConfig.o AppConfig.cpp
+	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/AppConfig.o AppConfig.cpp
 
 ${OBJECTDIR}/GpgMECWorker.o: GpgMECWorker.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GpgMECWorker.o GpgMECWorker.cpp
+	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GpgMECWorker.o GpgMECWorker.cpp
 
 ${OBJECTDIR}/GpgMEWorker.o: GpgMEWorker.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GpgMEWorker.o GpgMEWorker.cpp
+	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GpgMEWorker.o GpgMEWorker.cpp
 
 ${OBJECTDIR}/K7Main.o: K7Main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/K7Main.o K7Main.cpp
+	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/K7Main.o K7Main.cpp
+
+${OBJECTDIR}/KeyEdit.o: KeyEdit.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/KeyEdit.o KeyEdit.cpp
 
 ${OBJECTDIR}/PopupDeleter.o: PopupDeleter.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PopupDeleter.o PopupDeleter.cpp
+	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PopupDeleter.o PopupDeleter.cpp
 
 ${OBJECTDIR}/PopupUploader.o: PopupUploader.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PopupUploader.o PopupUploader.cpp
+	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PopupUploader.o PopupUploader.cpp
 
 ${OBJECTDIR}/TransientMessageWidget.o: TransientMessageWidget.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TransientMessageWidget.o TransientMessageWidget.cpp
+	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TransientMessageWidget.o TransientMessageWidget.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:

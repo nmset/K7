@@ -13,10 +13,12 @@
 #include <gpgme++/context.h>
 #include <gpgme++/error.h>
 #include <gpgme++/key.h>
+#include <gpgme++/gpgsetownertrusteditinteractor.h>
 #include <vector>
 
 using namespace std;
 using namespace GpgME;
+
 /**
  * Main class for GPGME OP, except deleting keys.
  */
@@ -50,9 +52,33 @@ public:
      * @return the keyid
      */
     const string ImportKey(const char * filePath, Error& e);
+    /**
+     * Inplace editing of owner trust if allowed
+     * @param anyFullId
+     * @param trustLevel : New trust level in key owner
+     * @return 
+     */
+    const Error EditOwnerTrust(const char * anyFullId, GpgME::Key::OwnerTrust trustLevel);
 
 private:
     Context * m_ctx;
+};
+
+/**
+ * Edit trust in key owner
+ */
+class SetOwnerTrustEditInteractor : public GpgSetOwnerTrustEditInteractor
+{
+public:
+    /**
+     * 
+     * @param ownerTrust : New trust level
+     */
+    SetOwnerTrustEditInteractor(GpgME::Key::OwnerTrust ownerTrust)
+    : GpgSetOwnerTrustEditInteractor(ownerTrust) {}
+
+    virtual ~SetOwnerTrustEditInteractor() {}
+
 };
 
 #endif /* GPGMEWORKER_H */

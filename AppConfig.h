@@ -43,6 +43,12 @@ public:
      */
     bool CanDelete() const;
     /**
+     * Allows to edit trust in key owner. Users who don't manage private keys
+     * can to that too.
+     * @return 
+     */
+    bool CanEditOwnerTrust() const;
+    /**
      * List of full private key identifiers. The user may delete these private keys.
      * Must be full keyid, short keyid or fingerprint.
      * @return 

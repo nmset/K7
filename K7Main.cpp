@@ -12,6 +12,7 @@
 #include <iostream>
 #include <Wt/WBreak.h>
 #include <Wt/WPushButton.h>
+#include <Wt/WComboBox.h>
 #include <Wt/WGridLayout.h>
 #include <Wt/WHBoxLayout.h>
 #include <Wt/WVBoxLayout.h>
@@ -55,11 +56,13 @@ K7Main::K7Main(const WEnvironment& env)
     OwnerTrustLevel[GpgME::Key::OwnerTrust::Undefined] = TR("UidUndefined");
     OwnerTrustLevel[GpgME::Key::OwnerTrust::Unknown] = TR("UidUnknown");
     m_uploader = NULL; m_deleter = NULL;
+    m_keyEdit = new KeyEdit(this);
 }
 
 K7Main::~K7Main()
 {
     delete m_config; delete m_uploader; delete m_deleter;
+    delete m_keyEdit;
 }
 
 void
@@ -255,7 +258,16 @@ void K7Main::DisplayKeys(const vector<GpgME::Key>& kList, const WString& grpLabe
         anc->setAttributeValue("hasSecret", k.hasSecret() ? "1" : "0");
         anc->clicked().connect(std::bind(&K7Main::OnKeyAnchorClicked, this, anc));
         keyNode->setColumnWidget(1, unique_ptr<WAnchor> (anc));
-        keyNode->setColumnWidget(2, cpp14::make_unique<WText> (OwnerTrustLevel[k.ownerTrust()]));
+        WText * lblOwnerTrust = new WText(OwnerTrustLevel[k.ownerTrust()]);
+        if (m_config->CanEditOwnerTrust()) {
+            if (!m_keyEdit->IsOurKey(k.primaryFingerprint())) {
+                lblOwnerTrust->doubleClicked().connect(std::bind(&KeyEdit::OnOwnerTrustDoubleClicked, m_keyEdit, keyNode));
+                lblOwnerTrust->setToolTip(TR("TTTDoubleCLick"));
+            } else {
+                lblOwnerTrust->setToolTip(TR("TTTYourKey"));
+            }
+        }
+        keyNode->setColumnWidget(2, unique_ptr<WText> (lblOwnerTrust));
         keyNode->setColumnWidget(3, cpp14::make_unique<WText> (k.primaryFingerprint()));
         grpNode->addChildNode(unique_ptr<WTreeTableNode> (keyNode));
     }

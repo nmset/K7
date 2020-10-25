@@ -29,6 +29,7 @@ using namespace std;
         "UserCommonName1" : {
             "canImport" : true,
             "canDelete" : true,
+            "canEditOwnerTrust" : true,
             "privKeyIds" : [
                 "fullKeyId1",
                 "fullKeyId2"
@@ -113,6 +114,17 @@ bool AppConfig::CanDelete() const
     if (!cnObject.contains("canDelete"))
         return false;
     return cnObject.get("canDelete");
+}
+
+bool AppConfig::CanEditOwnerTrust() const
+{
+    const WString commonName = GetSubjectDnAttribute(WSslCertificate::DnAttributeName::CommonName);
+    if (!m_SubjectCNObject.contains(commonName.toUTF8()))
+        return false;
+    Json::Object cnObject = m_SubjectCNObject.get(commonName.toUTF8());
+    if (!cnObject.contains("canEditOwnerTrust"))
+        return false;
+    return cnObject.get("canEditOwnerTrust");
 }
 
 vector<WString> AppConfig::PrivateKeyIds() const

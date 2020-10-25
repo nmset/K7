@@ -3,6 +3,7 @@
         "user1" : {
             "canImport" : true,
             "canDelete" : true,
+            "canEditOwnerTrust" : true,
             "privKeyIds" : [
                 "FullKeyId1",
                 "FullKeyId2"

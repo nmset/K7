@@ -25,11 +25,16 @@
 #include "PopupUploader.h"
 #include "PopupDeleter.h"
 #include "TransientMessageWidget.h"
+#include "KeyEdit.h"
+#include "global.h"
 
 using namespace Wt;
 
+class KeyEdit;
+
 class K7Main : public WApplication
 {
+    friend class KeyEdit;
 public:
     K7Main(const WEnvironment& env);
     virtual ~K7Main();
@@ -39,9 +44,7 @@ private:
     /**
      * Translate UID trusts to string
      */
-    typedef map<int, WString> UidValidityMap;
     UidValidityMap UidValidities;
-    typedef map<int, WString> OwnerTrustMap;
     OwnerTrustMap OwnerTrustLevel;
     AppConfig * m_config;
     WGridLayout * m_grlMain;
@@ -56,6 +59,7 @@ private:
     WTreeTable * m_ttbSubKeys;
     Uploader * m_uploader;
     Deleter * m_deleter;
+    KeyEdit * m_keyEdit;
     /**
      * Finds public keys as per criteria,
      * and private keys if any is declared in config file for current client.

@@ -63,4 +63,9 @@
     <message id='ImportSuccess'>Import success : </message>
     <message id='ImportError'>Uploaded file could not be imported in the keyring</message>
     <message id='DeleteSuccess'>Delete success : </message>
+    
+    <message id='TTTDoubleCLick'>Double click to edit</message>
+    <message id='TTTYourKey'>This is your key</message>
+    <message id='OwnerTrustSuccess'>Owner trust level succesfully changed</message>
+    <message id='OwnerTrustFailure'>Owner trust level failed to be changed</message>
  </messages>

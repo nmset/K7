@@ -21,6 +21,9 @@ const WString _APPVERSION_("1");
 const WString _SPACE_(" ");
 const WString _COLON_(":");
 
+typedef map<int, WString> UidValidityMap;
+typedef map<int, WString> OwnerTrustMap;
+
 
 #endif /* GLOBAL_H */
 
