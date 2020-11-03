@@ -9,16 +9,21 @@
       <itemPath>GpgMEWorker.h</itemPath>
       <itemPath>K7Main.h</itemPath>
       <itemPath>KeyEdit.h</itemPath>
+      <itemPath>LoopbackPassphraseProvider.h</itemPath>
+      <itemPath>PopupCertifyUserId.h</itemPath>
       <itemPath>PopupDeleter.h</itemPath>
       <itemPath>PopupUploader.h</itemPath>
+      <itemPath>Tools.h</itemPath>
       <itemPath>TransientMessageWidget.h</itemPath>
       <itemPath>global.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
                    projectFiles="true">
+      <itemPath>WTAPPROOT/K7/K7.css</itemPath>
       <itemPath>WTAPPROOT/K7/K7.xml</itemPath>
       <itemPath>WTAPPROOT/K7/K7_fr.xml</itemPath>
+      <itemPath>WTAPPROOT/K7/k7config.json</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
@@ -28,8 +33,11 @@
       <itemPath>GpgMEWorker.cpp</itemPath>
       <itemPath>K7Main.cpp</itemPath>
       <itemPath>KeyEdit.cpp</itemPath>
+      <itemPath>LoopbackPassphraseProvider.cpp</itemPath>
+      <itemPath>PopupCertifyUserId.cpp</itemPath>
       <itemPath>PopupDeleter.cpp</itemPath>
       <itemPath>PopupUploader.cpp</itemPath>
+      <itemPath>Tools.cpp</itemPath>
       <itemPath>TransientMessageWidget.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
@@ -96,6 +104,14 @@
       </item>
       <item path="KeyEdit.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="LoopbackPassphraseProvider.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="LoopbackPassphraseProvider.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PopupCertifyUserId.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="PopupCertifyUserId.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="PopupDeleter.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PopupDeleter.h" ex="false" tool="3" flavor2="0">
@@ -104,13 +120,21 @@
       </item>
       <item path="PopupUploader.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Tools.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Tools.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="TransientMessageWidget.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="TransientMessageWidget.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="WTAPPROOT/K7/K7.css" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="WTAPPROOT/K7/K7.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="WTAPPROOT/K7/K7_fr.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="WTAPPROOT/K7/k7config.json" ex="false" tool="3" flavor2="0">
       </item>
       <item path="global.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -176,6 +200,14 @@
       </item>
       <item path="KeyEdit.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="LoopbackPassphraseProvider.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="LoopbackPassphraseProvider.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PopupCertifyUserId.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="PopupCertifyUserId.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="PopupDeleter.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PopupDeleter.h" ex="false" tool="3" flavor2="0">
@@ -184,13 +216,21 @@
       </item>
       <item path="PopupUploader.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Tools.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Tools.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="TransientMessageWidget.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="TransientMessageWidget.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="WTAPPROOT/K7/K7.css" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="WTAPPROOT/K7/K7.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="WTAPPROOT/K7/K7_fr.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="WTAPPROOT/K7/k7config.json" ex="false" tool="3" flavor2="0">
       </item>
       <item path="global.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -260,6 +300,14 @@
       </item>
       <item path="KeyEdit.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="LoopbackPassphraseProvider.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="LoopbackPassphraseProvider.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PopupCertifyUserId.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="PopupCertifyUserId.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="PopupDeleter.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PopupDeleter.h" ex="false" tool="3" flavor2="0">
@@ -268,13 +316,21 @@
       </item>
       <item path="PopupUploader.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Tools.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Tools.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="TransientMessageWidget.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="TransientMessageWidget.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="WTAPPROOT/K7/K7.css" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="WTAPPROOT/K7/K7.xml" ex="false" tool="3" flavor2="0">
       </item>
       <item path="WTAPPROOT/K7/K7_fr.xml" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="WTAPPROOT/K7/k7config.json" ex="false" tool="3" flavor2="0">
       </item>
       <item path="global.h" ex="false" tool="3" flavor2="0">
       </item>

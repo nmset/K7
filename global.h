@@ -20,6 +20,10 @@ const WString _APPNAME_("K7");
 const WString _APPVERSION_("1");
 const WString _SPACE_(" ");
 const WString _COLON_(":");
+const WString _BRACKET_OPEN_("(");
+const WString _BRACKET_CLOSE_(")");
+const WString _ANGLE_BRACKET_OPEN_("<");
+const WString _ANGLE_BRACKET_CLOSE_(">");
 
 typedef map<int, WString> UidValidityMap;
 typedef map<int, WString> OwnerTrustMap;

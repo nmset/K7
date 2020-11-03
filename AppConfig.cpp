@@ -30,6 +30,7 @@ using namespace std;
             "canImport" : true,
             "canDelete" : true,
             "canEditOwnerTrust" : true,
+            "canEditUidValidity" : true,
             "privKeyIds" : [
                 "fullKeyId1",
                 "fullKeyId2"
@@ -125,6 +126,19 @@ bool AppConfig::CanEditOwnerTrust() const
     if (!cnObject.contains("canEditOwnerTrust"))
         return false;
     return cnObject.get("canEditOwnerTrust");
+}
+
+bool AppConfig::CanEditUidValidity() const
+{
+    if (PrivateKeyIds().size() == 0)
+        return false;
+    const WString commonName = GetSubjectDnAttribute(WSslCertificate::DnAttributeName::CommonName);
+    if (!m_SubjectCNObject.contains(commonName.toUTF8()))
+        return false;
+    Json::Object cnObject = m_SubjectCNObject.get(commonName.toUTF8());
+    if (!cnObject.contains("canEditUidValidity"))
+        return false;
+    return cnObject.get("canEditUidValidity");
 }
 
 vector<WString> AppConfig::PrivateKeyIds() const

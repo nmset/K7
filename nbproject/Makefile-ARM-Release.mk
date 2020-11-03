@@ -40,8 +40,11 @@ OBJECTFILES= \
 	${OBJECTDIR}/GpgMEWorker.o \
 	${OBJECTDIR}/K7Main.o \
 	${OBJECTDIR}/KeyEdit.o \
+	${OBJECTDIR}/LoopbackPassphraseProvider.o \
+	${OBJECTDIR}/PopupCertifyUserId.o \
 	${OBJECTDIR}/PopupDeleter.o \
 	${OBJECTDIR}/PopupUploader.o \
+	${OBJECTDIR}/Tools.o \
 	${OBJECTDIR}/TransientMessageWidget.o \
 	${OBJECTDIR}/main.o
 
@@ -95,6 +98,16 @@ ${OBJECTDIR}/KeyEdit.o: KeyEdit.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/KeyEdit.o KeyEdit.cpp
 
+${OBJECTDIR}/LoopbackPassphraseProvider.o: LoopbackPassphraseProvider.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/LoopbackPassphraseProvider.o LoopbackPassphraseProvider.cpp
+
+${OBJECTDIR}/PopupCertifyUserId.o: PopupCertifyUserId.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PopupCertifyUserId.o PopupCertifyUserId.cpp
+
 ${OBJECTDIR}/PopupDeleter.o: PopupDeleter.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -104,6 +117,11 @@ ${OBJECTDIR}/PopupUploader.o: PopupUploader.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PopupUploader.o PopupUploader.cpp
+
+${OBJECTDIR}/Tools.o: Tools.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Tools.o Tools.cpp
 
 ${OBJECTDIR}/TransientMessageWidget.o: TransientMessageWidget.cpp
 	${MKDIR} -p ${OBJECTDIR}

@@ -17,10 +17,12 @@
 GpgMEWorker::GpgMEWorker()
 {
     m_ctx = Context::createForProtocol(Protocol::OpenPGP);
+    m_ppp = NULL;
 }
 
 GpgMEWorker::~GpgMEWorker()
 {
+    delete m_ppp;
     delete m_ctx;
 }
 
@@ -88,4 +90,43 @@ const Error GpgMEWorker::EditOwnerTrust(const char* anyFullId, GpgME::Key::Owner
     SetOwnerTrustEditInteractor * interactor = new SetOwnerTrustEditInteractor(trustLevel);
     GpgME::Data d; // Internal processing data
     return m_ctx->edit(k, std::unique_ptr<SetOwnerTrustEditInteractor> (interactor), d);
+}
+
+const Error GpgMEWorker::CertifyKey(const char* fprSigningKey,
+                                    const char * fprKeyToSign,
+                                    vector<uint>& userIDsToSign, int options,
+                                    const string& passphrase)
+{
+    Error e;
+    Key signingKey = FindKey(fprSigningKey, e, true);
+    if (e.code() != 0)
+        return e;
+    e = m_ctx->addSigningKey(signingKey); // +++
+    if (e.code() != 0)
+        return e;
+    Key keyToSign = FindKey(fprKeyToSign, e, false);
+    if (e.code() != 0)
+        return e;
+    
+    // GPG engine will fetch for  passphrase in the custom provider.
+    m_ctx->setPinentryMode(Context::PinentryMode::PinentryLoopback);
+    if (m_ppp == NULL)
+        m_ppp = new LoopbackPassphraseProvider();
+    m_ppp->SetPassphrase(passphrase);
+    m_ctx->setPassphraseProvider(m_ppp);
+    
+    SetSignKeyEditInteractor * interactor = new SetSignKeyEditInteractor();
+    interactor->setKey(keyToSign);
+    interactor->setUserIDsToSign(userIDsToSign);
+    interactor->setSigningOptions(options);
+    // What's that check level ?
+    // interactor->setCheckLevel(2);
+    GpgME::Data d;
+    e = m_ctx->edit(keyToSign, std::unique_ptr<SetSignKeyEditInteractor> (interactor), d);
+    m_ctx->clearSigningKeys();
+    /*
+     * On error, always : code = 1024 | asString = User defined error code 1
+     * Can't distinguish between bad password or whatever cause.
+     */
+    return e;
 }

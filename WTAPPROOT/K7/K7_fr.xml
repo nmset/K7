@@ -68,4 +68,15 @@
     <message id='TTTYourKey'>C'est votre clé</message>
     <message id='OwnerTrustSuccess'>Confiance dans la certification changée avec succès</message>
     <message id='OwnerTrustFailure'>Échec de changement de la confiance dans la certification</message>
+    
+    <message id='BadKeyCount'>Trop de clés; une seule attendue</message>
+    <message id='Options'>Options</message>
+    <message id='ExportableCertification'>Certifier pour une visibilité par tous</message>
+    <message id='NonRevocableCertification'>Non révocable</message>
+    <message id='TrustCertification'>Confiance totale</message>
+    <message id='Passphrase'>Phrase de passe</message>
+    <message id='NoUidSelected'>Aucun courriel n'est sélectionné</message>
+    <message id='Apply'>Appliquer</message>
+    <message id='CertificationSuccess'>Succès de certification de la clé</message>
+    <message id='CertificationFailure'>Échec de certification de la clé</message>
  </messages>

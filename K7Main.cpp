@@ -19,6 +19,7 @@
 #include <Wt/WLink.h>
 #include "GpgMEWorker.h"
 #include "GpgMECWorker.h"
+#include "Tools.h"
 
 using namespace std;
 
@@ -189,7 +190,7 @@ void K7Main::Search()
         for (uint j = 0; j < lst.size(); j++)
         {
             const GpgME::Key k = lst.at(j);
-            if (!ConfigKeyIdMatchesKey(k, configPrivKeys.at(i)))
+            if (!Tools::ConfigKeyIdMatchesKey(k, configPrivKeys.at(i)))
             {
                 m_tmwMessage->SetText(configPrivKeys.at(i) + TR("BadConfigKeyId"));
                 privkList.clear();
@@ -225,14 +226,6 @@ void K7Main::Search()
         DisplayKeys(pubkList, TR("Publics"), true);
     if (privkList.size() && m_config->PrivateKeyIds().size() > 0)
         DisplayKeys(privkList, TR("Secrets"), false);
-}
-
-bool K7Main::ConfigKeyIdMatchesKey(const GpgME::Key& k, const WString& configKeyId) const
-{
-    // We want key identifier in config file to be real and complete.
-    return (configKeyId == WString(k.shortKeyID())
-            || configKeyId == WString(k.keyID())
-            || configKeyId == WString(k.primaryFingerprint()));
 }
 
 WString K7Main::MakeDateTimeLabel(time_t ticks)
@@ -311,12 +304,19 @@ void K7Main::DisplayUids(const WString& fullKeyID, bool secret)
     rootNode->setChildCountPolicy(ChildCountPolicy::Enabled);
     m_ttbUids->setTreeRoot(unique_ptr<WTreeTableNode> (rootNode), TR("UIDs"));
     rootNode->expand();
+    vector<WString> privateKeys = m_config->PrivateKeyIds();
     for (uint i = 0; i < k.numUserIDs(); i++)
     {
         UserID uid = k.userID(i);
         WTreeTableNode * uidNode = new WTreeTableNode(uid.name());
         uidNode->setColumnWidget(1, cpp14::make_unique<WText> (uid.email()));
-        uidNode->setColumnWidget(2, cpp14::make_unique<WText> (UidValidities[uid.validity()]));
+        // Show key certify popup on double click
+        WText * lblUidValidity = new WText(UidValidities[uid.validity()]);
+        if (m_config->CanEditUidValidity()) {
+            lblUidValidity->setToolTip(TR("TTTDoubleCLick"));
+            lblUidValidity->doubleClicked().connect(std::bind(&KeyEdit::OnUidValidityClicked, m_keyEdit, uidNode, privateKeys, WString(k.primaryFingerprint())));
+        }
+        uidNode->setColumnWidget(2, unique_ptr<WText> (lblUidValidity));
         uidNode->setColumnWidget(3, cpp14::make_unique<WText> (uid.comment()));
         rootNode->addChildNode(unique_ptr<WTreeTableNode> (uidNode));
         // uid.numSignatures() is always 0, even for signed keys !
@@ -445,7 +445,7 @@ bool K7Main::CanKeyBeDeleted(const WString& fullKeyID) {
     vector<WString> curUserPrivKeys = m_config->PrivateKeyIds();
     vector<WString>::iterator it;
     for (it = curUserPrivKeys.begin(); it != curUserPrivKeys.end(); it++) {
-        if (ConfigKeyIdMatchesKey(k, *it)) {
+        if (Tools::ConfigKeyIdMatchesKey(k, *it)) {
             m_btnDelete->setAttributeValue("keyid", k.keyID());
             m_btnDelete->setAttributeValue("hasSecret", "1");
             return true;

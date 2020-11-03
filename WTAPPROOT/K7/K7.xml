@@ -68,4 +68,15 @@
     <message id='TTTYourKey'>This is your key</message>
     <message id='OwnerTrustSuccess'>Owner trust level succesfully changed</message>
     <message id='OwnerTrustFailure'>Owner trust level failed to be changed</message>
+    
+    <message id='BadKeyCount'>Too many keys; a single key is expected</message>
+    <message id='Options'>Options</message>
+    <message id='ExportableCertification'>Certify for everyone to see</message>
+    <message id='NonRevocableCertification'>Non revocable</message>
+    <message id='TrustCertification'>Trust</message>
+    <message id='Passphrase'>Passphrase</message>
+    <message id='NoUidSelected'>No email address is selected</message>
+    <message id='Apply'>Apply</message>
+    <message id='CertificationSuccess'>Key succesfully certified</message>
+    <message id='CertificationFailure'>Key certification failed</message>
  </messages>

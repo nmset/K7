@@ -49,6 +49,12 @@ public:
      */
     bool CanEditOwnerTrust() const;
     /**
+     * Allows to edit validity of user identity. 
+     * Only users who manage private keys can do that.
+     * @return 
+     */
+    bool CanEditUidValidity() const;
+    /**
      * List of full private key identifiers. The user may delete these private keys.
      * Must be full keyid, short keyid or fingerprint.
      * @return 

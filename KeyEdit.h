@@ -13,6 +13,7 @@
 #include <Wt/WTreeTableNode.h>
 #include "K7Main.h"
 #include <Wt/WComboBox.h>
+#include "PopupCertifyUserId.h"
 
 using namespace Wt;
 
@@ -20,9 +21,9 @@ class K7Main;
 
 /**
  * Some key editing functionalities are or will be implemented here. For now,
- * only owner trust level is editable.
+ * only owner trust level and key certification are implemented.
  */
-class KeyEdit
+class KeyEdit : public WObject
 {
 public:
     KeyEdit(K7Main * owner);
@@ -43,11 +44,21 @@ public:
      * @return 
      */
     bool IsOurKey(const WString& fpr);
-
+    /**
+     * Shows a popup with parameters for key certification.
+     * @param uidNode
+     * @param privateKeys : A list of our private keys.
+     * @param targetKeyFpr : The key to sign.
+     */
+    void OnUidValidityClicked(WTreeTableNode * uidNode, vector<WString>& privateKeys, const WString& targetKeyFpr);
+    
 private:
     K7Main * m_owner;
+    PopupCertifyUserId * m_popupUid;
+    WString m_targetKeyFpr;
 
     void FillOwnerTrustCombo(WComboBox * cmb);
+    void CertifyKey();
 };
 
 #endif /* KEYEDIT_H */

@@ -4,6 +4,7 @@
             "canImport" : true,
             "canDelete" : true,
             "canEditOwnerTrust" : true,
+            "canEditUidValidity" : true,
             "privKeyIds" : [
                 "FullKeyId1",
                 "FullKeyId2"

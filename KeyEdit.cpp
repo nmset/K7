@@ -16,12 +16,16 @@
 using namespace std;
 
 KeyEdit::KeyEdit(K7Main * owner)
+:WObject()
 {
     m_owner = owner;
+    m_popupUid = NULL;
+    m_targetKeyFpr = WString::Empty;
 }
 
 KeyEdit::~KeyEdit()
 {
+    delete m_popupUid;
 }
 
 void KeyEdit::OnOwnerTrustDoubleClicked(WTreeTableNode * keyNode)
@@ -99,4 +103,47 @@ bool KeyEdit::IsOurKey(const WString& fpr)
             return true;
     }
     return false;
+}
+
+void KeyEdit::OnUidValidityClicked(WTreeTableNode* uidNode, vector<WString>& privateKeys, const WString& targetKeyFpr)
+{
+    if (targetKeyFpr != m_targetKeyFpr) {
+        bool passwordVisibility = true;
+        if (m_popupUid)
+            passwordVisibility = m_popupUid->IsPasswordVisible();
+        delete m_popupUid;
+        WText * lblUidValidity = static_cast<WText*> (uidNode->columnWidget(2));
+        m_popupUid = new PopupCertifyUserId(lblUidValidity, m_owner->m_tmwMessage);
+        m_popupUid->Create(privateKeys, targetKeyFpr);
+        m_popupUid->ShowPassphrase(passwordVisibility);
+        m_targetKeyFpr = targetKeyFpr;
+        m_popupUid->GetCertifyButton()->clicked().connect(this, &KeyEdit::CertifyKey);
+    }
+    m_popupUid->show();
+}
+
+void KeyEdit::CertifyKey()
+{
+    vector<uint>& uidsToSign = m_popupUid->GetUidsToSign();
+    if (uidsToSign.size() == 0) {
+        m_owner->m_tmwMessage->SetText(TR("NoUidSelected"));
+        return;
+    }
+    const WString signingKey = m_popupUid->GetSelectedKey();
+    const WString keyToSign = m_popupUid->GetKeyToSign();
+    int options = m_popupUid->GetCertifyOptions();
+    GpgMEWorker gpgWorker;
+    GpgME::Error e = gpgWorker.CertifyKey(signingKey.toUTF8().c_str(),
+                                          keyToSign.toUTF8().c_str(),
+                                          uidsToSign, options,
+                                          m_popupUid->GetPassphrase());
+    if (e.code() != 0)
+    {
+        m_owner->m_tmwMessage->SetText(TR("CertificationFailure"));
+        m_popupUid->ShowPassphrase(true);
+        return;
+    }
+    m_owner->m_tmwMessage->SetText(TR("CertificationSuccess"));
+    m_popupUid->ShowPassphrase(false);
+    m_owner->DisplayUids(keyToSign);
 }

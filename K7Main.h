@@ -67,13 +67,6 @@ private:
      */
     void Search();
     /**
-     * We want key identifier in config file to be real and complete.
-     * @param k
-     * @param configKeyId key identifier as entered in configuration file
-     * @return 
-     */
-    bool ConfigKeyIdMatchesKey(const GpgME::Key& k, const WString& configKeyId) const;
-    /**
      * Show keys in tree table
      */
     void DisplayKeys(const vector<GpgME::Key>& kList, const WString& grpLabel, bool expand);
