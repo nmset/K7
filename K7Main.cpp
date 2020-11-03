@@ -20,6 +20,7 @@
 #include "GpgMEWorker.h"
 #include "GpgMECWorker.h"
 #include "Tools.h"
+#include "SensitiveTreeTableNodeText.h"
 
 using namespace std;
 
@@ -267,7 +268,8 @@ void K7Main::DisplayKeys(const vector<GpgME::Key>& kList, const WString& grpLabe
             }
         }
         keyNode->setColumnWidget(2, unique_ptr<WText> (lblOwnerTrust));
-        keyNode->setColumnWidget(3, cpp14::make_unique<WText> (k.primaryFingerprint()));
+        TreeTableNodeText * ttntFpr = new TreeTableNodeText(k.primaryFingerprint(), keyNode, 3);
+        keyNode->setColumnWidget(3, unique_ptr<TreeTableNodeText> (ttntFpr));
         grpNode->addChildNode(unique_ptr<WTreeTableNode> (keyNode));
     }
     if (expand)
@@ -315,7 +317,8 @@ void K7Main::DisplayUids(const WString& fullKeyID, bool secret)
     {
         UserID uid = k.userID(i);
         WTreeTableNode * uidNode = new WTreeTableNode(uid.name());
-        uidNode->setColumnWidget(1, cpp14::make_unique<WText> (uid.email()));
+        TreeTableNodeText * ttntUidEmail = new TreeTableNodeText(uid.email(), uidNode, 1);
+        uidNode->setColumnWidget(1, unique_ptr<TreeTableNodeText> (ttntUidEmail));
         // Show key certify popup on double click
         WText * lblUidValidity = new WText(UidValidities[uid.validity()]);
         if (m_config->CanEditUidValidity()) {
@@ -323,7 +326,8 @@ void K7Main::DisplayUids(const WString& fullKeyID, bool secret)
             lblUidValidity->doubleClicked().connect(std::bind(&KeyEdit::OnUidValidityClicked, m_keyEdit, uidNode, privateKeys, WString(k.primaryFingerprint())));
         }
         uidNode->setColumnWidget(2, unique_ptr<WText> (lblUidValidity));
-        uidNode->setColumnWidget(3, cpp14::make_unique<WText> (uid.comment()));
+        TreeTableNodeText * ttntUidComment = new TreeTableNodeText(uid.comment(), uidNode, 3);
+        uidNode->setColumnWidget(3, unique_ptr<TreeTableNodeText> (ttntUidComment));
         rootNode->addChildNode(unique_ptr<WTreeTableNode> (uidNode));
         // uid.numSignatures() is always 0, even for signed keys !
         for (uint s = 0; s < uid.numSignatures(); s++)
@@ -332,11 +336,13 @@ void K7Main::DisplayUids(const WString& fullKeyID, bool secret)
             const WString signer = WString(sig.signerName()) + _SPACE_
                     + WString(sig.signerKeyID());
             WTreeTableNode * sigNode = new WTreeTableNode(signer);
-            sigNode->setColumnWidget(1, cpp14::make_unique<WText> (sig.signerEmail()));
+            TreeTableNodeText * ttntEmail = new TreeTableNodeText(sig.signerEmail(), sigNode, 1);
+            sigNode->setColumnWidget(1, unique_ptr<TreeTableNodeText> (ttntEmail));
             WString exp = TR("Expiration") + _SPACE_ + _COLON_ + _SPACE_;
             exp += sig.neverExpires() ? TR("Never") : MakeDateTimeLabel(sig.expirationTime());
             sigNode->setColumnWidget(2, cpp14::make_unique<WText> (exp));
-            sigNode->setColumnWidget(3, cpp14::make_unique<WText> (sig.signerComment()));
+            TreeTableNodeText * ttntComment = new TreeTableNodeText(sig.signerComment(), sigNode, 3);
+            sigNode->setColumnWidget(3, unique_ptr<TreeTableNodeText> (ttntComment));
             uidNode->addChild(unique_ptr<WTreeTableNode> (sigNode));
         }
     }
@@ -370,7 +376,8 @@ void K7Main::DisplaySubKeys(const WString& fullKeyID, bool secret)
     {
         Subkey sk = k.subkey(i);
         WTreeTableNode * skNode = new WTreeTableNode(sk.keyID());
-        skNode->setColumnWidget(1, cpp14::make_unique<WText> (sk.fingerprint()));
+        TreeTableNodeText * ttntFpr = new TreeTableNodeText(sk.fingerprint(), skNode, 1);
+        skNode->setColumnWidget(1, unique_ptr<TreeTableNodeText> (ttntFpr));
         WString exp = sk.neverExpires() ? TR("Never") : MakeDateTimeLabel(sk.expirationTime());
         skNode->setColumnWidget(2, cpp14::make_unique<WText> (exp));
         WString usage = sk.canAuthenticate() ? WString("A") : WString::Empty;
