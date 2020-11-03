@@ -13,8 +13,6 @@
         <gdb_interceptlist>
           <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
         </gdb_interceptlist>
-        <gdb_signals>
-        </gdb_signals>
         <gdb_options>
           <DebugOptions>
           </DebugOptions>
@@ -27,6 +25,7 @@
       <runprofile version="9">
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" --docroot ../../../ --https-address localhost --https-port 8080 --ssl-client-verification required --ssl-ca-certificates /home/user/tmp/ca.crt --ssl-certificate /home/user/tmp/cert.pem --ssl-private-key /home/user/tmp/cert.key --ssl-tmp-dh /home/user/tmp/dh.pem</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" --docroot . --https-address localhost --https-port 8080 --ssl-client-verification required --ssl-ca-certificates /home/user/tmp/ca.crt --ssl-certificate /home/user/tmp/cert.pem --ssl-private-key /home/user/tmp/cert.key --ssl-tmp-dh /home/user/tmp/dh.pem</runcommandpicklistitem>
         </runcommandpicklist>
         <runcommand>"${OUTPUT_PATH}" --docroot . --https-address localhost --https-port 8080 --ssl-client-verification required --ssl-ca-certificates /home/user/tmp/ca.crt --ssl-certificate /home/user/tmp/cert.pem --ssl-private-key /home/user/tmp/cert.key --ssl-tmp-dh /home/user/tmp/dh.pem</runcommand>

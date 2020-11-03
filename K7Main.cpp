@@ -58,6 +58,12 @@ K7Main::K7Main(const WEnvironment& env)
     OwnerTrustLevel[GpgME::Key::OwnerTrust::Unknown] = TR("UidUnknown");
     m_uploader = NULL; m_deleter = NULL;
     m_keyEdit = new KeyEdit(this);
+    
+    WLink link;
+    const WString cssFile = WApplication::appRoot() + _APPNAME_ 
+                        + WString(".css");
+    link.setUrl(cssFile.toUTF8());
+    WApplication::useStyleSheet(link);
 }
 
 K7Main::~K7Main()

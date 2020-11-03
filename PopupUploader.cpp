@@ -31,6 +31,8 @@ void Uploader::Create() {
     m_upload->setFileTextSize(10240); // Is really approximate
     m_upload->setMultiple(false);
     m_cwMain = static_cast<WContainerWidget*> (implementation());
+    // White in css file, like default background color.
+    m_cwMain->setStyleClass("popup");
     WVBoxLayout * vblMain = new WVBoxLayout();
     m_cwMain->setLayout(unique_ptr<WVBoxLayout> (vblMain));
     vblMain->addWidget(unique_ptr<WFileUpload> (m_upload));

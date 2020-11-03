@@ -28,6 +28,8 @@ Deleter::~Deleter() {
 
 void Deleter::Create() {
     m_cwMain = static_cast<WContainerWidget*> (implementation());
+    // White in css file, like default background color.
+    m_cwMain->setStyleClass("popup");
     WVBoxLayout * vblMain = new WVBoxLayout();
     m_cwMain->setLayout(unique_ptr<WVBoxLayout> (vblMain));
     m_cbConfirm = new WCheckBox(TR("Confirm"));

@@ -1,0 +1,10 @@
+/*
+ * Default page color is white.
+ * Default popup background is transparent.
+ * Can't use inherit :
+ *  root()->decorationStyle().backgroundColor().{red,green, blue}
+ *  are all 0.
+*/
+div.popup {
+    background-color: lavender;
+} 
