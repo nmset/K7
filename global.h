@@ -17,7 +17,7 @@ using namespace std;
 #define TR(sk) WString::tr(sk)
 
 const WString _APPNAME_("K7");
-const WString _APPVERSION_("1");
+const WString _APPVERSION_("2");
 const WString _SPACE_(" ");
 const WString _COLON_(":");
 const WString _BRACKET_OPEN_("(");
