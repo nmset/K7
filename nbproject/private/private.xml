@@ -7,10 +7,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/user/Documents/published/K7/WTAPPROOT/K7/K7_fr.xml</file>
-            <file>file:/home/user/Documents/published/K7/K7Main.cpp</file>
+            <file>file:/home/user/Documents/published/K7/PopupDeleter.h</file>
             <file>file:/home/user/Documents/published/K7/K7Main.h</file>
-            <file>file:/home/user/Documents/published/K7/WTAPPROOT/K7/K7.xml</file>
+            <file>file:/home/user/Documents/published/K7/PopupUploader.h</file>
+            <file>file:/home/user/Documents/published/K7/K7Main.cpp</file>
+            <file>file:/home/user/Documents/published/K7/PopupCertifyUserId.cpp</file>
+            <file>file:/home/user/Documents/published/K7/PopupUploader.cpp</file>
+            <file>file:/home/user/Documents/published/K7/PopupCertifyUserId.h</file>
+            <file>file:/home/user/Documents/published/K7/PopupDeleter.cpp</file>
         </group>
     </open-files>
 </project-private>
