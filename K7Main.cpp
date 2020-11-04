@@ -260,12 +260,12 @@ void K7Main::DisplayKeys(const vector<GpgME::Key>& kList, const WString& grpLabe
         keyNode->setColumnWidget(1, unique_ptr<WAnchor> (anc));
         WText * lblOwnerTrust = new WText(OwnerTrustLevel[k.ownerTrust()]);
         if (m_config->CanEditOwnerTrust()) {
-            if (!m_keyEdit->IsOurKey(k.primaryFingerprint())) {
-                lblOwnerTrust->doubleClicked().connect(std::bind(&KeyEdit::OnOwnerTrustDoubleClicked, m_keyEdit, keyNode));
-                lblOwnerTrust->setToolTip(TR("TTTDoubleCLick"));
-            } else {
-                lblOwnerTrust->setToolTip(TR("TTTYourKey"));
-            }
+            /*
+             * Here we allow the owner trust level of primary keys to be changed anytime.
+             * Kleopatra doesn't do that for primary keys having ultimate trust level.
+             */
+            lblOwnerTrust->doubleClicked().connect(std::bind(&KeyEdit::OnOwnerTrustDoubleClicked, m_keyEdit, keyNode));
+            lblOwnerTrust->setToolTip(TR("TTTDoubleCLick"));
         }
         keyNode->setColumnWidget(2, unique_ptr<WText> (lblOwnerTrust));
         TreeTableNodeText * ttntFpr = new TreeTableNodeText(k.primaryFingerprint(), keyNode, 3);

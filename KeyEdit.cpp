@@ -30,10 +30,10 @@ KeyEdit::~KeyEdit()
 
 void KeyEdit::OnOwnerTrustDoubleClicked(WTreeTableNode * keyNode)
 {
-    // We ought to trust our own keys
-    const WText * lblFpr = static_cast<WText*> (keyNode->columnWidget(3));
-    if (IsOurKey(lblFpr->text()))
-        return;
+    /*
+     * TODO : decide if we should exclude any primary key with ultimate trust
+     * level for any further change.
+     */
     WComboBox * cmbOwnerTrust = new WComboBox();
     FillOwnerTrustCombo(cmbOwnerTrust);
     cmbOwnerTrust->blurred().connect(std::bind(&KeyEdit::OnOwnerTrustBlurred, this, keyNode));
