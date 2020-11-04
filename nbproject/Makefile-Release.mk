@@ -44,6 +44,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/PopupCertifyUserId.o \
 	${OBJECTDIR}/PopupDeleter.o \
 	${OBJECTDIR}/PopupUploader.o \
+	${OBJECTDIR}/SensitiveTreeTableNodeText.o \
 	${OBJECTDIR}/Tools.o \
 	${OBJECTDIR}/TransientMessageWidget.o \
 	${OBJECTDIR}/main.o
@@ -117,6 +118,11 @@ ${OBJECTDIR}/PopupUploader.o: PopupUploader.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -s -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PopupUploader.o PopupUploader.cpp
+
+${OBJECTDIR}/SensitiveTreeTableNodeText.o: SensitiveTreeTableNodeText.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -s -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SensitiveTreeTableNodeText.o SensitiveTreeTableNodeText.cpp
 
 ${OBJECTDIR}/Tools.o: Tools.cpp
 	${MKDIR} -p ${OBJECTDIR}
