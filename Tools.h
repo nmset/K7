@@ -38,6 +38,12 @@ public:
      */
     static int ToInt(const string& s);
     
+    static WString TexttualBool(bool value);
+    
+    static WString GetKeyStatus(const GpgME::Key& k);
+    static WString GetUidStatus(const GpgME::UserID& uid);
+    static WString GetSigStatus(const GpgME::UserID::Signature& sig);
+    
 private:
 
 };

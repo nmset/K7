@@ -81,4 +81,27 @@
     <message id='CertificationFailure'>Échec de certification de la clé</message>
     
     <message id='PrepareCopy'>Cliquez pour pouvoir ensuite copier</message>
+    
+    <message id='KeyStatusFor'>État de la clé</message>
+    <message id='KeyStatusIsBad'>Mauvais</message>
+    <message id='KeyStatusIsNull'>Null</message>
+    <message id='KeyStatusIsInvalid'>Invalide</message>
+    <message id='KeyStatusIsDisabled'>Désactivé</message>
+    <message id='KeyStatusIsExpired'>Expiré</message>
+    <message id='KeyStatusIsRevoked'>Revoqué</message>
+    
+    <message id='UserStatus'>État de l'utilisateur</message>
+    <message id='UserStatusIsBad'>Mauvais</message>
+    <message id='UserStatusIsNull'>Null</message>
+    <message id='UserStatusIsInvalid'>Invalide</message>
+    <message id='UserStatusIsRevoked'>Revoqué</message>
+    
+    <message id='SigStatus'>État de la signature</message>
+    <message id='SigStatusIsBad'>Mauvais</message>
+    <message id='SigStatusIsNull'>Null</message>
+    <message id='SigStatusIsInvalid'>Invalide</message>
+    <message id='SigStatusIsExportable'>Exportable</message>
+    <message id='SigStatusIsExpired'>Expiré</message>
+    <message id='SigStatusIsRevokation'>Revocation</message>
+    
  </messages>
