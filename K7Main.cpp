@@ -250,6 +250,7 @@ void K7Main::DisplayKeys(const vector<GpgME::Key>& kList, const WString& grpLabe
     {
         const GpgME::Key k = kList.at(i);
         WTreeTableNode * keyNode = new WTreeTableNode(k.userID(0).name());
+        keyNode->setToolTip(Tools::GetKeyStatus(k));
         WLink ln;
         ln.setUrl(WString(L"javascript:void(0)").toUTF8());
         WAnchor * anc = new WAnchor(ln, k.shortKeyID());
@@ -317,6 +318,7 @@ void K7Main::DisplayUids(const WString& fullKeyID, bool secret)
     {
         UserID uid = k.userID(i);
         WTreeTableNode * uidNode = new WTreeTableNode(uid.name());
+        uidNode->setToolTip(Tools::GetUidStatus(uid));
         TreeTableNodeText * ttntUidEmail = new TreeTableNodeText(uid.email(), uidNode, 1);
         uidNode->setColumnWidget(1, unique_ptr<TreeTableNodeText> (ttntUidEmail));
         // Show key certify popup on double click
@@ -336,6 +338,7 @@ void K7Main::DisplayUids(const WString& fullKeyID, bool secret)
             const WString signer = WString(sig.signerName()) + _SPACE_
                     + WString(sig.signerKeyID());
             WTreeTableNode * sigNode = new WTreeTableNode(signer);
+            sigNode->setToolTip(Tools::GetSigStatus(sig));
             TreeTableNodeText * ttntEmail = new TreeTableNodeText(sig.signerEmail(), sigNode, 1);
             sigNode->setColumnWidget(1, unique_ptr<TreeTableNodeText> (ttntEmail));
             WString exp = TR("Expiration") + _SPACE_ + _COLON_ + _SPACE_;
@@ -376,6 +379,7 @@ void K7Main::DisplaySubKeys(const WString& fullKeyID, bool secret)
     {
         Subkey sk = k.subkey(i);
         WTreeTableNode * skNode = new WTreeTableNode(sk.keyID());
+        skNode->setToolTip(Tools::GetKeyStatus(k));
         TreeTableNodeText * ttntFpr = new TreeTableNodeText(sk.fingerprint(), skNode, 1);
         skNode->setColumnWidget(1, unique_ptr<TreeTableNodeText> (ttntFpr));
         WString exp = sk.neverExpires() ? TR("Never") : MakeDateTimeLabel(sk.expirationTime());

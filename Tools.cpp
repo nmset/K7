@@ -33,3 +33,59 @@ int Tools::ToInt(const string& s) {
     buffer >> num;
     return num;
 }
+
+WString Tools::TexttualBool(bool value)
+{
+    const WString res = value
+                ? WString::tr("Yes")
+                : WString::tr("No");
+    return res;
+}
+
+WString Tools::GetKeyStatus(const GpgME::Key& k)
+{
+    const WString nl("\n");
+    const WString sep(" : ");
+    WString status(WString::tr("KeyStatusFor"));
+    status += WString(" ");
+    status += WString(k.keyID()) + WString(" :") + nl + nl;
+    status += WString(WString::tr("KeyStatusIsBad")) + sep + TexttualBool(k.isBad()) + nl;
+    status += WString(WString::tr("KeyStatusIsNull")) + sep + TexttualBool(k.isBad()) + nl;
+    status += WString(WString::tr("KeyStatusIsInvalid")) + sep + TexttualBool(k.isBad()) + nl;
+    status += WString(WString::tr("KeyStatusIsDisabled")) + sep + TexttualBool(k.isBad()) + nl;
+    status += WString(WString::tr("KeyStatusIsExpired")) + sep + TexttualBool(k.isBad()) + nl;
+    status += WString(WString::tr("KeyStatusIsRevoked")) + sep + TexttualBool(k.isBad());
+    
+    return status;
+}
+
+WString Tools::GetUidStatus(const GpgME::UserID& uid)
+{
+    const WString nl("\n");
+    const WString sep(" : ");
+    WString status(WString::tr("UserStatus"));
+    status += WString(" :") + nl + nl;
+    status += WString(WString::tr("UserStatusIsBad")) + sep + TexttualBool(uid.isBad()) + nl;
+    status += WString(WString::tr("UserStatusIsNull")) + sep + TexttualBool(uid.isBad()) + nl;
+    status += WString(WString::tr("UserStatusIsInvalid")) + sep + TexttualBool(uid.isBad()) + nl;
+    status += WString(WString::tr("UserStatusIsRevoked")) + sep + TexttualBool(uid.isBad());
+    
+    return status;
+}
+
+WString Tools::GetSigStatus(const GpgME::UserID::Signature& sig)
+{
+    const WString nl("\n");
+    const WString sep(" : ");
+    WString status(WString::tr("SigStatus"));
+    status += WString(" :") + nl + nl;
+    status += WString(WString::tr("SigStatusIsBad")) + sep + TexttualBool(sig.isBad()) + nl;
+    status += WString(WString::tr("SigStatusIsNull")) + sep + TexttualBool(sig.isBad()) + nl;
+    status += WString(WString::tr("SigStatusIsInvalid")) + sep + TexttualBool(sig.isBad()) + nl;
+    status += WString(WString::tr("SigStatusIsExportable")) + sep + TexttualBool(sig.isBad()) + nl;
+    status += WString(WString::tr("SigStatusIsExpired")) + sep + TexttualBool(sig.isBad()) + nl;
+    status += WString(WString::tr("SigStatusIsRevokation")) + sep + TexttualBool(sig.isBad());
+    
+    return status;
+}
+

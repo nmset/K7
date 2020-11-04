@@ -81,4 +81,27 @@
     <message id='CertificationFailure'>Key certification failed</message>
     
     <message id='PrepareCopy'>Click to be able to copy next</message>
+    
+    <message id='KeyStatusFor'>Status for key</message>
+    <message id='KeyStatusIsBad'>Bad</message>
+    <message id='KeyStatusIsNull'>Null</message>
+    <message id='KeyStatusIsInvalid'>Invalid</message>
+    <message id='KeyStatusIsDisabled'>Disabled</message>
+    <message id='KeyStatusIsExpired'>Expired</message>
+    <message id='KeyStatusIsRevoked'>Revoked</message>
+    
+    <message id='UserStatus'>User status</message>
+    <message id='UserStatusIsBad'>Bad</message>
+    <message id='UserStatusIsNull'>Null</message>
+    <message id='UserStatusIsInvalid'>Invalid</message>
+    <message id='UserStatusIsRevoked'>Revoked</message>
+    
+    <message id='SigStatus'>Signature status</message>
+    <message id='SigStatusIsBad'>Bad</message>
+    <message id='SigStatusIsNull'>Null</message>
+    <message id='SigStatusIsInvalid'>Invalid</message>
+    <message id='SigStatusIsExportable'>Exportable</message>
+    <message id='SigStatusIsExpired'>Expired</message>
+    <message id='SigStatusIsRevokation'>Revokation</message>
+    
  </messages>
