@@ -15,9 +15,9 @@ As a NetBeans project, a Makefile exists in the project root.
 
 cd /path/to/K7
 
-make CONF=Debug #linked to wthttp here
+make CONF=Debug
 
-make CONF=Release #linked to wtfcgi here (consider linking to wthttp rather)
+make CONF=Release
 
 **INSTALLING AND RUNNING**
 
