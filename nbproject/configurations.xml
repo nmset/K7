@@ -191,7 +191,7 @@
           <stripSymbols>true</stripSymbols>
           <linkerLibItems>
             <linkerLibLibItem>wt</linkerLibLibItem>
-            <linkerLibLibItem>wtfcgi</linkerLibLibItem>
+            <linkerLibLibItem>wthttp</linkerLibLibItem>
             <linkerLibLibItem>gpgmepp</linkerLibLibItem>
             <linkerLibLibItem>gpgme</linkerLibLibItem>
           </linkerLibItems>
@@ -295,7 +295,7 @@
           <stripSymbols>true</stripSymbols>
           <linkerLibItems>
             <linkerLibLibItem>wt</linkerLibLibItem>
-            <linkerLibLibItem>wtfcgi</linkerLibLibItem>
+            <linkerLibLibItem>wthttp</linkerLibLibItem>
             <linkerLibLibItem>gpgmepp</linkerLibLibItem>
             <linkerLibLibItem>gpgme</linkerLibLibItem>
           </linkerLibItems>
