@@ -64,7 +64,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L/usr/local/Wt/lib -lwt -lwtfcgi -lgpgmepp -lgpgme
+LDLIBSOPTIONS=-L/usr/local/Wt/lib -lwt -lwthttp -lgpgmepp -lgpgme
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
