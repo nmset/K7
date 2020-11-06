@@ -31,13 +31,15 @@ public:
     /**
      * Shows a combobox with all trust levels
      * @param keyNode
+     * @param keyHasSecret
      */
-    void OnOwnerTrustDoubleClicked(WTreeTableNode * keyNode);
+    void OnOwnerTrustDoubleClicked(WTreeTableNode * keyNode, bool keyHasSecret);
     /**
      * Saves any changes in trust level
      * @param keyNode
+     * @param keyHasSecret
      */
-    void OnOwnerTrustBlurred(WTreeTableNode * keyNode);
+    void OnOwnerTrustBlurred(WTreeTableNode * keyNode, bool keyHasSecret);
     /**
      * If the fingerprint is that of a private key we manage, returns true.
      * @param fpr
@@ -56,8 +58,15 @@ private:
     K7Main * m_owner;
     PopupCertifyUserId * m_popupUid;
     WString m_targetKeyFpr;
-
-    void FillOwnerTrustCombo(WComboBox * cmb);
+    /**
+     * Unknown is common.
+     * \n If keyHasSecret is true, show only Ultimate level.
+     * \n Else, show everything except Ultimate.
+     * \n Undefined is not included.
+     * @param cmb
+     * @param keyHasSecret
+     */
+    void FillOwnerTrustCombo(WComboBox * cmb, bool keyHasSecret);
     void CertifyKey();
 };
 

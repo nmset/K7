@@ -66,6 +66,7 @@
     
     <message id='TTTDoubleCLick'>Double click to edit</message>
     <message id='TTTYourKey'>This is your key</message>
+    <message id='OwnerTrustReadOnly'>Owner trust level read only; a primary key coexists and you don't manage it.</message>
     <message id='OwnerTrustSuccess'>Owner trust level succesfully changed</message>
     <message id='OwnerTrustFailure'>Owner trust level failed to be changed</message>
     
@@ -89,7 +90,7 @@
     <message id='KeyStatusIsDisabled'>Disabled</message>
     <message id='KeyStatusIsExpired'>Expired</message>
     <message id='KeyStatusIsRevoked'>Revoked</message>
-    <message id='KeyTypeIsSecret'>Secret</message>
+    <message id='KeyTypeIsSecret'>Coexists with a secret key</message>
     
     <message id='UserStatus'>User status</message>
     <message id='UserStatusIsBad'>Bad</message>

@@ -43,6 +43,7 @@ public:
     static WString GetKeyStatus(const GpgME::Key& k);
     static WString GetUidStatus(const GpgME::UserID& uid);
     static WString GetSigStatus(const GpgME::UserID::Signature& sig);
+    static bool KeyHasSecret(const WString& fpr);
     
 private:
 
