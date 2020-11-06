@@ -89,6 +89,7 @@
     <message id='KeyStatusIsDisabled'>Désactivé</message>
     <message id='KeyStatusIsExpired'>Expiré</message>
     <message id='KeyStatusIsRevoked'>Revoqué</message>
+    <message id='KeyTypeIsSecret'>Secret</message>
     
     <message id='UserStatus'>État de l'utilisateur</message>
     <message id='UserStatusIsBad'>Mauvais</message>
