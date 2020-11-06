@@ -66,6 +66,7 @@
     
     <message id='TTTDoubleCLick'>Double cliquez pour éditer</message>
     <message id='TTTYourKey'>C'est votre clé</message>
+    <message id='OwnerTrustReadOnly'>Confiance dans la certification en lecture seule; une clé primaire coexiste et vous ne la gérez pas.</message>
     <message id='OwnerTrustSuccess'>Confiance dans la certification changée avec succès</message>
     <message id='OwnerTrustFailure'>Échec de changement de la confiance dans la certification</message>
     
@@ -89,7 +90,7 @@
     <message id='KeyStatusIsDisabled'>Désactivé</message>
     <message id='KeyStatusIsExpired'>Expiré</message>
     <message id='KeyStatusIsRevoked'>Revoqué</message>
-    <message id='KeyTypeIsSecret'>Secret</message>
+    <message id='KeyTypeIsSecret'>Coexiste avec une clé secrète</message>
     
     <message id='UserStatus'>État de l'utilisateur</message>
     <message id='UserStatusIsBad'>Mauvais</message>

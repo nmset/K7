@@ -13,10 +13,12 @@
 
 using namespace std;
 
-Tools::Tools() {
+Tools::Tools()
+{
 }
 
-Tools::~Tools() {
+Tools::~Tools()
+{
 }
 
 bool Tools::ConfigKeyIdMatchesKey(const GpgME::Key& k, const WString& configKeyId)
@@ -27,7 +29,8 @@ bool Tools::ConfigKeyIdMatchesKey(const GpgME::Key& k, const WString& configKeyI
             || configKeyId == WString(k.primaryFingerprint()));
 }
 
-int Tools::ToInt(const string& s) {
+int Tools::ToInt(const string& s)
+{
     istringstream buffer(s.c_str());
     int num;
     buffer >> num;
@@ -37,8 +40,8 @@ int Tools::ToInt(const string& s) {
 WString Tools::TexttualBool(bool value)
 {
     const WString res = value
-                ? WString::tr("Yes")
-                : WString::tr("No");
+            ? WString::tr("Yes")
+            : WString::tr("No");
     return res;
 }
 
@@ -55,8 +58,8 @@ WString Tools::GetKeyStatus(const GpgME::Key& k)
     status += WString(WString::tr("KeyStatusIsDisabled")) + sep + TexttualBool(k.isDisabled()) + nl;
     status += WString(WString::tr("KeyStatusIsExpired")) + sep + TexttualBool(k.isExpired()) + nl;
     status += WString(WString::tr("KeyStatusIsRevoked")) + sep + TexttualBool(k.isRevoked()) + nl + nl;
-    status += WString(WString::tr("KeyTypeIsSecret")) + sep + TexttualBool(k.isSecret());
-    
+    status += WString(WString::tr("KeyTypeIsSecret")) + sep + TexttualBool(KeyHasSecret(k.primaryFingerprint()));
+
     return status;
 }
 
@@ -70,7 +73,7 @@ WString Tools::GetUidStatus(const GpgME::UserID& uid)
     status += WString(WString::tr("UserStatusIsNull")) + sep + TexttualBool(uid.isNull()) + nl;
     status += WString(WString::tr("UserStatusIsInvalid")) + sep + TexttualBool(uid.isInvalid()) + nl;
     status += WString(WString::tr("UserStatusIsRevoked")) + sep + TexttualBool(uid.isRevoked());
-    
+
     return status;
 }
 
@@ -86,7 +89,18 @@ WString Tools::GetSigStatus(const GpgME::UserID::Signature& sig)
     status += WString(WString::tr("SigStatusIsExportable")) + sep + TexttualBool(sig.isExportable()) + nl;
     status += WString(WString::tr("SigStatusIsExpired")) + sep + TexttualBool(sig.isExpired()) + nl;
     status += WString(WString::tr("SigStatusIsRevokation")) + sep + TexttualBool(sig.isRevokation());
-    
+
     return status;
 }
 
+bool Tools::KeyHasSecret(const WString& fpr)
+{
+    Error e;
+    GpgMEWorker gpgw;
+    GpgME::Key k = gpgw.FindKey(fpr.toUTF8().c_str(), e, true); // Look for a private key
+    if (e.code() != 0 && e.code() != 16383)
+    { // 16383 : end of file, when key is not private
+        return false;
+    }
+    return (!k.isNull());
+}

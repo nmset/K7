@@ -12,6 +12,7 @@
 #include <Wt/WStandardItemModel.h>
 #include <Wt/WStandardItem.h>
 #include "GpgMEWorker.h"
+#include "Tools.h"
 
 using namespace std;
 
@@ -28,29 +29,48 @@ KeyEdit::~KeyEdit()
     delete m_popupUid;
 }
 
-void KeyEdit::OnOwnerTrustDoubleClicked(WTreeTableNode * keyNode)
+void KeyEdit::OnOwnerTrustDoubleClicked(WTreeTableNode * keyNode, bool keyHasSecret)
 {
     /*
-     * TODO : decide if we should exclude any primary key with ultimate trust
-     * level for any further change.
+     * A private key that a user does not manage will have its public part
+     * listed in the public WTreeTableNode. The certification trust level must
+     * not be editable by anyone.
+     */
+    WText * lblFpr = static_cast<WText*> (keyNode->columnWidget(3));
+    if (!IsOurKey(lblFpr->text()) && Tools::KeyHasSecret(lblFpr->text())) {
+        m_owner->m_tmwMessage->SetText(TR("OwnerTrustReadOnly"));
+        return;
+    }
+    /*
+     * We leave a primary key with ultimate trust level for further change.
+     * kleopatra does not do that.
      */
     WComboBox * cmbOwnerTrust = new WComboBox();
-    FillOwnerTrustCombo(cmbOwnerTrust);
-    cmbOwnerTrust->blurred().connect(std::bind(&KeyEdit::OnOwnerTrustBlurred, this, keyNode));
+    FillOwnerTrustCombo(cmbOwnerTrust, keyHasSecret);
+    cmbOwnerTrust->blurred().connect(std::bind(&KeyEdit::OnOwnerTrustBlurred, this, keyNode, keyHasSecret));
     WText * lblOwnerTrust = static_cast<WText*> (keyNode->columnWidget(2));
     cmbOwnerTrust->setCurrentIndex(cmbOwnerTrust->findText(lblOwnerTrust->text()));
-    // If nothing gets changed, don't go to engine.
+    /*
+     * Prepare to check for change in combobox item.
+     * Change is detected by index, not value.
+    */
     cmbOwnerTrust->setAttributeValue("previousTrustLevel", std::to_string(cmbOwnerTrust->currentIndex()));
     keyNode->setColumnWidget(2, unique_ptr<WComboBox> (cmbOwnerTrust));
     // +++
     cmbOwnerTrust->setFocus();
 }
 
-void KeyEdit::OnOwnerTrustBlurred(WTreeTableNode* keyNode)
+void KeyEdit::OnOwnerTrustBlurred(WTreeTableNode* keyNode, bool keyHasSecret)
 {
+    // Get new level (not index)
     WComboBox * cmbOwnerTrust = static_cast<WComboBox*> (keyNode->columnWidget(2));
+    shared_ptr<WAbstractItemModel> aiModel = cmbOwnerTrust->model();
+    WStandardItemModel * iModel = static_cast<WStandardItemModel*> (aiModel.get());
+    WStandardItem * item = iModel->item(cmbOwnerTrust->currentIndex(), 0);
+    int newLevel = Tools::ToInt(item->text().toUTF8());
+    
     WText * lblOwnerTrust = new WText(cmbOwnerTrust->currentText());
-    lblOwnerTrust->doubleClicked().connect(std::bind(&KeyEdit::OnOwnerTrustDoubleClicked, this, keyNode));
+    lblOwnerTrust->doubleClicked().connect(std::bind(&KeyEdit::OnOwnerTrustDoubleClicked, this, keyNode, keyHasSecret));
     const WText * lblFpr = static_cast<WText*> (keyNode->columnWidget(3));
     const uint newTrustLevel = cmbOwnerTrust->currentIndex();
     const WString previousTrustLevel = cmbOwnerTrust->attributeValue("previousTrustLevel");
@@ -58,9 +78,9 @@ void KeyEdit::OnOwnerTrustBlurred(WTreeTableNode* keyNode)
     // If nothing was changed, don't go to engine.
     if (WString(std::to_string(newTrustLevel)) == previousTrustLevel)
         return;
-
+    
     GpgMEWorker gpgWorker;
-    GpgME::Error e = gpgWorker.EditOwnerTrust(lblFpr->text().toUTF8().c_str(), (GpgME::Key::OwnerTrust) newTrustLevel);
+    GpgME::Error e = gpgWorker.EditOwnerTrust(lblFpr->text().toUTF8().c_str(), (GpgME::Key::OwnerTrust) newLevel);
     if (e.code() != 0)
     {
         lblOwnerTrust->setText(previousTrustLevel);
@@ -70,21 +90,24 @@ void KeyEdit::OnOwnerTrustBlurred(WTreeTableNode* keyNode)
     m_owner->m_tmwMessage->SetText(TR("OwnerTrustSuccess"));
 }
 
-void KeyEdit::FillOwnerTrustCombo(WComboBox * cmb)
+void KeyEdit::FillOwnerTrustCombo(WComboBox * cmb, bool keyHasSecret)
 {
-    /*
-     * We should perhaps exclude OwnerTrust::Ultimate.
-     * kleopatra doesn't do that.
-     */
     shared_ptr<WStandardItemModel> siModel = make_shared<WStandardItemModel> ();
     OwnerTrustMap OwnerTrustLevel = m_owner->OwnerTrustLevel;
     vector<unique_ptr < WStandardItem>> colIndex;
     vector<unique_ptr < WStandardItem>> colText;
-    OwnerTrustMap::iterator it;
-    for (it = OwnerTrustLevel.begin(); it != OwnerTrustLevel.end(); it++)
-    {
-        colIndex.push_back(cpp14::make_unique<WStandardItem> (std::to_string((*it).first)));
-        colText.push_back(cpp14::make_unique<WStandardItem> ((*it).second));
+    colIndex.push_back(cpp14::make_unique<WStandardItem> (std::to_string(UserID::Validity::Unknown)));
+    colText.push_back(cpp14::make_unique<WStandardItem> (TR("UidUnknown")));
+    if (keyHasSecret) {
+        colIndex.push_back(cpp14::make_unique<WStandardItem> (std::to_string(UserID::Validity::Ultimate)));
+        colText.push_back(cpp14::make_unique<WStandardItem> (TR("UidUltimate")));
+    } else {
+        colIndex.push_back(cpp14::make_unique<WStandardItem> (std::to_string(UserID::Validity::Never)));
+        colText.push_back(cpp14::make_unique<WStandardItem> (TR("UidNever")));
+        colIndex.push_back(cpp14::make_unique<WStandardItem> (std::to_string(UserID::Validity::Marginal)));
+        colText.push_back(cpp14::make_unique<WStandardItem> (TR("UidMarginal")));
+        colIndex.push_back(cpp14::make_unique<WStandardItem> (std::to_string(UserID::Validity::Full)));
+        colText.push_back(cpp14::make_unique<WStandardItem> (TR("UidFull")));
     }
     siModel->appendColumn(std::move(colIndex));
     siModel->appendColumn(std::move(colText));
