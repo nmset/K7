@@ -50,11 +50,12 @@ WString Tools::GetKeyStatus(const GpgME::Key& k)
     status += WString(" ");
     status += WString(k.keyID()) + WString(" :") + nl + nl;
     status += WString(WString::tr("KeyStatusIsBad")) + sep + TexttualBool(k.isBad()) + nl;
-    status += WString(WString::tr("KeyStatusIsNull")) + sep + TexttualBool(k.isBad()) + nl;
-    status += WString(WString::tr("KeyStatusIsInvalid")) + sep + TexttualBool(k.isBad()) + nl;
-    status += WString(WString::tr("KeyStatusIsDisabled")) + sep + TexttualBool(k.isBad()) + nl;
-    status += WString(WString::tr("KeyStatusIsExpired")) + sep + TexttualBool(k.isBad()) + nl;
-    status += WString(WString::tr("KeyStatusIsRevoked")) + sep + TexttualBool(k.isBad());
+    status += WString(WString::tr("KeyStatusIsNull")) + sep + TexttualBool(k.isNull()) + nl;
+    status += WString(WString::tr("KeyStatusIsInvalid")) + sep + TexttualBool(k.isInvalid()) + nl;
+    status += WString(WString::tr("KeyStatusIsDisabled")) + sep + TexttualBool(k.isDisabled()) + nl;
+    status += WString(WString::tr("KeyStatusIsExpired")) + sep + TexttualBool(k.isExpired()) + nl;
+    status += WString(WString::tr("KeyStatusIsRevoked")) + sep + TexttualBool(k.isRevoked()) + nl + nl;
+    status += WString(WString::tr("KeyTypeIsSecret")) + sep + TexttualBool(k.isSecret());
     
     return status;
 }
@@ -66,9 +67,9 @@ WString Tools::GetUidStatus(const GpgME::UserID& uid)
     WString status(WString::tr("UserStatus"));
     status += WString(" :") + nl + nl;
     status += WString(WString::tr("UserStatusIsBad")) + sep + TexttualBool(uid.isBad()) + nl;
-    status += WString(WString::tr("UserStatusIsNull")) + sep + TexttualBool(uid.isBad()) + nl;
-    status += WString(WString::tr("UserStatusIsInvalid")) + sep + TexttualBool(uid.isBad()) + nl;
-    status += WString(WString::tr("UserStatusIsRevoked")) + sep + TexttualBool(uid.isBad());
+    status += WString(WString::tr("UserStatusIsNull")) + sep + TexttualBool(uid.isNull()) + nl;
+    status += WString(WString::tr("UserStatusIsInvalid")) + sep + TexttualBool(uid.isInvalid()) + nl;
+    status += WString(WString::tr("UserStatusIsRevoked")) + sep + TexttualBool(uid.isRevoked());
     
     return status;
 }
@@ -80,11 +81,11 @@ WString Tools::GetSigStatus(const GpgME::UserID::Signature& sig)
     WString status(WString::tr("SigStatus"));
     status += WString(" :") + nl + nl;
     status += WString(WString::tr("SigStatusIsBad")) + sep + TexttualBool(sig.isBad()) + nl;
-    status += WString(WString::tr("SigStatusIsNull")) + sep + TexttualBool(sig.isBad()) + nl;
-    status += WString(WString::tr("SigStatusIsInvalid")) + sep + TexttualBool(sig.isBad()) + nl;
-    status += WString(WString::tr("SigStatusIsExportable")) + sep + TexttualBool(sig.isBad()) + nl;
-    status += WString(WString::tr("SigStatusIsExpired")) + sep + TexttualBool(sig.isBad()) + nl;
-    status += WString(WString::tr("SigStatusIsRevokation")) + sep + TexttualBool(sig.isBad());
+    status += WString(WString::tr("SigStatusIsNull")) + sep + TexttualBool(sig.isNull()) + nl;
+    status += WString(WString::tr("SigStatusIsInvalid")) + sep + TexttualBool(sig.isInvalid()) + nl;
+    status += WString(WString::tr("SigStatusIsExportable")) + sep + TexttualBool(sig.isExportable()) + nl;
+    status += WString(WString::tr("SigStatusIsExpired")) + sep + TexttualBool(sig.isExpired()) + nl;
+    status += WString(WString::tr("SigStatusIsRevokation")) + sep + TexttualBool(sig.isRevokation());
     
     return status;
 }

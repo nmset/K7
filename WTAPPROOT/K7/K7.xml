@@ -89,6 +89,7 @@
     <message id='KeyStatusIsDisabled'>Disabled</message>
     <message id='KeyStatusIsExpired'>Expired</message>
     <message id='KeyStatusIsRevoked'>Revoked</message>
+    <message id='KeyTypeIsSecret'>Secret</message>
     
     <message id='UserStatus'>User status</message>
     <message id='UserStatusIsBad'>Bad</message>
@@ -102,6 +103,6 @@
     <message id='SigStatusIsInvalid'>Invalid</message>
     <message id='SigStatusIsExportable'>Exportable</message>
     <message id='SigStatusIsExpired'>Expired</message>
-    <message id='SigStatusIsRevokation'>Revokation</message>
+    <message id='SigStatusIsRevokation'>Revocation</message>
     
  </messages>
