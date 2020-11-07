@@ -80,6 +80,7 @@
     <message id='Apply'>Appliquer</message>
     <message id='CertificationSuccess'>Succès de certification de la clé</message>
     <message id='CertificationFailure'>Échec de certification de la clé</message>
+    <message id='OneWayHint'>Une fois appliquée, cette option ne pourra plus être enlevée. Utilisez gpg en ligne de commande pour édition ultérieure.</message>
     
     <message id='PrepareCopy'>Cliquez pour pouvoir ensuite copier</message>
     

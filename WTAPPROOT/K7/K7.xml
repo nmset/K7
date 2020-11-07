@@ -80,6 +80,7 @@
     <message id='Apply'>Apply</message>
     <message id='CertificationSuccess'>Key succesfully certified</message>
     <message id='CertificationFailure'>Key certification failed</message>
+    <message id='OneWayHint'>Once set, this option cannot be removed. Use gpg cli for further edit.</message>
     
     <message id='PrepareCopy'>Click to be able to copy next</message>
     

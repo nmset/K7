@@ -69,8 +69,10 @@ void PopupCertifyUserId::Create(vector<WString>& privateKeys,
     WText * lblOptions = new WText(TR("Options"));
     vblOptions->addWidget(unique_ptr<WText> (lblOptions));
     m_cbOptionExportable = new WCheckBox(TR("ExportableCertification"));
+    m_cbOptionExportable->setToolTip(TR("OneWayHint"));
     vblOptions->addWidget(unique_ptr<WCheckBox> (m_cbOptionExportable));
     m_cbOptionNonRevocable = new WCheckBox(TR("NonRevocableCertification"));
+    m_cbOptionNonRevocable->setToolTip(TR("OneWayHint"));
     vblOptions->addWidget(unique_ptr<WCheckBox> (m_cbOptionNonRevocable));
     /*m_cbOptionTrust = new WCheckBox(TR("TrustCertification"));
     vblOptions->addWidget(unique_ptr<WCheckBox> (m_cbOptionTrust));*/
