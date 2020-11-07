@@ -99,7 +99,7 @@
     <message id='UserStatusIsInvalid'>Invalide</message>
     <message id='UserStatusIsRevoked'>Revoqué</message>
     
-    <message id='SigStatus'>État de la signature</message>
+    <message id='SigStatus'>État de la certification</message>
     <message id='SigStatusIsBad'>Mauvais</message>
     <message id='SigStatusIsNull'>Null</message>
     <message id='SigStatusIsInvalid'>Invalide</message>
