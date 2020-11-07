@@ -44,7 +44,6 @@ void PopupCertifyUserId::Create(vector<WString>& privateKeys,
 {
     m_fprKeyToSign = fprKeyToSign;
     m_cwMain = static_cast<WContainerWidget*> (implementation());
-    // White in css file, like default background color.
     m_cwMain->setStyleClass("popup");
 
     WVBoxLayout * vblMain = new WVBoxLayout();

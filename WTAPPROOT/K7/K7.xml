@@ -107,4 +107,9 @@
     <message id='SigStatusIsExpired'>Expired</message>
     <message id='SigStatusIsRevokation'>Revocation</message>
     
+    <message id='ExpiryDate'>Expiry date</message>
+    <message id='SetExpirationTimeSuccess'>Expiration time succesfully changed</message>
+    <message id='SetExpirationTimeFailure'>Set expiration time failed</message>
+    <message id='Close'>Close</message>
+    
  </messages>

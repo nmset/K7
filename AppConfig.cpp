@@ -31,6 +31,7 @@ using namespace std;
             "canDelete" : true,
             "canEditOwnerTrust" : true,
             "canEditUidValidity" : true,
+            "canEditExpiryTime" : true, 
             "privKeyIds" : [
                 "fullKeyId1",
                 "fullKeyId2"
@@ -140,6 +141,20 @@ bool AppConfig::CanEditUidValidity() const
         return false;
     return cnObject.get("canEditUidValidity");
 }
+
+bool AppConfig::CanEditExpiryTime() const
+{
+    if (PrivateKeyIds().size() == 0)
+        return false;
+    const WString commonName = GetSubjectDnAttribute(WSslCertificate::DnAttributeName::CommonName);
+    if (!m_SubjectCNObject.contains(commonName.toUTF8()))
+        return false;
+    Json::Object cnObject = m_SubjectCNObject.get(commonName.toUTF8());
+    if (!cnObject.contains("canEditExpiryTime"))
+        return false;
+    return cnObject.get("canEditExpiryTime");
+}
+
 
 vector<WString> AppConfig::PrivateKeyIds() const
 {

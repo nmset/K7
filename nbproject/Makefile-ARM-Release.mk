@@ -43,6 +43,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/LoopbackPassphraseProvider.o \
 	${OBJECTDIR}/PopupCertifyUserId.o \
 	${OBJECTDIR}/PopupDeleter.o \
+	${OBJECTDIR}/PopupExpiryTime.o \
 	${OBJECTDIR}/PopupUploader.o \
 	${OBJECTDIR}/SensitiveTreeTableNodeText.o \
 	${OBJECTDIR}/Tools.o \
@@ -113,6 +114,11 @@ ${OBJECTDIR}/PopupDeleter.o: PopupDeleter.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PopupDeleter.o PopupDeleter.cpp
+
+${OBJECTDIR}/PopupExpiryTime.o: PopupExpiryTime.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PopupExpiryTime.o PopupExpiryTime.cpp
 
 ${OBJECTDIR}/PopupUploader.o: PopupUploader.cpp
 	${MKDIR} -p ${OBJECTDIR}

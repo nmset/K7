@@ -15,6 +15,7 @@
 #include <gpgme++/key.h>
 #include <gpgme++/gpgsetownertrusteditinteractor.h>
 #include <gpgme++/gpgsignkeyeditinteractor.h>
+#include <gpgme++/gpgsetexpirytimeeditinteractor.h>
 #include <vector>
 #include "LoopbackPassphraseProvider.h"
 
@@ -75,6 +76,14 @@ public:
                            const char * fprKeyToSign,
                            vector<uint>& userIDsToSign, int options,
                            const string& passphrase);
+    /**
+     * Set new expiry time of a secret key.
+     * @param timeString
+     * @return 
+     */
+    const Error SetExpiryTime(const char * keyFpr,
+                              const string& passphrase,
+                              const string& timeString = "0");
 
 private:
     Context * m_ctx;
@@ -121,5 +130,18 @@ public:
 
 };
 
+class SetExpiryTimeEditInteractor : public GpgSetExpiryTimeEditInteractor
+{
+public:
+
+    SetExpiryTimeEditInteractor(const std::string& timeString = "0")
+    : GpgSetExpiryTimeEditInteractor(timeString)
+    {
+    };
+
+    virtual ~SetExpiryTimeEditInteractor()
+    {
+    };
+};
 #endif /* GPGMEWORKER_H */
 

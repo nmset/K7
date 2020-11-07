@@ -19,7 +19,7 @@ GpgMEWorker::GpgMEWorker()
     m_ctx = Context::createForProtocol(Protocol::OpenPGP);
     // Allow to list key certifications
     m_ctx->setKeyListMode(GpgME::KeyListMode::Signatures
-                    | GpgME::KeyListMode::Validate);
+                          | GpgME::KeyListMode::Validate);
     m_ppp = NULL;
 }
 
@@ -110,14 +110,14 @@ const Error GpgMEWorker::CertifyKey(const char* fprSigningKey,
     Key keyToSign = FindKey(fprKeyToSign, e, false);
     if (e.code() != 0)
         return e;
-    
+
     // GPG engine will fetch for  passphrase in the custom provider.
     m_ctx->setPinentryMode(Context::PinentryMode::PinentryLoopback);
     if (m_ppp == NULL)
         m_ppp = new LoopbackPassphraseProvider();
     m_ppp->SetPassphrase(passphrase);
     m_ctx->setPassphraseProvider(m_ppp);
-    
+
     SetSignKeyEditInteractor * interactor = new SetSignKeyEditInteractor();
     interactor->setKey(keyToSign);
     interactor->setUserIDsToSign(userIDsToSign);
@@ -131,5 +131,32 @@ const Error GpgMEWorker::CertifyKey(const char* fprSigningKey,
      * On error, always : code = 1024 | asString = User defined error code 1
      * Can't distinguish between bad password or whatever cause.
      */
+    return e;
+}
+
+const Error GpgMEWorker::SetExpiryTime(const char * keyFpr,
+                                       const string& passphrase,
+                                       const string& timeString)
+{
+    Error e;
+    Key k = FindKey(keyFpr, e, true);
+    if (e.code() != 0)
+        return e;
+    e = m_ctx->addSigningKey(k); // +++
+    if (e.code() != 0)
+        return e;
+    
+    m_ctx->setPinentryMode(Context::PinentryMode::PinentryLoopback);
+    if (m_ppp == NULL)
+        m_ppp = new LoopbackPassphraseProvider();
+    m_ppp->SetPassphrase(passphrase);
+    m_ctx->setPassphraseProvider(m_ppp);
+    
+    SetExpiryTimeEditInteractor * interactor
+            = new SetExpiryTimeEditInteractor(timeString);
+    GpgME::Data d;
+    e = m_ctx->edit(k, std::unique_ptr<SetExpiryTimeEditInteractor> (interactor), d);
+    m_ctx->clearSigningKeys();
+    
     return e;
 }

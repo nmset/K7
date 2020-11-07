@@ -376,6 +376,9 @@ void K7Main::DisplaySubKeys(const WString& fullKeyID, bool secret)
     rootNode->setChildCountPolicy(ChildCountPolicy::Enabled);
     m_ttbSubKeys->setTreeRoot(unique_ptr<WTreeTableNode> (rootNode), TR("SubKeys"));
     rootNode->expand();
+    bool canEditExpiry = m_config->CanEditExpiryTime()
+                && Tools::KeyHasSecret(k.primaryFingerprint())
+                && m_keyEdit->IsOurKey(k.primaryFingerprint());
     for (uint i = 0; i < k.numSubkeys(); i++)
     {
         Subkey sk = k.subkey(i);
@@ -384,7 +387,12 @@ void K7Main::DisplaySubKeys(const WString& fullKeyID, bool secret)
         TreeTableNodeText * ttntFpr = new TreeTableNodeText(sk.fingerprint(), skNode, 1);
         skNode->setColumnWidget(1, unique_ptr<TreeTableNodeText> (ttntFpr));
         WString exp = sk.neverExpires() ? TR("Never") : MakeDateTimeLabel(sk.expirationTime());
-        skNode->setColumnWidget(2, cpp14::make_unique<WText> (exp));
+        WText * lblExpiry = new WText(exp);
+        if (canEditExpiry) {
+            lblExpiry->setToolTip(TR("TTTDoubleCLick"));
+            lblExpiry->doubleClicked().connect(std::bind(&KeyEdit::OnExpiryClicked, m_keyEdit, skNode, WString(k.primaryFingerprint())));
+        }
+        skNode->setColumnWidget(2, unique_ptr<WText> (lblExpiry));
         WString usage = sk.canAuthenticate() ? WString("A") : WString::Empty;
         usage += sk.canCertify() ? WString("C") : WString::Empty;
         usage += sk.canEncrypt() ? WString("E") : WString::Empty;

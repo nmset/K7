@@ -21,7 +21,9 @@ KeyEdit::KeyEdit(K7Main * owner)
 {
     m_owner = owner;
     m_popupUid = NULL;
+    m_popupExpiryTime = NULL;
     m_targetUidValidityKeyFpr = WString::Empty;
+    m_expiryEditedKeyFpr = WString::Empty;
 }
 
 KeyEdit::~KeyEdit()
@@ -170,3 +172,34 @@ void KeyEdit::CertifyKey()
     m_popupUid->ShowPassphrase(false);
     m_owner->DisplayUids(keyToSign);
 }
+
+void KeyEdit::OnExpiryClicked(WTreeTableNode* subkeyNode, const WString& keyFpr)
+{
+    if (keyFpr != m_expiryEditedKeyFpr) {
+        delete m_popupExpiryTime;
+        WText * lblExpiry = static_cast<WText*> (subkeyNode->columnWidget(2));
+        m_popupExpiryTime = new PopupExpiryTime(lblExpiry, m_owner->m_tmwMessage);
+        m_popupExpiryTime->Create(keyFpr);
+        m_expiryEditedKeyFpr = keyFpr;
+        m_popupExpiryTime->GetApplyButton()->clicked().connect(this, &KeyEdit::SetExpiryTime);
+    }
+    m_popupExpiryTime->show();
+}
+
+void KeyEdit::SetExpiryTime()
+{
+    GpgMEWorker gpgWorker;
+    GpgME::Error e = gpgWorker.SetExpiryTime(m_expiryEditedKeyFpr.toUTF8().c_str(),
+                                             m_popupExpiryTime->GetPassphrase(),
+                                             m_popupExpiryTime->GetExpiryTime());
+    if (e.code() != 0)
+    {
+        m_owner->m_tmwMessage->SetText(TR("SetExpirationTimeFailure"));
+        m_popupExpiryTime->ShowPassphrase(true);
+        return;
+    }
+    m_owner->m_tmwMessage->SetText(TR("SetExpirationTimeSuccess"));
+    m_popupExpiryTime->ShowPassphrase(false);
+    m_owner->DisplaySubKeys(m_expiryEditedKeyFpr, true);
+}
+

@@ -55,6 +55,12 @@ public:
      */
     bool CanEditUidValidity() const;
     /**
+     * Allows to edit expiry time of a key. 
+     * Only private keys are concerned.
+     * @return 
+     */
+    bool CanEditExpiryTime() const;
+    /**
      * List of full private key identifiers. The user may delete these private keys.
      * Must be full keyid, short keyid or fingerprint.
      * @return 

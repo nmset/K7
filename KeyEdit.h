@@ -14,6 +14,7 @@
 #include "K7Main.h"
 #include <Wt/WComboBox.h>
 #include "PopupCertifyUserId.h"
+#include "PopupExpiryTime.h"
 
 using namespace Wt;
 
@@ -53,11 +54,20 @@ public:
      * @param targetKeyFpr : The key to sign.
      */
     void OnUidValidityClicked(WTreeTableNode * uidNode, vector<WString>& privateKeys, const WString& targetKeyFpr);
+    /**
+     * Shows a popup with parameters to change expiry date.
+     * @param subkeyNode
+     * @param keyFpr
+     */
+    void OnExpiryClicked(WTreeTableNode * subkeyNode, const WString& keyFpr);
     
 private:
     K7Main * m_owner;
     PopupCertifyUserId * m_popupUid;
     WString m_targetUidValidityKeyFpr;
+    
+    PopupExpiryTime * m_popupExpiryTime;
+    WString m_expiryEditedKeyFpr;
     /**
      * Unknown is common.
      * \n If keyHasSecret is true, show only Ultimate level.
@@ -68,6 +78,7 @@ private:
      */
     void FillOwnerTrustCombo(WComboBox * cmb, bool keyHasSecret);
     void CertifyKey();
+    void SetExpiryTime();
 };
 
 #endif /* KEYEDIT_H */
