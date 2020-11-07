@@ -17,6 +17,9 @@
 GpgMEWorker::GpgMEWorker()
 {
     m_ctx = Context::createForProtocol(Protocol::OpenPGP);
+    // Allow to list key certifications
+    m_ctx->setKeyListMode(GpgME::KeyListMode::Signatures
+                    | GpgME::KeyListMode::Validate);
     m_ppp = NULL;
 }
 

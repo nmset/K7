@@ -285,7 +285,8 @@ void K7Main::OnKeyAnchorClicked(WAnchor * source)
     if (hasSecret == WString("0"))
         secret = false;
     const string id = source->id();
-    DisplayUids(id, secret);
+    // With secret = false, key signatures can be retrieved.
+    DisplayUids(id);
     DisplaySubKeys(id, secret);
     if (m_config->CanDelete()) // m_btnDelete is NULL otherwise
         m_btnDelete->setHidden(!CanKeyBeDeleted(id));
@@ -331,7 +332,7 @@ void K7Main::DisplayUids(const WString& fullKeyID, bool secret)
         TreeTableNodeText * ttntUidComment = new TreeTableNodeText(uid.comment(), uidNode, 3);
         uidNode->setColumnWidget(3, unique_ptr<TreeTableNodeText> (ttntUidComment));
         rootNode->addChildNode(unique_ptr<WTreeTableNode> (uidNode));
-        // uid.numSignatures() is always 0, even for signed keys !
+        // Set context KeyListMode to ::Signatures | ::Validate
         for (uint s = 0; s < uid.numSignatures(); s++)
         {
             UserID::Signature sig = uid.signature(s);
@@ -346,7 +347,7 @@ void K7Main::DisplayUids(const WString& fullKeyID, bool secret)
             sigNode->setColumnWidget(2, cpp14::make_unique<WText> (exp));
             TreeTableNodeText * ttntComment = new TreeTableNodeText(sig.signerComment(), sigNode, 3);
             sigNode->setColumnWidget(3, unique_ptr<TreeTableNodeText> (ttntComment));
-            uidNode->addChild(unique_ptr<WTreeTableNode> (sigNode));
+            uidNode->addChildNode(unique_ptr<WTreeTableNode> (sigNode));
         }
     }
     m_ttbUids->show();
