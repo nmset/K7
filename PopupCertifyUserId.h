@@ -69,7 +69,8 @@ public:
      */
     bool IsPasswordVisible() const
     {
-        return m_lePassphrase->isVisible();
+        // isVisible is always false when the popup is hidden !
+        return !(m_lePassphrase->isHidden());
     }
     /**
      * Used to forward the passphrase to the loopback passphrase provider.
