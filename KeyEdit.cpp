@@ -21,7 +21,7 @@ KeyEdit::KeyEdit(K7Main * owner)
 {
     m_owner = owner;
     m_popupUid = NULL;
-    m_targetKeyFpr = WString::Empty;
+    m_targetUidValidityKeyFpr = WString::Empty;
 }
 
 KeyEdit::~KeyEdit()
@@ -130,7 +130,7 @@ bool KeyEdit::IsOurKey(const WString& fpr)
 
 void KeyEdit::OnUidValidityClicked(WTreeTableNode* uidNode, vector<WString>& privateKeys, const WString& targetKeyFpr)
 {
-    if (targetKeyFpr != m_targetKeyFpr) {
+    if (targetKeyFpr != m_targetUidValidityKeyFpr) {
         bool passwordVisibility = true;
         if (m_popupUid)
             passwordVisibility = m_popupUid->IsPasswordVisible();
@@ -139,7 +139,7 @@ void KeyEdit::OnUidValidityClicked(WTreeTableNode* uidNode, vector<WString>& pri
         m_popupUid = new PopupCertifyUserId(lblUidValidity, m_owner->m_tmwMessage);
         m_popupUid->Create(privateKeys, targetKeyFpr);
         m_popupUid->ShowPassphrase(passwordVisibility);
-        m_targetKeyFpr = targetKeyFpr;
+        m_targetUidValidityKeyFpr = targetKeyFpr;
         m_popupUid->GetCertifyButton()->clicked().connect(this, &KeyEdit::CertifyKey);
     }
     m_popupUid->show();

@@ -57,7 +57,7 @@ public:
 private:
     K7Main * m_owner;
     PopupCertifyUserId * m_popupUid;
-    WString m_targetKeyFpr;
+    WString m_targetUidValidityKeyFpr;
     /**
      * Unknown is common.
      * \n If keyHasSecret is true, show only Ultimate level.
