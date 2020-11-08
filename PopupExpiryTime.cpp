@@ -22,7 +22,18 @@ PopupExpiryTime::PopupExpiryTime(WWidget * anchorWidget, TransientMessageWidget 
     m_tmwMessage = txtMessage;
     m_cwMain = NULL;
     m_keyFpr = WString::Empty;
-    setTransient(false);
+    /*
+     * Trade-off.
+     * When the calendar of WDateEdit is clicked, this popup gets hidden,
+     * forcing to show it again.
+     * If setTransient is false, this popup will obviously persist, until
+     * explicitly hidden with the Close button. Not satisfactory to change key
+     * selection while it is visible, nor to do other tasks like changing
+     * certification trust level, certifying uids.... whatever.
+     * Forcing its persistence while playing with many events has not been
+     * successful, and quite ugly.
+     */
+    setTransient(true);
     setAnchorWidget(anchorWidget);
     setWidth(width);
 }
