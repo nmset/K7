@@ -94,7 +94,7 @@ K7Main::Create()
     m_config = new AppConfig(m_tmwMessage);
     if (!m_config->LoadConfig())
         return;
-
+    
     m_cwMain = new WContainerWidget();
     WGridLayout * grlMain = new WGridLayout();
     grlMain->setColumnStretch(0, 1);
@@ -444,6 +444,8 @@ void K7Main::DoImportKey() {
     }
     m_tmwMessage->SetText(TR("ImportSuccess") + fpr + WString(" - ") + WString(k.userID(0).name()));
     m_leSearch->setText(fpr);
+    if (Tools::KeyHasSecret(fpr))
+        m_config->UpdateSecretKeyOwnership(fpr, true);
     Search();
 }
 
@@ -511,10 +513,12 @@ void K7Main::DoDeleteKey() {
     if (c_e.code() != 0) {
         m_tmwMessage->SetText(c_e.asString());
     } else {
-        m_tmwMessage->SetText(TR("DeleteSuccess") + fullKeyID + WString(" - ") + WString(k.userID(0).name()));
+        m_tmwMessage->SetText(TR("DeleteSuccess") + fpr + WString(" - ") + WString(k.userID(0).name()));
     }
     m_btnDelete->hide();
     m_deleter->hide();
+    if (secret)
+        m_config->UpdateSecretKeyOwnership(fpr, false);
     // Show that the key is no longer available
     m_leSearch->setText(fpr);
     Search();
