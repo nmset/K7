@@ -61,6 +61,22 @@ public:
      */
     bool CanEditExpiryTime() const;
     /**
+     * Allows to create keys. At the application level, it means creating a pair
+     * of secret and private keys.
+     * @return 
+     */
+    bool CanCreateKeys() const;
+    /**
+     * Disown the user of the secret key, or grants him ownership. It just adds
+     * or remove fpr from the private key array, without any further check. The
+     * application must call here when relevant.
+     * @param fpr
+     * @param own : if true, adds the fpr to the private key array if found.
+     * Else, removes the fpr if found.
+     * @return 
+     */
+    bool UpdateSecretKeyOwnership(const WString& fpr, bool own);
+    /**
      * List of full private key identifiers. The user may delete these private keys.
      * Must be full keyid, short keyid or fingerprint.
      * @return 
@@ -85,6 +101,8 @@ private:
      * @return 
      */
     const WString GetSubjectDnAttribute(const WSslCertificate::DnAttributeName& attrName) const;
+    
+    bool WriteTextFile(const WString& filePath, const WString& content);
 };
 
 #endif /* APPCONFIG_H */

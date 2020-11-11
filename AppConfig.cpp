@@ -11,6 +11,7 @@
 #include "global.h"
 #include <vector>
 #include <fstream>
+#include <mutex>
 #include <Wt/WApplication.h>
 #include <Wt/WEnvironment.h>
 #include <Wt/WSslInfo.h>
@@ -18,11 +19,15 @@
 #include <Wt/Json/Array.h>
 #include <Wt/Json/Parser.h>
 #include <Wt/Json/Serializer.h>
+#include <algorithm>
 
 using namespace std;
 
+mutex gs_fileWriteMutex;
+
 // Hard coded. File must be in WT_APP_ROOT
 #define JSON_CONFIG_FILE "k7config.json"
+
 /*
  {
     "sCommonName" : {
@@ -32,6 +37,7 @@ using namespace std;
             "canEditOwnerTrust" : true,
             "canEditUidValidity" : true,
             "canEditExpiryTime" : true, 
+            "canCreateKeys" : true,
             "privKeyIds" : [
                 "fullKeyId1",
                 "fullKeyId2"
@@ -155,6 +161,56 @@ bool AppConfig::CanEditExpiryTime() const
     return cnObject.get("canEditExpiryTime");
 }
 
+bool AppConfig::CanCreateKeys() const
+{
+    const WString commonName = GetSubjectDnAttribute(WSslCertificate::DnAttributeName::CommonName);
+    if (!m_SubjectCNObject.contains(commonName.toUTF8()))
+        return false;
+    Json::Object cnObject = m_SubjectCNObject.get(commonName.toUTF8());
+    if (!cnObject.contains("canCreateKeys"))
+        return false;
+    return cnObject.get("canCreateKeys");
+}
+
+bool AppConfig::UpdateSecretKeyOwnership(const WString& fpr, bool own)
+{
+    const WString commonName = GetSubjectDnAttribute(WSslCertificate::DnAttributeName::CommonName);
+    if (!m_SubjectCNObject.contains(commonName.toUTF8()))
+        return false;
+    Json::Object cnObject = m_SubjectCNObject.get(commonName.toUTF8());
+    Json::Array aKeyId;
+    if (cnObject.contains("privKeyIds"))
+    {
+        aKeyId = cnObject.get("privKeyIds");
+        cnObject.erase("privKeyIds");
+    }
+    Json::Array::iterator it = std::find(aKeyId.begin(), aKeyId.end(), Json::Value(fpr));
+    if (it == aKeyId.end())
+    {
+        if (own) 
+            aKeyId.push_back(Json::Value(fpr));
+        else
+            return true; // We don't own it.
+    }
+    else
+    {
+        if (not own)
+            aKeyId.erase(it);
+        else
+            return true; // We already own it.
+    }
+    
+    // TODO : Do this **better**, without replacing sequentially up to root.
+    cnObject.insert(make_pair("privKeyIds", aKeyId));
+    m_SubjectCNObject.erase(commonName.toUTF8());
+    m_SubjectCNObject.insert(make_pair(commonName.toUTF8(), cnObject));
+    m_RootObject.erase("sCommonName");
+    m_RootObject.insert(make_pair("sCommonName", m_SubjectCNObject));
+
+    if (WriteTextFile(JSON_CONFIG_FILE, Json::serialize(m_RootObject)))
+        return LoadConfig();
+    return false;
+}
 
 vector<WString> AppConfig::PrivateKeyIds() const
 {
@@ -185,4 +241,22 @@ const WString AppConfig::GetSubjectDnAttribute(const WSslCertificate::DnAttribut
             return dnAttr->at(i).value();
     }
     return WString::Empty;
+}
+
+bool AppConfig::WriteTextFile(const WString& filePath, const WString& content)
+{
+    gs_fileWriteMutex.lock();
+    ofstream osFile;
+    const WString f(WApplication::appRoot() + WString(filePath));
+    osFile.open(f.toUTF8().c_str());
+    if (!osFile.is_open())
+    {
+        gs_fileWriteMutex.unlock();
+        return false;
+    }
+    osFile << content.toUTF8();
+    osFile.flush();
+    osFile.close();
+    gs_fileWriteMutex.unlock();
+    return osFile.bad();
 }
