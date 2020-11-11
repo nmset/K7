@@ -10,9 +10,18 @@
 #include "GpgMEWorker.h"
 #include <gpgme++/keylistresult.h>
 #include <gpgme++/importresult.h>
+#include <gpgme++/keygenerationresult.h>
 #include <locale>
 #include <iostream>
 #include <gpgme++/data.h>
+
+using namespace std;
+
+#define SPACE " "
+#define LESSTHAN "<"
+#define MORETHAN ">"
+// From gpgme.h (C API), don't want to include it here for one const.
+#define _CREATE_NOEXPIRE   (1 << 13)
 
 GpgMEWorker::GpgMEWorker()
 {
@@ -145,18 +154,98 @@ const Error GpgMEWorker::SetExpiryTime(const char * keyFpr,
     e = m_ctx->addSigningKey(k); // +++
     if (e.code() != 0)
         return e;
-    
+
     m_ctx->setPinentryMode(Context::PinentryMode::PinentryLoopback);
     if (m_ppp == NULL)
         m_ppp = new LoopbackPassphraseProvider();
     m_ppp->SetPassphrase(passphrase);
     m_ctx->setPassphraseProvider(m_ppp);
-    
+
     SetExpiryTimeEditInteractor * interactor
             = new SetExpiryTimeEditInteractor(timeString);
     GpgME::Data d;
     e = m_ctx->edit(k, std::unique_ptr<SetExpiryTimeEditInteractor> (interactor), d);
     m_ctx->clearSigningKeys();
-    
+
+    return e;
+}
+
+/*
+ * Using a temporary context for key creation. It is altered after secret key
+ * creation, and subkey creation fails thereafter. This is observational.
+ */
+const Error GpgMEWorker::CreateKeyWithEngineDefaultAlgo(GpgME::Key& k,
+                                                        const string& name,
+                                                        const string& email,
+                                                        const string& comment,
+                                                        const string& passphrase,
+                                                        ulong expires)
+{
+    Error e;
+    Context * ctx = Context::createForProtocol(Protocol::OpenPGP);
+    LoopbackPassphraseProvider * ppp = new LoopbackPassphraseProvider(passphrase);
+    ctx->setPinentryMode(Context::PinentryMode::PinentryLoopback);
+    ctx->setPassphraseProvider(ppp);
+
+    string uid = name + SPACE
+            + LESSTHAN + email + MORETHAN;
+    if (!comment.empty())
+        uid += SPACE + comment;
+    uint flags = expires
+            ? 0 : _CREATE_NOEXPIRE;
+
+    KeyGenerationResult kgr = ctx->createKeyEx(uid.c_str(), "default",
+                                               0, 0, k, flags);
+    return kgr.error();
+}
+
+const Error GpgMEWorker::CreateKey(GpgME::Key& k,
+                                   const string& name,
+                                   const string& email,
+                                   const string& comment,
+                                   const char* algo,
+                                   const string& passphrase,
+                                   ulong expires)
+{
+    Error e;
+    Context * ctx = Context::createForProtocol(Protocol::OpenPGP);
+    LoopbackPassphraseProvider * ppp = new LoopbackPassphraseProvider(passphrase);
+    ctx->setPinentryMode(Context::PinentryMode::PinentryLoopback);
+    ctx->setPassphraseProvider(ppp);
+
+    string uid = name + SPACE
+            + LESSTHAN + email + MORETHAN;
+    if (!comment.empty())
+        uid += SPACE + comment;
+    uint flags = expires
+            ? 0 : _CREATE_NOEXPIRE;
+
+    KeyGenerationResult kgr = ctx->createKeyEx(uid.c_str(), algo,
+                                               0, expires, k, flags);
+    // Why is k not assigned the newly created key ?!
+    k = FindKey(kgr.fingerprint(), e, true);
+    delete ppp;
+    delete ctx;
+    return kgr.error();
+}
+
+const Error GpgMEWorker::CreateSubKey(GpgME::Key& k,
+                                      const char* algo,
+                                      const string& passphrase,
+                                      ulong expires)
+{
+    Error e;
+    Context * ctx = Context::createForProtocol(Protocol::OpenPGP);
+    LoopbackPassphraseProvider * ppp = new LoopbackPassphraseProvider(passphrase);
+    ctx->setPinentryMode(Context::PinentryMode::PinentryLoopback);
+    ctx->setPassphraseProvider(ppp);
+
+    uint flags = expires
+            ? 0 : _CREATE_NOEXPIRE;
+
+    e = ctx->createSubkey(k, algo, 0, expires, flags);
+    k.update();
+    delete ppp;
+    delete ctx;
     return e;
 }

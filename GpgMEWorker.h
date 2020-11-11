@@ -84,6 +84,55 @@ public:
     const Error SetExpiryTime(const char * keyFpr,
                               const string& passphrase,
                               const string& timeString = "0");
+    /**
+     * Creates a pair of secret and public keys with the default engine
+     * algorithms. Default expiry time is 2 * 365 days.
+     * @param k : must be a null key
+     * @param name
+     * @param email
+     * @param comment
+     * @param passphrase
+     * @param expires : seconds ahead of creation time. Use 0 for no expiry.
+     * @return 
+     */
+    const Error CreateKeyWithEngineDefaultAlgo(GpgME::Key& k,
+                                               const string& name,
+                                               const string& email,
+                                               const string& comment,
+                                               const string& passphrase,
+                                               ulong expires = 63072000);
+    /**
+     * Creates a secret key with passed in algorithm name. Default expiry time
+     * is 2 * 365 days.
+     * @param k : must be a null key
+     * @param name
+     * @param email
+     * @param comment
+     * @param algo : a valid algorithm name for a secret key
+     * @param passphrase
+     * @param expires : seconds ahead of creation time. Use 0 for no expiry.
+     * @return 
+     */
+    const Error CreateKey(GpgME::Key& k,
+                          const string& name,
+                          const string& email,
+                          const string& comment,
+                          const char * algo,
+                          const string& passphrase,
+                          ulong expires = 63072000);
+    /**
+     * Creates a public key with passed in algorithm name and adds it to secret
+     * key k. Default expiry time is 2 * 365 days.
+     * @param k : must be a secret key
+     * @param algo : : a valid algorithm name for a public key
+     * @param passphrase
+     * @param expires : seconds ahead of creation time. Use 0 for no expiry.
+     * @return 
+     */
+    const Error CreateSubKey(GpgME::Key& k,
+                             const char * algo,
+                             const string& passphrase,
+                             ulong expires = 63072000);
 
 private:
     Context * m_ctx;
