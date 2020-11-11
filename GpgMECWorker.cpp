@@ -17,9 +17,9 @@ GpgMECWorker::~GpgMECWorker() {
     gpgme_release(c_ctx);
 }
 
-bool GpgMECWorker::DeleteKey(const char * fullKeyId, bool secret, GpgME::Error& e) {
+bool GpgMECWorker::DeleteKey(const char * fpr, bool secret, GpgME::Error& e) {
     gpgme_key_t c_key;
-    gpgme_error_t c_err = gpgme_get_key(c_ctx, fullKeyId, &c_key, secret);
+    gpgme_error_t c_err = gpgme_get_key(c_ctx, fpr, &c_key, secret);
     if (c_key == NULL) {
         e = GpgME::Error::fromCode(c_err);
         return false;

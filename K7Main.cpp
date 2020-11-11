@@ -425,25 +425,25 @@ void K7Main::DoImportKey() {
     const WString spool = m_btnImport->attributeValue("spool");
     Error e;
     GpgMEWorker gpgw;
-    const WString keyid = gpgw.ImportKey(spool.toUTF8().c_str(), e);
+    const WString fpr = gpgw.ImportKey(spool.toUTF8().c_str(), e);
     m_btnImport->hide();
     m_btnImport->setAttributeValue("spool", "");
     if (e.code() != 0) {
         m_tmwMessage->SetText(e.asString());
         return;
     }
-    if (keyid.empty()) {
-        m_tmwMessage->SetText(TR("ImportError") + keyid);
+    if (fpr.empty()) {
+        m_tmwMessage->SetText(TR("ImportError") + fpr);
         return;
     }
     // Show the imported key
-    GpgME::Key k = gpgw.FindKey(keyid.toUTF8().c_str(), e, false); // A public is present anyway
+    GpgME::Key k = gpgw.FindKey(fpr.toUTF8().c_str(), e, false); // A public is present anyway
     if (e.code() != 0) {
         m_tmwMessage->SetText(e.asString());
         return;
     }
-    m_tmwMessage->SetText(TR("ImportSuccess") + keyid + WString(" - ") + WString(k.userID(0).name()));
-    m_leSearch->setText(keyid);
+    m_tmwMessage->SetText(TR("ImportSuccess") + fpr + WString(" - ") + WString(k.userID(0).name()));
+    m_leSearch->setText(fpr);
     Search();
 }
 
@@ -506,7 +506,8 @@ void K7Main::DoDeleteKey() {
         return;
     }
     // Delete the key using the C API
-    bool res = gpgcw.DeleteKey(fullKeyID.toUTF8().c_str(), secret, c_e);
+    const WString fpr(k.primaryFingerprint());
+    bool res = gpgcw.DeleteKey(k.primaryFingerprint(), secret, c_e);
     if (c_e.code() != 0) {
         m_tmwMessage->SetText(c_e.asString());
     } else {
@@ -515,6 +516,6 @@ void K7Main::DoDeleteKey() {
     m_btnDelete->hide();
     m_deleter->hide();
     // Show that the key is no longer available
-    m_leSearch->setText(fullKeyID);
+    m_leSearch->setText(fpr);
     Search();
 }

@@ -52,7 +52,7 @@ public:
      * Import a key from file.
      * @param filePath
      * @param e
-     * @return the keyid
+     * @return : the fingerprint
      */
     const string ImportKey(const char * filePath, Error& e);
     /**

@@ -80,7 +80,7 @@ const string GpgMEWorker::ImportKey(const char * filePath, Error& e)
         fclose(kFp);
         return "";
     }
-    const string keyid = string(dKey.toKeys().at(0).keyID()); // Must be done before import
+    const string fpr = string(dKey.toKeys().at(0).primaryFingerprint()); // Must be done before import
     ImportResult rImportKey = m_ctx->importKeys(dKey);
     e = rImportKey.error();
     if (e.code() != 0)
@@ -90,7 +90,7 @@ const string GpgMEWorker::ImportKey(const char * filePath, Error& e)
     }
 
     fclose(kFp);
-    return keyid;
+    return fpr;
 }
 
 const Error GpgMEWorker::EditOwnerTrust(const char* anyFullId, GpgME::Key::OwnerTrust trustLevel)
