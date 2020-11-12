@@ -258,5 +258,5 @@ bool AppConfig::WriteTextFile(const WString& filePath, const WString& content)
     osFile.flush();
     osFile.close();
     gs_fileWriteMutex.unlock();
-    return osFile.bad();
+    return osFile.good();
 }
