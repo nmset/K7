@@ -7,11 +7,13 @@
    <message id='Upload'>Télécharger</message>
    <message id='Import'>Importer</message>
    <message id='Delete'>Supprimer</message>
+   <message id='Create'>Créer</message>
    <message id='SignKey'>Signer</message>
    <message id='TTTSearch'>Rechercher des clés correspondant au motif</message>
    <message id='TTTUpload'>Télécharger une nouvelle clé</message>
    <message id='TTTImport'>Ajouter une nouvelle clé au porte clés</message>
    <message id='TTTDelete'>Supprimer la clé sélectionnée</message>
+   <message id='TTTCreate'>Créer une paire de clés</message>
    <message id='TTTSignKey'>Signer la clé sélectionnée avec votre clé secrète si elle est disponible</message>
    <message id='CantUpload'>Ne peut télécharger</message>
    
@@ -112,4 +114,17 @@
     <message id='SetExpirationTimeFailure'>Echec de changement de la date d'expiration</message>
     <message id='Close'>Fermer</message>
     
+    <message id='Name'>Nom</message>
+    <message id='Email'>Courriel</message>
+    <message id='DefaultAlgo'>Algorithmes par défaut</message>
+    <message id='Type'>Type</message>
+    <message id='Subkey'>Sous clé</message>
+    <message id='TTTKeyAlgo'>Algorithmes des clés</message>
+    <message id='TTTEmailRecommended'>Une adresse de courriel est fortement recommandée</message>
+    
+    <message id='ValidateEmailMissing'>Courriel manquant</message>
+    <message id='ValidateKeyAlgoMissing'>Sélectionnez un algorithme de clé au moins</message>
+    <message id='ValidatePassphraseMissing'>Phrase de passe manquante</message>
+    <message id='ValidatePassphraseNoMatch'>Les phrases de passe ne sont pas identiques</message>
+    <message id='CreateSuccess'>Création réussie : </message>
  </messages>

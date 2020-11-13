@@ -24,6 +24,7 @@
 #include "AppConfig.h"
 #include "PopupUploader.h"
 #include "PopupDeleter.h"
+#include "PopupCreate.h"
 #include "TransientMessageWidget.h"
 #include "KeyEdit.h"
 #include "global.h"
@@ -54,12 +55,14 @@ private:
     WPushButton * m_btnUpload;
     WPushButton * m_btnImport;
     WPushButton * m_btnDelete ;
+    WPushButton * m_btnCreate ;
     WTreeTable * m_ttbKeys;
     WTreeTable * m_ttbUids;
     WTreeTable * m_ttbSubKeys;
     Uploader * m_uploader;
     Deleter * m_deleter;
     KeyEdit * m_keyEdit;
+    PopupCreate * m_popupCreate;
     /**
      * Finds public keys as per criteria,
      * and private keys if any is declared in config file for current client.
@@ -121,6 +124,14 @@ private:
      * Translates unit time to readable date.
      */
     WString MakeDateTimeLabel(time_t ticks);
+    /**
+     * Shows a non-blocking popup to create keys.
+     */
+    void ShowPopupCreate();
+    /**
+     * Validates input and creates the keys.
+     */
+    void DoCreateKey();
 };
 
 #endif /* K7MAIN_H */

@@ -42,6 +42,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/KeyEdit.o \
 	${OBJECTDIR}/LoopbackPassphraseProvider.o \
 	${OBJECTDIR}/PopupCertifyUserId.o \
+	${OBJECTDIR}/PopupCreate.o \
 	${OBJECTDIR}/PopupDeleter.o \
 	${OBJECTDIR}/PopupExpiryTime.o \
 	${OBJECTDIR}/PopupUploader.o \
@@ -109,6 +110,11 @@ ${OBJECTDIR}/PopupCertifyUserId.o: PopupCertifyUserId.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -DDEVTIME -I/usr/local/Wt-Debug/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PopupCertifyUserId.o PopupCertifyUserId.cpp
+
+${OBJECTDIR}/PopupCreate.o: PopupCreate.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DDEVTIME -I/usr/local/Wt-Debug/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PopupCreate.o PopupCreate.cpp
 
 ${OBJECTDIR}/PopupDeleter.o: PopupDeleter.cpp
 	${MKDIR} -p ${OBJECTDIR}

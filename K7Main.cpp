@@ -29,6 +29,7 @@ K7Main::K7Main(const WEnvironment& env)
 {
     m_config = NULL;
     m_btnUpload = NULL; m_btnImport = NULL; m_btnDelete = NULL;
+    m_btnCreate = NULL; m_popupCreate = NULL;
     WApplication::setTitle(_APPNAME_);
     const WString bundle = WApplication::appRoot() + _APPNAME_;
     WApplication::instance()->messageResourceBundle().use(bundle.toUTF8());
@@ -70,7 +71,7 @@ K7Main::K7Main(const WEnvironment& env)
 K7Main::~K7Main()
 {
     delete m_config; delete m_uploader; delete m_deleter;
-    delete m_keyEdit;
+    delete m_keyEdit; delete m_popupCreate;
 }
 
 void
@@ -137,7 +138,14 @@ K7Main::Create()
         m_btnDelete->clicked().connect(this, &K7Main::PopupDeleter);
         m_btnDelete->hide();
     }
-    vblButtons->addSpacing(300);
+    vblButtons->addSpacing(150);
+    vblButtons->addStretch(1);
+    if (m_config->CanCreateKeys()) {
+        m_btnCreate = new WPushButton(TR("Create"));
+        m_btnCreate->setToolTip(TR("TTTCreate"));
+        vblButtons->addWidget(unique_ptr<WPushButton> (m_btnCreate));
+        m_btnCreate->clicked().connect(this, &K7Main::ShowPopupCreate);
+    }
     grlMain->addWidget(unique_ptr<WContainerWidget> (cwButtons), 1, 1);
 
     // Add and hide detail tables
@@ -522,4 +530,65 @@ void K7Main::DoDeleteKey() {
     // Show that the key is no longer available
     m_leSearch->setText(fpr);
     Search();
+}
+
+void K7Main::ShowPopupCreate()
+{
+    if (m_popupCreate == NULL)
+    {
+        m_popupCreate = new PopupCreate(m_btnCreate, m_tmwMessage);
+        m_popupCreate->Create();
+        m_popupCreate->GetApplyButton()->clicked().connect(this, &K7Main::DoCreateKey);
+    }
+    m_popupCreate->show();
+}
+
+void K7Main::DoCreateKey()
+{
+    if (!m_popupCreate->Validate())
+        return;
+    Error e;
+    GpgME::Key k;
+    GpgMEWorker gpgw;
+    if (m_popupCreate->UseDefaultEngineAlgorithms())
+    {
+        e = gpgw.CreateKeyWithEngineDefaultAlgo(k, m_popupCreate->GetName().toUTF8(),
+                                                m_popupCreate->GetEmail().toUTF8(),
+                                                m_popupCreate->GetComment().toUTF8(),
+                                                m_popupCreate->GetPassphrase().toUTF8(),
+                                                m_popupCreate->GetExpiry());
+    }
+    else
+    {
+        e = gpgw.CreateKey(k, m_popupCreate->GetName().toUTF8(),
+                           m_popupCreate->GetEmail().toUTF8(),
+                           m_popupCreate->GetComment().toUTF8(),
+                           m_popupCreate->GetArbitraryKeyAlgo().toUTF8().c_str(),
+                           m_popupCreate->GetPassphrase().toUTF8(),
+                           m_popupCreate->GetExpiry());
+        // GPGME accepts a missing subkey.
+        if (e.code() == 0 && !m_popupCreate->GetArbitrarySubkeyAlgo().empty())
+            e = gpgw.CreateSubKey(k,
+                                  m_popupCreate->GetArbitrarySubkeyAlgo().toUTF8().c_str(),
+                                  m_popupCreate->GetPassphrase().toUTF8(),
+                                  m_popupCreate->GetExpiry());
+    }
+    if (e.code() != 0)
+    {
+        m_tmwMessage->SetText(e.asString());
+    }
+    else
+    {
+        const WString fpr(k.primaryFingerprint());
+        m_tmwMessage->SetText(TR("CreateSuccess")
+            + fpr + WString(" - ") + WString(k.userID(0).name()));
+        // Add the key fingerprint to the list of keys managed by the user.
+        m_config->UpdateSecretKeyOwnership(fpr, true);
+        m_popupCreate->hide();
+#ifndef DEVTIME
+        m_popupCreate->Reset();
+#endif
+        m_leSearch->setText(fpr);
+        Search();
+    }
 }

@@ -7,11 +7,13 @@
    <message id='Upload'>Upload</message>
    <message id='Import'>Import</message>
    <message id='Delete'>Delete</message>
+   <message id='Create'>Create</message>
    <message id='SignKey'>Sign key</message>
    <message id='TTTSearch'>Find keys with this pattern</message>
    <message id='TTTUpload'>Upload a new key</message>
    <message id='TTTImport'>Add a new key</message>
    <message id='TTTDelete'>Delete selected key</message>
+   <message id='TTTCreate'>Create a pair of keys</message>
    <message id='TTTSignKey'>Sign selected key with your secret key if available</message>
    <message id='CantUpload'>Can't upload</message>
    
@@ -112,4 +114,17 @@
     <message id='SetExpirationTimeFailure'>Set expiration time failed</message>
     <message id='Close'>Close</message>
     
+    <message id='Name'>Name</message>
+    <message id='Email'>Email</message>
+    <message id='DefaultAlgo'>Default algorithms</message>
+    <message id='Type'>Type</message>
+    <message id='Subkey'>Subkey</message>
+    <message id='TTTKeyAlgo'>Key algorithms</message>
+    <message id='TTTEmailRecommended'>An email address is highly recommended</message>
+    
+    <message id='ValidateEmailMissing'>Email is missing</message>
+    <message id='ValidateKeyAlgoMissing'>Select at least a key algorithm</message>
+    <message id='ValidatePassphraseMissing'>Passphrase missing</message>
+    <message id='ValidatePassphraseNoMatch'>Passphrase does not match</message>
+    <message id='CreateSuccess'>Create success : </message>
  </messages>
