@@ -114,6 +114,12 @@ void PopupCertifyUserId::FillPrivateKeyComboBox(vector<WString>& privateKeys)
             m_tmwMessage->SetText(e.asString());
             return;
         }
+        /*
+         * A fingerprint manually added in the config file may be missing in
+         * the keyring.
+         */
+        if (lst.size() == 0)
+            continue;
         // We are expecting one single key from a full fpr
         const GpgME::Key k = lst.at(0);
         if (!Tools::ConfigKeyIdMatchesKey(k, (*it)))
