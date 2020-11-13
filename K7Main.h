@@ -59,8 +59,8 @@ private:
     WTreeTable * m_ttbKeys;
     WTreeTable * m_ttbUids;
     WTreeTable * m_ttbSubKeys;
-    Uploader * m_uploader;
-    Deleter * m_deleter;
+    PopupUpload * m_popupUpload;
+    PopupDelete * m_popupDelete;
     KeyEdit * m_keyEdit;
     PopupCreate * m_popupCreate;
     /**
@@ -94,7 +94,7 @@ private:
      * Shows a non-blocking popup to upload a key,
      * with forward confirmation for upload.
      */
-    void PopupUploader();
+    void ShowPopupUpload();
     /**
      * Shows a button to import an uploaded key
      * @param spool
@@ -107,7 +107,7 @@ private:
     /**
      * Shows a non-blocking popup to delete a key
      */
-    void PopupDeleter();
+    void ShowPopupDelete();
     /**
      * All public keys can be deleted.
      * Private keys can be deleted only if the user

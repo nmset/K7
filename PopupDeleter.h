@@ -21,10 +21,10 @@ using namespace Wt;
  * A transient popup window with a forward confirmation 
  * before deleting a key.
  */
-class Deleter : public WPopupWidget {
+class PopupDelete : public WPopupWidget {
 public:
-    Deleter(WWidget * anchorWidget, TransientMessageWidget * txtMessage, const WLength& width = 350);
-    virtual ~Deleter();
+    PopupDelete(WWidget * anchorWidget, TransientMessageWidget * txtMessage, const WLength& width = 350);
+    virtual ~PopupDelete();
     void Create();
     /**
      * Caller can bind the delete function to this button.

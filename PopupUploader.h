@@ -26,11 +26,11 @@ using namespace Wt;
  * @param txtMessage
  * @param width
  */
-class Uploader : public WPopupWidget
+class PopupUpload : public WPopupWidget
 {
 public:
-    Uploader(WWidget * anchorWidget, TransientMessageWidget * txtMessage, const WLength& width = 350);
-    virtual ~Uploader();
+    PopupUpload(WWidget * anchorWidget, TransientMessageWidget * txtMessage, const WLength& width = 350);
+    virtual ~PopupUpload();
     void Create();
 
     /**

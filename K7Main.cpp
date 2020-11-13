@@ -58,7 +58,7 @@ K7Main::K7Main(const WEnvironment& env)
     OwnerTrustLevel[GpgME::Key::OwnerTrust::Ultimate] = TR("UidUltimate");
     OwnerTrustLevel[GpgME::Key::OwnerTrust::Undefined] = TR("UidUndefined");
     OwnerTrustLevel[GpgME::Key::OwnerTrust::Unknown] = TR("UidUnknown");
-    m_uploader = NULL; m_deleter = NULL;
+    m_popupUpload = NULL; m_popupDelete = NULL;
     m_keyEdit = new KeyEdit(this);
     
     WLink link;
@@ -70,7 +70,7 @@ K7Main::K7Main(const WEnvironment& env)
 
 K7Main::~K7Main()
 {
-    delete m_config; delete m_uploader; delete m_deleter;
+    delete m_config; delete m_popupUpload; delete m_popupDelete;
     delete m_keyEdit; delete m_popupCreate;
 }
 
@@ -122,7 +122,7 @@ K7Main::Create()
         m_btnUpload = new WPushButton(TR("Upload"));
         m_btnUpload->setToolTip(TR("TTTUpload"));
         vblButtons->addWidget(unique_ptr<WPushButton> (m_btnUpload));
-        m_btnUpload->clicked().connect(this, &K7Main::PopupUploader);
+        m_btnUpload->clicked().connect(this, &K7Main::ShowPopupUpload);
         m_btnImport = new WPushButton(TR("Import"));
         m_btnImport->setToolTip(TR("TTTImport"));
         vblButtons->addWidget(unique_ptr<WPushButton> (m_btnImport));
@@ -135,7 +135,7 @@ K7Main::Create()
         m_btnDelete = new WPushButton(TR("Delete"));
         m_btnDelete->setToolTip(TR("TTTDelete"));
         vblButtons->addWidget(unique_ptr<WPushButton> (m_btnDelete));
-        m_btnDelete->clicked().connect(this, &K7Main::PopupDeleter);
+        m_btnDelete->clicked().connect(this, &K7Main::ShowPopupDelete);
         m_btnDelete->hide();
     }
     vblButtons->addSpacing(150);
@@ -413,20 +413,20 @@ void K7Main::DisplaySubKeys(const WString& fullKeyID, bool secret)
     m_ttbSubKeys->show();
 }
 
-void K7Main::PopupUploader() {
-    if (m_uploader == NULL) {
-        m_uploader = new Uploader(m_btnUpload, m_tmwMessage);
-        m_uploader->Create();
-        m_uploader->UploadDone().connect(this, &K7Main::OnUploadCompleted);
+void K7Main::ShowPopupUpload() {
+    if (m_popupUpload == NULL) {
+        m_popupUpload = new PopupUpload(m_btnUpload, m_tmwMessage);
+        m_popupUpload->Create();
+        m_popupUpload->UploadDone().connect(this, &K7Main::OnUploadCompleted);
     }
-    m_uploader->show();
+    m_popupUpload->show();
 }
 
 void K7Main::OnUploadCompleted(const WString& spool) {
     // Buffer the spool file name in the import button
     m_btnImport->setAttributeValue("spool", spool);
     m_btnImport->show();
-    m_uploader->hide();
+    m_popupUpload->hide();
 }
 
 void K7Main::DoImportKey() {
@@ -490,13 +490,13 @@ bool K7Main::CanKeyBeDeleted(const WString& fullKeyID) {
     return false;
 }
 
-void K7Main::PopupDeleter() {
-    if (m_deleter == NULL) {
-        m_deleter = new Deleter(m_btnDelete, m_tmwMessage);
-        m_deleter->Create();
-        m_deleter->GetDeleteButton()->clicked().connect(this, &K7Main::DoDeleteKey);
+void K7Main::ShowPopupDelete() {
+    if (m_popupDelete == NULL) {
+        m_popupDelete = new PopupDelete(m_btnDelete, m_tmwMessage);
+        m_popupDelete->Create();
+        m_popupDelete->GetDeleteButton()->clicked().connect(this, &K7Main::DoDeleteKey);
     }
-    m_deleter->show();
+    m_popupDelete->show();
 }
 
 void K7Main::DoDeleteKey() {
@@ -524,7 +524,7 @@ void K7Main::DoDeleteKey() {
         m_tmwMessage->SetText(TR("DeleteSuccess") + fpr + WString(" - ") + WString(k.userID(0).name()));
     }
     m_btnDelete->hide();
-    m_deleter->hide();
+    m_popupDelete->hide();
     if (secret)
         m_config->UpdateSecretKeyOwnership(fpr, false);
     // Show that the key is no longer available

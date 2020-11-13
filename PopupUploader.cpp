@@ -14,7 +14,7 @@
 
 using namespace std;
 
-Uploader::Uploader(WWidget * anchorWidget, TransientMessageWidget * txtMessage, const WLength& width)
+PopupUpload::PopupUpload(WWidget * anchorWidget, TransientMessageWidget * txtMessage, const WLength& width)
 : WPopupWidget(cpp14::make_unique<WContainerWidget>()) {
     m_tmwMessage = txtMessage; m_upload = NULL; m_cwMain = NULL;
     m_cbConfirm = NULL; m_cbReConfirm = NULL; m_btnUpload = NULL;
@@ -23,10 +23,10 @@ Uploader::Uploader(WWidget * anchorWidget, TransientMessageWidget * txtMessage, 
     setWidth(width);
 }
 
-Uploader::~Uploader() {
+PopupUpload::~PopupUpload() {
 }
 
-void Uploader::Create() {
+void PopupUpload::Create() {
     m_upload = new WFileUpload();
     m_upload->setFileTextSize(10240); // Is really approximate
     m_upload->setMultiple(false);
@@ -45,16 +45,16 @@ void Uploader::Create() {
     m_cbReConfirm->hide();
     m_cbConfirm->hide();
     m_btnUpload->hide();
-    m_cbConfirm->changed().connect(this, &Uploader::OnCbConfirm);
-    m_cbReConfirm->changed().connect(this, &Uploader::OnCbReConfirm);
-    m_btnUpload->clicked().connect(this, &Uploader::DoUpload);
-    m_upload->uploaded().connect(this, &Uploader::OnUploadDone);
-    m_upload->fileTooLarge().connect(this, &Uploader::OnFileTooLarge);
-    m_upload->changed().connect(this, &Uploader::Reset);
-    this->hidden().connect(this, &Uploader::Reset);
+    m_cbConfirm->changed().connect(this, &PopupUpload::OnCbConfirm);
+    m_cbReConfirm->changed().connect(this, &PopupUpload::OnCbReConfirm);
+    m_btnUpload->clicked().connect(this, &PopupUpload::DoUpload);
+    m_upload->uploaded().connect(this, &PopupUpload::OnUploadDone);
+    m_upload->fileTooLarge().connect(this, &PopupUpload::OnFileTooLarge);
+    m_upload->changed().connect(this, &PopupUpload::Reset);
+    this->hidden().connect(this, &PopupUpload::Reset);
 }
 
-void Uploader::Reset() {
+void PopupUpload::Reset() {
     m_btnUpload->hide();
     m_cbReConfirm->setUnChecked();
     m_cbReConfirm->hide();
@@ -62,17 +62,17 @@ void Uploader::Reset() {
     m_cbConfirm->show();
     m_btnUpload->enable();
 }
-void Uploader::OnCbConfirm() {
+void PopupUpload::OnCbConfirm() {
     m_cbReConfirm->setHidden(m_cbConfirm->checkState() != CheckState::Checked);
     m_cbReConfirm->setUnChecked();
     m_btnUpload->setHidden(m_cbReConfirm->checkState() != CheckState::Checked);
 }
 
-void Uploader::OnCbReConfirm() {
+void PopupUpload::OnCbReConfirm() {
     m_btnUpload->setHidden(m_cbReConfirm->checkState() != CheckState::Checked);
 }
 
-void Uploader::DoUpload() {
+void PopupUpload::DoUpload() {
     if (m_upload->canUpload()) {
         m_btnUpload->disable();
         m_upload->upload();
@@ -81,12 +81,12 @@ void Uploader::DoUpload() {
     }
 }
 
-void Uploader::OnUploadDone() {
+void PopupUpload::OnUploadDone() {
     m_sigUploadDone.emit(m_upload->spoolFileName());
     m_btnUpload->enable();
 }
 
-void Uploader::OnFileTooLarge() {
+void PopupUpload::OnFileTooLarge() {
     m_tmwMessage->SetText(TR("FileTooLarge"));
     m_btnUpload->enable();
 }

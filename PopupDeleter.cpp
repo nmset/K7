@@ -14,7 +14,7 @@
 
 using namespace std;
 
-Deleter::Deleter(WWidget * anchorWidget, TransientMessageWidget * txtMessage, const WLength& width) 
+PopupDelete::PopupDelete(WWidget * anchorWidget, TransientMessageWidget * txtMessage, const WLength& width) 
 : WPopupWidget(cpp14::make_unique<WContainerWidget>()) {
     m_tmwMessage = txtMessage; m_cwMain = NULL; m_cbConfirm = NULL;
     m_cbReConfirm = NULL; m_btnDelete = NULL;
@@ -23,10 +23,10 @@ Deleter::Deleter(WWidget * anchorWidget, TransientMessageWidget * txtMessage, co
     setWidth(width);
 }
 
-Deleter::~Deleter() {
+PopupDelete::~PopupDelete() {
 }
 
-void Deleter::Create() {
+void PopupDelete::Create() {
     m_cwMain = static_cast<WContainerWidget*> (implementation());
     // White in css file, like default background color.
     m_cwMain->setStyleClass("popup");
@@ -40,12 +40,12 @@ void Deleter::Create() {
     vblMain->addWidget(unique_ptr<WPushButton> (m_btnDelete));
     m_cbReConfirm->hide();
     m_btnDelete->hide();
-    m_cbConfirm->changed().connect(this, &Deleter::OnCbConfirm);
-    m_cbReConfirm->changed().connect(this, &Deleter::OnCbReConfirm);
-    this->hidden().connect(this, &Deleter::Reset);
+    m_cbConfirm->changed().connect(this, &PopupDelete::OnCbConfirm);
+    m_cbReConfirm->changed().connect(this, &PopupDelete::OnCbReConfirm);
+    this->hidden().connect(this, &PopupDelete::Reset);
 }
 
-void Deleter::Reset() {
+void PopupDelete::Reset() {
     m_btnDelete->hide();
     m_cbReConfirm->setUnChecked();
     m_cbReConfirm->hide();
@@ -53,12 +53,12 @@ void Deleter::Reset() {
     m_cbConfirm->show();
 }
 
-void Deleter::OnCbConfirm() {
+void PopupDelete::OnCbConfirm() {
     m_cbReConfirm->setHidden(m_cbConfirm->checkState() != CheckState::Checked);
     m_cbReConfirm->setUnChecked();
     m_btnDelete->setHidden(m_cbReConfirm->checkState() != CheckState::Checked);
 }
 
-void Deleter::OnCbReConfirm() {
+void PopupDelete::OnCbReConfirm() {
     m_btnDelete->setHidden(m_cbReConfirm->checkState() != CheckState::Checked);
 }
