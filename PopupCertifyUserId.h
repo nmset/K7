@@ -63,6 +63,7 @@ public:
      * @param show
      */
     void ShowPassphrase(bool show = true);
+
     /**
      * Used to restore the state of the widgets when target key changes.
      * @return 
@@ -72,6 +73,7 @@ public:
         // isVisible is always false when the popup is hidden !
         return !(m_lePassphrase->isHidden());
     }
+
     /**
      * Used to forward the passphrase to the loopback passphrase provider.
      * @return 
@@ -80,6 +82,7 @@ public:
     {
         return m_lePassphrase->text().toUTF8();
     }
+
     /**
      * Obviously.
      * @return 
@@ -88,6 +91,7 @@ public:
     {
         return m_fprKeyToSign;
     }
+
     /**
      * We can select what identity (email) to certify. GPG expects it as a
      * vector of indices.
@@ -97,6 +101,7 @@ public:
     {
         return m_uidsToSign;
     }
+
     /**
      * Sum of option values
      * <ul>
@@ -110,6 +115,7 @@ public:
     {
         return m_certifyOptions;
     }
+
     /**
      * Caller binds its certify function here.
      * @return 

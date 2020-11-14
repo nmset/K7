@@ -56,7 +56,7 @@ private:
     void DoUpload();
     void OnUploadDone();
     void OnFileTooLarge();
-    
+
 };
 
 #endif /* POPUPUPLOADER_H */

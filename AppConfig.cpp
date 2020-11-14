@@ -187,7 +187,7 @@ bool AppConfig::UpdateSecretKeyOwnership(const WString& fpr, bool own)
     Json::Array::iterator it = std::find(aKeyId.begin(), aKeyId.end(), Json::Value(fpr));
     if (it == aKeyId.end())
     {
-        if (own) 
+        if (own)
             aKeyId.push_back(Json::Value(fpr));
         else
             return true; // We don't own it.
@@ -199,7 +199,7 @@ bool AppConfig::UpdateSecretKeyOwnership(const WString& fpr, bool own)
         else
             return true; // We already own it.
     }
-    
+
     // TODO : Do this **better**, without replacing sequentially up to root.
     cnObject.insert(make_pair("privKeyIds", aKeyId));
     m_SubjectCNObject.erase(commonName.toUTF8());

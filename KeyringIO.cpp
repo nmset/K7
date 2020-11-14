@@ -233,7 +233,7 @@ void KeyringIO::DoCreateKey()
     {
         const WString fpr(k.primaryFingerprint());
         m_tmwMessage->SetText(TR("CreateSuccess")
-            + fpr + WString(" - ") + WString(k.userID(0).name()));
+                              + fpr + WString(" - ") + WString(k.userID(0).name()));
         // Add the key fingerprint to the list of keys managed by the user.
         m_config->UpdateSecretKeyOwnership(fpr, true);
         m_popupCreate->hide();

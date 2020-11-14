@@ -13,11 +13,12 @@
 #include <gpgme.h>
 #include <gpgme++/error.h>
 
-class GpgMECWorker {
+class GpgMECWorker
+{
 public:
     GpgMECWorker();
     virtual ~GpgMECWorker();
-    
+
     /**
      * Deleting keys must be done with the C API because 
      * gpgmepp does not provide a way to use GPGME_DELETE_FORCE,
@@ -29,7 +30,7 @@ public:
      * @return 
      */
     bool DeleteKey(const char * fpr, bool secret, GpgME::Error& e);
-    
+
 private:
     gpgme_ctx_t c_ctx;
 };

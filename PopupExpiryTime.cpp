@@ -16,7 +16,7 @@
 using namespace std;
 
 PopupExpiryTime::PopupExpiryTime(WWidget * anchorWidget, TransientMessageWidget * txtMessage,
-                                       const WLength& width)
+                                 const WLength& width)
 : WPopupWidget(cpp14::make_unique<WContainerWidget>())
 {
     m_tmwMessage = txtMessage;
@@ -47,17 +47,17 @@ void PopupExpiryTime::Create(const WString& keyFpr)
     m_keyFpr = keyFpr;
     m_cwMain = static_cast<WContainerWidget*> (implementation());
     m_cwMain->setStyleClass("popup");
-    
+
     WVBoxLayout * vblMain = new WVBoxLayout();
     m_cwMain->setLayout(unique_ptr<WVBoxLayout> (vblMain));
-    
+
     WHBoxLayout * hblExpiry = new WHBoxLayout();
     WText * lblExpiry = new WText(TR("ExpiryDate"));
     hblExpiry->addWidget(unique_ptr<WText> (lblExpiry));
     m_deExpiry = new WDateEdit();
     hblExpiry->addWidget(unique_ptr<WDateEdit> (m_deExpiry), 1);
     vblMain->addLayout(unique_ptr<WHBoxLayout> (hblExpiry));
-    
+
     WHBoxLayout * hblPassphrase = new WHBoxLayout();
     m_lblPassphrase = new WText(TR("Passphrase"));
     hblPassphrase->addWidget(unique_ptr<WText> (m_lblPassphrase));
@@ -65,7 +65,7 @@ void PopupExpiryTime::Create(const WString& keyFpr)
     m_lePassphrase->setEchoMode(EchoMode::Password);
     hblPassphrase->addWidget(unique_ptr<WLineEdit> (m_lePassphrase), 1);
     vblMain->addLayout(unique_ptr<WHBoxLayout> (hblPassphrase));
-    
+
     WHBoxLayout * hblButtons = new WHBoxLayout();
     WPushButton * btnClose = new WPushButton(TR("Close"));
     btnClose->clicked().connect(this, &WPopupWidget::hide);

@@ -17,7 +17,7 @@
 using namespace std;
 
 KeyEdit::KeyEdit(K7Main * owner)
-:WObject()
+: WObject()
 {
     m_owner = owner;
     m_popupUid = NULL;
@@ -41,7 +41,8 @@ void KeyEdit::OnOwnerTrustDoubleClicked(WTreeTableNode * keyNode, bool keyHasSec
     WText * lblFpr = static_cast<WText*> (keyNode->columnWidget(3));
     vector<WString> ourKeys = m_owner->m_config->PrivateKeyIds();
     if (!Tools::IsOurKey(lblFpr->text(), ourKeys)
-            && Tools::KeyHasSecret(lblFpr->text())) {
+            && Tools::KeyHasSecret(lblFpr->text()))
+    {
         m_owner->m_tmwMessage->SetText(TR("OwnerTrustReadOnly"));
         return;
     }
@@ -57,7 +58,7 @@ void KeyEdit::OnOwnerTrustDoubleClicked(WTreeTableNode * keyNode, bool keyHasSec
     /*
      * Prepare to check for change in combobox item.
      * Change is detected by index, not value.
-    */
+     */
     cmbOwnerTrust->setAttributeValue("previousTrustLevel", std::to_string(cmbOwnerTrust->currentIndex()));
     keyNode->setColumnWidget(2, unique_ptr<WComboBox> (cmbOwnerTrust));
     // +++
@@ -72,7 +73,7 @@ void KeyEdit::OnOwnerTrustBlurred(WTreeTableNode* keyNode, bool keyHasSecret)
     WStandardItemModel * iModel = static_cast<WStandardItemModel*> (aiModel.get());
     WStandardItem * item = iModel->item(cmbOwnerTrust->currentIndex(), 0);
     int newLevel = Tools::ToInt(item->text().toUTF8());
-    
+
     WText * lblOwnerTrust = new WText(cmbOwnerTrust->currentText());
     lblOwnerTrust->doubleClicked().connect(std::bind(&KeyEdit::OnOwnerTrustDoubleClicked, this, keyNode, keyHasSecret));
     const WText * lblFpr = static_cast<WText*> (keyNode->columnWidget(3));
@@ -82,7 +83,7 @@ void KeyEdit::OnOwnerTrustBlurred(WTreeTableNode* keyNode, bool keyHasSecret)
     // If nothing was changed, don't go to engine.
     if (WString(std::to_string(newTrustLevel)) == previousTrustLevel)
         return;
-    
+
     GpgMEWorker gpgWorker;
     GpgME::Error e = gpgWorker.EditOwnerTrust(lblFpr->text().toUTF8().c_str(), (GpgME::Key::OwnerTrust) newLevel);
     if (e.code() != 0)
@@ -102,10 +103,13 @@ void KeyEdit::FillOwnerTrustCombo(WComboBox * cmb, bool keyHasSecret)
     vector<unique_ptr < WStandardItem>> colText;
     colIndex.push_back(cpp14::make_unique<WStandardItem> (std::to_string(UserID::Validity::Unknown)));
     colText.push_back(cpp14::make_unique<WStandardItem> (TR("UidUnknown")));
-    if (keyHasSecret) {
+    if (keyHasSecret)
+    {
         colIndex.push_back(cpp14::make_unique<WStandardItem> (std::to_string(UserID::Validity::Ultimate)));
         colText.push_back(cpp14::make_unique<WStandardItem> (TR("UidUltimate")));
-    } else {
+    }
+    else
+    {
         colIndex.push_back(cpp14::make_unique<WStandardItem> (std::to_string(UserID::Validity::Never)));
         colText.push_back(cpp14::make_unique<WStandardItem> (TR("UidNever")));
         colIndex.push_back(cpp14::make_unique<WStandardItem> (std::to_string(UserID::Validity::Marginal)));
@@ -122,7 +126,8 @@ void KeyEdit::FillOwnerTrustCombo(WComboBox * cmb, bool keyHasSecret)
 
 void KeyEdit::OnUidValidityClicked(WTreeTableNode* uidNode, vector<WString>& privateKeys, const WString& targetKeyFpr)
 {
-    if (targetKeyFpr != m_targetUidValidityKeyFpr) {
+    if (targetKeyFpr != m_targetUidValidityKeyFpr)
+    {
         bool passwordVisibility = true;
         if (m_popupUid)
             passwordVisibility = m_popupUid->IsPasswordVisible();
@@ -140,7 +145,8 @@ void KeyEdit::OnUidValidityClicked(WTreeTableNode* uidNode, vector<WString>& pri
 void KeyEdit::CertifyKey()
 {
     vector<uint>& uidsToSign = m_popupUid->GetUidsToSign();
-    if (uidsToSign.size() == 0) {
+    if (uidsToSign.size() == 0)
+    {
         m_owner->m_tmwMessage->SetText(TR("NoUidSelected"));
         return;
     }
@@ -165,7 +171,8 @@ void KeyEdit::CertifyKey()
 
 void KeyEdit::OnExpiryClicked(WTreeTableNode* subkeyNode, const WString& keyFpr)
 {
-    if (keyFpr != m_expiryEditedKeyFpr) {
+    if (keyFpr != m_expiryEditedKeyFpr)
+    {
         delete m_popupExpiryTime;
         WText * lblExpiry = static_cast<WText*> (subkeyNode->columnWidget(2));
         m_popupExpiryTime = new PopupExpiryTime(lblExpiry, m_owner->m_tmwMessage);

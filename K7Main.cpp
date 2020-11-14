@@ -28,7 +28,9 @@ K7Main::K7Main(const WEnvironment& env)
 : WApplication(env)
 {
     m_config = NULL;
-    m_btnUpload = NULL; m_btnImport = NULL; m_btnDelete = NULL;
+    m_btnUpload = NULL;
+    m_btnImport = NULL;
+    m_btnDelete = NULL;
     m_btnCreate = NULL;
     WApplication::setTitle(_APPNAME_);
     const WString bundle = WApplication::appRoot() + _APPNAME_;
@@ -51,7 +53,7 @@ K7Main::K7Main(const WEnvironment& env)
     UidValidities[UserID::Validity::Ultimate] = TR("UidUltimate");
     UidValidities[UserID::Validity::Undefined] = TR("UidUndefined");
     UidValidities[UserID::Validity::Unknown] = TR("UidUnknown");
-    
+
     OwnerTrustLevel[GpgME::Key::OwnerTrust::Full] = TR("UidFull");
     OwnerTrustLevel[GpgME::Key::OwnerTrust::Marginal] = TR("UidMarginal");
     OwnerTrustLevel[GpgME::Key::OwnerTrust::Never] = TR("UidNever");
@@ -59,10 +61,10 @@ K7Main::K7Main(const WEnvironment& env)
     OwnerTrustLevel[GpgME::Key::OwnerTrust::Undefined] = TR("UidUndefined");
     OwnerTrustLevel[GpgME::Key::OwnerTrust::Unknown] = TR("UidUnknown");
     m_keyEdit = new KeyEdit(this);
-    
+
     WLink link;
-    const WString cssFile = WApplication::appRoot() + _APPNAME_ 
-                        + WString(".css");
+    const WString cssFile = WApplication::appRoot() + _APPNAME_
+            + WString(".css");
     link.setUrl(cssFile.toUTF8());
     WApplication::useStyleSheet(link);
 }
@@ -70,7 +72,8 @@ K7Main::K7Main(const WEnvironment& env)
 K7Main::~K7Main()
 {
     delete m_config;
-    delete m_keyEdit; delete m_keyringIO;
+    delete m_keyEdit;
+    delete m_keyringIO;
 }
 
 void
@@ -90,11 +93,11 @@ K7Main::Create()
     /*
      *  Load config JSON file.
      * On error, just abort, AppConfig will print an error message in m_tmwMessage
-    */
+     */
     m_config = new AppConfig(m_tmwMessage);
     if (!m_config->LoadConfig())
         return;
-    
+
     m_cwMain = new WContainerWidget();
     WGridLayout * grlMain = new WGridLayout();
     grlMain->setColumnStretch(0, 1);
@@ -154,9 +157,9 @@ K7Main::Create()
 
     root()->addWidget(cpp14::make_unique<WBreak>());
     root()->addWidget(unique_ptr<WContainerWidget> (m_cwMain));
-    
+
     m_keyringIO = new KeyringIO(this);
-    
+
 #ifdef DEVTIME
     // Save my fingertips.
     m_leSearch->setText("s");
@@ -190,7 +193,7 @@ void K7Main::Search()
          * configPrivKeys.at(i) : we want this to be a full key id(short, normal or fpr)
          * But it can be any string in the config file (name, email...).
          * lst can hence contain many keys.
-        */
+         */
         vector<GpgME::Key> lst = gpgw.FindKeys(configPrivKeys.at(i).toUTF8().c_str(), true, e);
         if (e.code() != 0)
         {
@@ -225,7 +228,8 @@ void K7Main::Search()
         }
     }
 
-    if (m_ttbKeys->columnCount() == 1) {
+    if (m_ttbKeys->columnCount() == 1)
+    {
         m_ttbKeys->addColumn(TR("ID"), 120);
         m_ttbKeys->addColumn(TR("OwnerTrust"), 210);
         m_ttbKeys->addColumn(TR("Fpr"), 300);
@@ -268,13 +272,15 @@ void K7Main::DisplayKeys(const vector<GpgME::Key>& kList, const WString& grpLabe
         anc->clicked().connect(std::bind(&K7Main::OnKeyAnchorClicked, this, anc));
         keyNode->setColumnWidget(1, unique_ptr<WAnchor> (anc));
         WText * lblOwnerTrust = new WText(OwnerTrustLevel[k.ownerTrust()]);
-        if (m_config->CanEditOwnerTrust()) {
+        if (m_config->CanEditOwnerTrust())
+        {
             /*
              * Here we allow the owner trust level of primary keys to be changed anytime.
              * Kleopatra doesn't do that for primary keys having ultimate trust level.
              */
             bool isOurKey = Tools::IsOurKey(k.primaryFingerprint(), ourKeys);
-            if (!isOurKey || (isOurKey && k.hasSecret())) {
+            if (!isOurKey || (isOurKey && k.hasSecret()))
+            {
                 lblOwnerTrust->doubleClicked().connect(std::bind(&KeyEdit::OnOwnerTrustDoubleClicked, m_keyEdit, keyNode, k.hasSecret()));
                 lblOwnerTrust->setToolTip(TR("TTTDoubleCLick"));
             }
@@ -335,7 +341,8 @@ void K7Main::DisplayUids(const WString& fullKeyID, bool secret)
         uidNode->setColumnWidget(1, unique_ptr<TreeTableNodeText> (ttntUidEmail));
         // Show key certify popup on double click
         WText * lblUidValidity = new WText(UidValidities[uid.validity()]);
-        if (m_config->CanEditUidValidity()) {
+        if (m_config->CanEditUidValidity())
+        {
             lblUidValidity->setToolTip(TR("TTTDoubleCLick"));
             lblUidValidity->doubleClicked().connect(std::bind(&KeyEdit::OnUidValidityClicked, m_keyEdit, uidNode, privateKeys, WString(k.primaryFingerprint())));
         }
@@ -389,8 +396,8 @@ void K7Main::DisplaySubKeys(const WString& fullKeyID, bool secret)
     rootNode->expand();
     vector<WString> ourKeys = m_config->PrivateKeyIds();
     bool canEditExpiry = m_config->CanEditExpiryTime()
-                && Tools::KeyHasSecret(k.primaryFingerprint())
-                && Tools::IsOurKey(k.primaryFingerprint(), ourKeys);
+            && Tools::KeyHasSecret(k.primaryFingerprint())
+            && Tools::IsOurKey(k.primaryFingerprint(), ourKeys);
     for (uint i = 0; i < k.numSubkeys(); i++)
     {
         Subkey sk = k.subkey(i);
@@ -400,7 +407,8 @@ void K7Main::DisplaySubKeys(const WString& fullKeyID, bool secret)
         skNode->setColumnWidget(1, unique_ptr<TreeTableNodeText> (ttntFpr));
         WString exp = sk.neverExpires() ? TR("Never") : MakeDateTimeLabel(sk.expirationTime());
         WText * lblExpiry = new WText(exp);
-        if (canEditExpiry) {
+        if (canEditExpiry)
+        {
             lblExpiry->setToolTip(TR("TTTDoubleCLick"));
             lblExpiry->doubleClicked().connect(std::bind(&KeyEdit::OnExpiryClicked, m_keyEdit, skNode, WString(k.primaryFingerprint())));
         }

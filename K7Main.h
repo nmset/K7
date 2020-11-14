@@ -54,8 +54,8 @@ private:
     WLineEdit * m_leSearch;
     WPushButton * m_btnUpload;
     WPushButton * m_btnImport;
-    WPushButton * m_btnDelete ;
-    WPushButton * m_btnCreate ;
+    WPushButton * m_btnDelete;
+    WPushButton * m_btnCreate;
     WTreeTable * m_ttbKeys;
     WTreeTable * m_ttbUids;
     WTreeTable * m_ttbSubKeys;

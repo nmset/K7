@@ -22,7 +22,8 @@ using namespace std;
 /**
  * Json configuration file reader.
  */
-class AppConfig {
+class AppConfig
+{
 public:
     AppConfig(WText * notifyWidget);
     virtual ~AppConfig();
@@ -101,7 +102,7 @@ private:
      * @return 
      */
     const WString GetSubjectDnAttribute(const WSslCertificate::DnAttributeName& attrName) const;
-    
+
     bool WriteTextFile(const WString& filePath, const WString& content);
 };
 

@@ -15,18 +15,25 @@
 using namespace std;
 
 PopupUpload::PopupUpload(WWidget * anchorWidget, TransientMessageWidget * txtMessage, const WLength& width)
-: WPopupWidget(cpp14::make_unique<WContainerWidget>()) {
-    m_tmwMessage = txtMessage; m_upload = NULL; m_cwMain = NULL;
-    m_cbConfirm = NULL; m_cbReConfirm = NULL; m_btnUpload = NULL;
+: WPopupWidget(cpp14::make_unique<WContainerWidget>())
+{
+    m_tmwMessage = txtMessage;
+    m_upload = NULL;
+    m_cwMain = NULL;
+    m_cbConfirm = NULL;
+    m_cbReConfirm = NULL;
+    m_btnUpload = NULL;
     setTransient(true);
     setAnchorWidget(anchorWidget);
     setWidth(width);
 }
 
-PopupUpload::~PopupUpload() {
+PopupUpload::~PopupUpload()
+{
 }
 
-void PopupUpload::Create() {
+void PopupUpload::Create()
+{
     m_upload = new WFileUpload();
     m_upload->setFileTextSize(10240); // Is really approximate
     m_upload->setMultiple(false);
@@ -54,7 +61,8 @@ void PopupUpload::Create() {
     this->hidden().connect(this, &PopupUpload::Reset);
 }
 
-void PopupUpload::Reset() {
+void PopupUpload::Reset()
+{
     m_btnUpload->hide();
     m_cbReConfirm->setUnChecked();
     m_cbReConfirm->hide();
@@ -62,31 +70,40 @@ void PopupUpload::Reset() {
     m_cbConfirm->show();
     m_btnUpload->enable();
 }
-void PopupUpload::OnCbConfirm() {
+
+void PopupUpload::OnCbConfirm()
+{
     m_cbReConfirm->setHidden(m_cbConfirm->checkState() != CheckState::Checked);
     m_cbReConfirm->setUnChecked();
     m_btnUpload->setHidden(m_cbReConfirm->checkState() != CheckState::Checked);
 }
 
-void PopupUpload::OnCbReConfirm() {
+void PopupUpload::OnCbReConfirm()
+{
     m_btnUpload->setHidden(m_cbReConfirm->checkState() != CheckState::Checked);
 }
 
-void PopupUpload::DoUpload() {
-    if (m_upload->canUpload()) {
+void PopupUpload::DoUpload()
+{
+    if (m_upload->canUpload())
+    {
         m_btnUpload->disable();
         m_upload->upload();
-    } else {
+    }
+    else
+    {
         m_tmwMessage->SetText(TR("CantUpload"));
     }
 }
 
-void PopupUpload::OnUploadDone() {
+void PopupUpload::OnUploadDone()
+{
     m_sigUploadDone.emit(m_upload->spoolFileName());
     m_btnUpload->enable();
 }
 
-void PopupUpload::OnFileTooLarge() {
+void PopupUpload::OnFileTooLarge()
+{
     m_tmwMessage->SetText(TR("FileTooLarge"));
     m_btnUpload->enable();
 }

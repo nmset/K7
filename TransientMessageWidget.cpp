@@ -49,9 +49,11 @@ void TransientMessageWidget::OnTimer()
 void TransientMessageWidget::SetText(const WString& text, bool stack)
 {
     m_timer.stop();
-    if (stack) {
+    if (stack)
+    {
         // Remove the oldest message if stack is full
-        if (m_stack.size() == m_stackSize) {
+        if (m_stack.size() == m_stackSize)
+        {
             m_stack.pop_back();
         }
         m_stack.push_front(text);

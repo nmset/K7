@@ -31,18 +31,18 @@ class KeyEdit : public WObject
 {
     friend class K7Main;
 public:
-    
+
 private:
     KeyEdit(K7Main * owner);
     virtual ~KeyEdit();
-    
+
     K7Main * m_owner;
     PopupCertifyUserId * m_popupUid;
     WString m_targetUidValidityKeyFpr;
-    
+
     PopupExpiryTime * m_popupExpiryTime;
     WString m_expiryEditedKeyFpr;
-    
+
     /**
      * Unknown is common.
      * \n If keyHasSecret is true, show only Ultimate level.
@@ -54,7 +54,7 @@ private:
     void FillOwnerTrustCombo(WComboBox * cmb, bool keyHasSecret);
     void CertifyKey();
     void SetExpiryTime();
-    
+
     /**
      * Shows a combobox with all trust levels
      * @param keyNode
@@ -80,7 +80,7 @@ private:
      * @param keyFpr
      */
     void OnExpiryClicked(WTreeTableNode * subkeyNode, const WString& keyFpr);
-    
+
 };
 
 #endif /* KEYEDIT_H */
