@@ -42,12 +42,6 @@ public:
      */
     void OnOwnerTrustBlurred(WTreeTableNode * keyNode, bool keyHasSecret);
     /**
-     * If the fingerprint is that of a private key we manage, returns true.
-     * @param fpr
-     * @return 
-     */
-    bool IsOurKey(const WString& fpr);
-    /**
      * Shows a popup with parameters for key certification.
      * @param uidNode
      * @param privateKeys : A list of our private keys.

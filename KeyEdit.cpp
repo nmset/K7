@@ -39,7 +39,9 @@ void KeyEdit::OnOwnerTrustDoubleClicked(WTreeTableNode * keyNode, bool keyHasSec
      * not be editable by anyone.
      */
     WText * lblFpr = static_cast<WText*> (keyNode->columnWidget(3));
-    if (!IsOurKey(lblFpr->text()) && Tools::KeyHasSecret(lblFpr->text())) {
+    vector<WString> ourKeys = m_owner->m_config->PrivateKeyIds();
+    if (!Tools::IsOurKey(lblFpr->text(), ourKeys)
+            && Tools::KeyHasSecret(lblFpr->text())) {
         m_owner->m_tmwMessage->SetText(TR("OwnerTrustReadOnly"));
         return;
     }
@@ -116,18 +118,6 @@ void KeyEdit::FillOwnerTrustCombo(WComboBox * cmb, bool keyHasSecret)
     cmb->clear();
     cmb->setModel(siModel);
     cmb->setModelColumn(1);
-}
-
-bool KeyEdit::IsOurKey(const WString& fpr)
-{
-    vector<WString> ourKeys = m_owner->m_config->PrivateKeyIds();
-    vector<WString> ::iterator it;
-    for (it = ourKeys.begin(); it != ourKeys.end(); it++)
-    {
-        if (*it == fpr)
-            return true;
-    }
-    return false;
 }
 
 void KeyEdit::OnUidValidityClicked(WTreeTableNode* uidNode, vector<WString>& privateKeys, const WString& targetKeyFpr)

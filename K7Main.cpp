@@ -253,6 +253,7 @@ void K7Main::DisplayKeys(const vector<GpgME::Key>& kList, const WString& grpLabe
 {
     WTreeTableNode * grpNode = new WTreeTableNode(grpLabel);
     m_ttbKeys->treeRoot()->addChildNode(unique_ptr<WTreeTableNode> (grpNode));
+    vector<WString> ourKeys = m_config->PrivateKeyIds();
     for (uint i = 0; i < kList.size(); i++)
     {
         const GpgME::Key k = kList.at(i);
@@ -272,7 +273,7 @@ void K7Main::DisplayKeys(const vector<GpgME::Key>& kList, const WString& grpLabe
              * Here we allow the owner trust level of primary keys to be changed anytime.
              * Kleopatra doesn't do that for primary keys having ultimate trust level.
              */
-            bool isOurKey = m_keyEdit->IsOurKey(k.primaryFingerprint());
+            bool isOurKey = Tools::IsOurKey(k.primaryFingerprint(), ourKeys);
             if (!isOurKey || (isOurKey && k.hasSecret())) {
                 lblOwnerTrust->doubleClicked().connect(std::bind(&KeyEdit::OnOwnerTrustDoubleClicked, m_keyEdit, keyNode, k.hasSecret()));
                 lblOwnerTrust->setToolTip(TR("TTTDoubleCLick"));
@@ -386,9 +387,10 @@ void K7Main::DisplaySubKeys(const WString& fullKeyID, bool secret)
     rootNode->setChildCountPolicy(ChildCountPolicy::Enabled);
     m_ttbSubKeys->setTreeRoot(unique_ptr<WTreeTableNode> (rootNode), TR("SubKeys"));
     rootNode->expand();
+    vector<WString> ourKeys = m_config->PrivateKeyIds();
     bool canEditExpiry = m_config->CanEditExpiryTime()
                 && Tools::KeyHasSecret(k.primaryFingerprint())
-                && m_keyEdit->IsOurKey(k.primaryFingerprint());
+                && Tools::IsOurKey(k.primaryFingerprint(), ourKeys);
     for (uint i = 0; i < k.numSubkeys(); i++)
     {
         Subkey sk = k.subkey(i);

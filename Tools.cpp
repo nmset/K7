@@ -104,3 +104,20 @@ bool Tools::KeyHasSecret(const WString& fpr)
     }
     return (!k.isNull());
 }
+
+bool Tools::IsFound(const WString& item, vector<WString>& items)
+{
+    // std:find should be more aesthetic.
+    vector<WString> ::iterator it;
+    for (it = items.begin(); it != items.end(); it++)
+    {
+        if ((*it) == item)
+            return true;
+    }
+    return false;
+}
+
+bool Tools::IsOurKey(const WString& fpr, vector<WString>& ourPrivKeys)
+{
+    return IsFound(fpr, ourPrivKeys);
+}

@@ -44,9 +44,16 @@ public:
     static WString GetUidStatus(const GpgME::UserID& uid);
     static WString GetSigStatus(const GpgME::UserID::Signature& sig);
     static bool KeyHasSecret(const WString& fpr);
+    /**
+     * If the fingerprint is that of a private key we manage, returns true.
+     * @param fpr
+     * @param ourPrivKeys
+     * @return 
+     */
+    static bool IsOurKey(const WString& fpr, vector<WString>& ourPrivKeys);
     
 private:
-
+    static bool IsFound(const WString& item, vector<WString>& items);
 };
 
 #endif /* TOOLS_H */
