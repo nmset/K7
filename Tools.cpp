@@ -88,7 +88,8 @@ WString Tools::GetSigStatus(const GpgME::UserID::Signature& sig)
     status += WString(WString::tr("SigStatusIsInvalid")) + sep + TexttualBool(sig.isInvalid()) + nl;
     status += WString(WString::tr("SigStatusIsExportable")) + sep + TexttualBool(sig.isExportable()) + nl;
     status += WString(WString::tr("SigStatusIsExpired")) + sep + TexttualBool(sig.isExpired()) + nl;
-    status += WString(WString::tr("SigStatusIsRevokation")) + sep + TexttualBool(sig.isRevokation());
+    status += WString(WString::tr("SigStatusIsRevokation")) + sep + TexttualBool(sig.isRevokation()) + nl;
+    status += WString(WString::tr("Algorithm")) + sep + WString(sig.algorithmAsString());
 
     return status;
 }

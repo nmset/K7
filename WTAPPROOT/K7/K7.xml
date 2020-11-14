@@ -54,6 +54,8 @@
    <message id='SubKeys'>Subkeys</message>
    <message id='Ids'>IDs</message>
    <message id='Usage'>Usage</message>
+   <message id='Algorithm'>Algorithm</message>
+   <message id='Algorithms'>Algorithms</message>
    
    <message id='Yes'>Yes</message>
    <message id='No'>No</message>

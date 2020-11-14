@@ -389,6 +389,7 @@ void K7Main::DisplaySubKeys(const WString& fullKeyID, bool secret)
         m_ttbSubKeys->addColumn(TR("Expiration"), 150);
         m_ttbSubKeys->addColumn(TR("Usage"), 70);
         m_ttbSubKeys->addColumn(TR("Secret"), 50);
+        m_ttbSubKeys->addColumn(TR("Algorithms"), 50);
     }
     WTreeTableNode * rootNode = new WTreeTableNode(fullKeyID);
     rootNode->setChildCountPolicy(ChildCountPolicy::Enabled);
@@ -420,6 +421,9 @@ void K7Main::DisplaySubKeys(const WString& fullKeyID, bool secret)
         skNode->setColumnWidget(3, cpp14::make_unique<WText> (usage));
         const WString isSecret = sk.isSecret() ? TR("Yes") : TR("No");
         skNode->setColumnWidget(4, cpp14::make_unique<WText> (isSecret));
+        const WString algos = sk.publicKeyAlgorithmAsString() + _SPACE_ + _DASH_
+                + _SPACE_ + sk.algoName();
+        skNode->setColumnWidget(5, cpp14::make_unique<WText> (algos));
         rootNode->addChildNode(unique_ptr<WTreeTableNode> (skNode));
     }
     m_ttbSubKeys->show();
