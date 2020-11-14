@@ -84,8 +84,12 @@ void PopupCertifyUserId::Create(vector<WString>& privateKeys,
     hblPassphrase->addWidget(unique_ptr<WLineEdit> (m_lePassphrase), 1);
     vblMain->addLayout(unique_ptr<WHBoxLayout> (hblPassphrase));
 
+    WHBoxLayout * hblButtons = new WHBoxLayout();
+    WPushButton * btnClose = new WPushButton(TR("Close"));
+    hblButtons->addWidget(unique_ptr<WPushButton> (btnClose));
     m_btnApply = new WPushButton(TR("Apply"));
-    vblMain->addWidget(unique_ptr<WPushButton> (m_btnApply));
+    hblButtons->addWidget(unique_ptr<WPushButton> (m_btnApply));
+    vblMain->addLayout(unique_ptr<WHBoxLayout> (hblButtons));
 
     m_cmbPrivKeys->changed().connect(std::bind(&PopupCertifyUserId::ShowPassphrase, this, true));
     m_cbOptionExportable->checked().connect(std::bind(&PopupCertifyUserId::OnCertifyOptionChecked, this, 1));
@@ -94,7 +98,7 @@ void PopupCertifyUserId::Create(vector<WString>& privateKeys,
     m_cbOptionExportable->unChecked().connect(std::bind(&PopupCertifyUserId::OnCertifyOptionUnChecked, this, 1));
     m_cbOptionNonRevocable->unChecked().connect(std::bind(&PopupCertifyUserId::OnCertifyOptionUnChecked, this, 2));
     // m_cbOptionTrust->unChecked().connect(std::bind(&PopupCertifyUserId::OnCertifyOptionUnChecked, this, 4));
-
+    btnClose->clicked().connect(this, &WPopupWidget::hide);
 }
 
 void PopupCertifyUserId::FillPrivateKeyComboBox(vector<WString>& privateKeys)
