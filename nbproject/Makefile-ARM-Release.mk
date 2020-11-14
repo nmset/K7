@@ -40,6 +40,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/GpgMEWorker.o \
 	${OBJECTDIR}/K7Main.o \
 	${OBJECTDIR}/KeyEdit.o \
+	${OBJECTDIR}/KeyringIO.o \
 	${OBJECTDIR}/LoopbackPassphraseProvider.o \
 	${OBJECTDIR}/PopupCertifyUserId.o \
 	${OBJECTDIR}/PopupCreate.o \
@@ -100,6 +101,11 @@ ${OBJECTDIR}/KeyEdit.o: KeyEdit.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/KeyEdit.o KeyEdit.cpp
+
+${OBJECTDIR}/KeyringIO.o: KeyringIO.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -s -DLARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -I/usr/local/Wt/include -I/usr/include/gpgme++ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/KeyringIO.o KeyringIO.cpp
 
 ${OBJECTDIR}/LoopbackPassphraseProvider.o: LoopbackPassphraseProvider.cpp
 	${MKDIR} -p ${OBJECTDIR}

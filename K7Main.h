@@ -22,20 +22,20 @@
 #include <gpgme++/key.h>
 #include <map>
 #include "AppConfig.h"
-#include "PopupUploader.h"
-#include "PopupDeleter.h"
-#include "PopupCreate.h"
 #include "TransientMessageWidget.h"
 #include "KeyEdit.h"
+#include "KeyringIO.h"
 #include "global.h"
 
 using namespace Wt;
 
 class KeyEdit;
+class KeyringIO;
 
 class K7Main : public WApplication
 {
     friend class KeyEdit;
+    friend class KeyringIO;
 public:
     K7Main(const WEnvironment& env);
     virtual ~K7Main();
@@ -59,10 +59,8 @@ private:
     WTreeTable * m_ttbKeys;
     WTreeTable * m_ttbUids;
     WTreeTable * m_ttbSubKeys;
-    PopupUpload * m_popupUpload;
-    PopupDelete * m_popupDelete;
     KeyEdit * m_keyEdit;
-    PopupCreate * m_popupCreate;
+    KeyringIO * m_keyringIO;
     /**
      * Finds public keys as per criteria,
      * and private keys if any is declared in config file for current client.
@@ -91,47 +89,9 @@ private:
      */
     void DisplaySubKeys(const WString& fullKeyID, bool secret = false);
     /**
-     * Shows a non-blocking popup to upload a key,
-     * with forward confirmation for upload.
-     */
-    void ShowPopupUpload();
-    /**
-     * Shows a button to import an uploaded key
-     * @param spool
-     */
-    void OnUploadCompleted(const WString& spool);
-    /**
-     * Actually import the uploaded file.
-     */
-    void DoImportKey();
-    /**
-     * Shows a non-blocking popup to delete a key
-     */
-    void ShowPopupDelete();
-    /**
-     * All public keys can be deleted.
-     * Private keys can be deleted only if the user
-     * manages that key, as declared in the configuration file.
-     * @param fullKeyID
-     * @return 
-     */
-    bool CanKeyBeDeleted(const WString& fullKeyID);
-    /**
-     * Actually delete the key, with forward confirmation in the popup.
-     */
-    void DoDeleteKey();
-    /**
      * Translates unit time to readable date.
      */
     WString MakeDateTimeLabel(time_t ticks);
-    /**
-     * Shows a non-blocking popup to create keys.
-     */
-    void ShowPopupCreate();
-    /**
-     * Validates input and creates the keys.
-     */
-    void DoCreateKey();
 };
 
 #endif /* K7MAIN_H */

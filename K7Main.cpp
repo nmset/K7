@@ -29,7 +29,7 @@ K7Main::K7Main(const WEnvironment& env)
 {
     m_config = NULL;
     m_btnUpload = NULL; m_btnImport = NULL; m_btnDelete = NULL;
-    m_btnCreate = NULL; m_popupCreate = NULL;
+    m_btnCreate = NULL;
     WApplication::setTitle(_APPNAME_);
     const WString bundle = WApplication::appRoot() + _APPNAME_;
     WApplication::instance()->messageResourceBundle().use(bundle.toUTF8());
@@ -58,7 +58,6 @@ K7Main::K7Main(const WEnvironment& env)
     OwnerTrustLevel[GpgME::Key::OwnerTrust::Ultimate] = TR("UidUltimate");
     OwnerTrustLevel[GpgME::Key::OwnerTrust::Undefined] = TR("UidUndefined");
     OwnerTrustLevel[GpgME::Key::OwnerTrust::Unknown] = TR("UidUnknown");
-    m_popupUpload = NULL; m_popupDelete = NULL;
     m_keyEdit = new KeyEdit(this);
     
     WLink link;
@@ -70,8 +69,8 @@ K7Main::K7Main(const WEnvironment& env)
 
 K7Main::~K7Main()
 {
-    delete m_config; delete m_popupUpload; delete m_popupDelete;
-    delete m_keyEdit; delete m_popupCreate;
+    delete m_config;
+    delete m_keyEdit; delete m_keyringIO;
 }
 
 void
@@ -122,11 +121,9 @@ K7Main::Create()
         m_btnUpload = new WPushButton(TR("Upload"));
         m_btnUpload->setToolTip(TR("TTTUpload"));
         vblButtons->addWidget(unique_ptr<WPushButton> (m_btnUpload));
-        m_btnUpload->clicked().connect(this, &K7Main::ShowPopupUpload);
         m_btnImport = new WPushButton(TR("Import"));
         m_btnImport->setToolTip(TR("TTTImport"));
         vblButtons->addWidget(unique_ptr<WPushButton> (m_btnImport));
-        m_btnImport->clicked().connect(this, &K7Main::DoImportKey);
         m_btnImport->hide();
     }
     // Add a delete button if current user is allowed
@@ -135,16 +132,15 @@ K7Main::Create()
         m_btnDelete = new WPushButton(TR("Delete"));
         m_btnDelete->setToolTip(TR("TTTDelete"));
         vblButtons->addWidget(unique_ptr<WPushButton> (m_btnDelete));
-        m_btnDelete->clicked().connect(this, &K7Main::ShowPopupDelete);
         m_btnDelete->hide();
     }
     vblButtons->addSpacing(150);
     vblButtons->addStretch(1);
-    if (m_config->CanCreateKeys()) {
+    if (m_config->CanCreateKeys())
+    {
         m_btnCreate = new WPushButton(TR("Create"));
         m_btnCreate->setToolTip(TR("TTTCreate"));
         vblButtons->addWidget(unique_ptr<WPushButton> (m_btnCreate));
-        m_btnCreate->clicked().connect(this, &K7Main::ShowPopupCreate);
     }
     grlMain->addWidget(unique_ptr<WContainerWidget> (cwButtons), 1, 1);
 
@@ -158,6 +154,9 @@ K7Main::Create()
 
     root()->addWidget(cpp14::make_unique<WBreak>());
     root()->addWidget(unique_ptr<WContainerWidget> (m_cwMain));
+    
+    m_keyringIO = new KeyringIO(this);
+    
 #ifdef DEVTIME
     // Save my fingertips.
     m_leSearch->setText("s");
@@ -300,7 +299,7 @@ void K7Main::OnKeyAnchorClicked(WAnchor * source)
     DisplayUids(id);
     DisplaySubKeys(id, secret);
     if (m_config->CanDelete()) // m_btnDelete is NULL otherwise
-        m_btnDelete->setHidden(!CanKeyBeDeleted(id));
+        m_btnDelete->setHidden(!m_keyringIO->CanKeyBeDeleted(id));
 }
 
 void K7Main::DisplayUids(const WString& fullKeyID, bool secret)
@@ -414,184 +413,4 @@ void K7Main::DisplaySubKeys(const WString& fullKeyID, bool secret)
         rootNode->addChildNode(unique_ptr<WTreeTableNode> (skNode));
     }
     m_ttbSubKeys->show();
-}
-
-void K7Main::ShowPopupUpload() {
-    if (m_popupUpload == NULL) {
-        m_popupUpload = new PopupUpload(m_btnUpload, m_tmwMessage);
-        m_popupUpload->Create();
-        m_popupUpload->UploadDone().connect(this, &K7Main::OnUploadCompleted);
-    }
-    m_popupUpload->show();
-}
-
-void K7Main::OnUploadCompleted(const WString& spool) {
-    // Buffer the spool file name in the import button
-    m_btnImport->setAttributeValue("spool", spool);
-    m_btnImport->show();
-    m_popupUpload->hide();
-}
-
-void K7Main::DoImportKey() {
-    const WString spool = m_btnImport->attributeValue("spool");
-    Error e;
-    GpgMEWorker gpgw;
-    const WString fpr = gpgw.ImportKey(spool.toUTF8().c_str(), e);
-    m_btnImport->hide();
-    m_btnImport->setAttributeValue("spool", "");
-    if (e.code() != 0) {
-        m_tmwMessage->SetText(e.asString());
-        return;
-    }
-    if (fpr.empty()) {
-        m_tmwMessage->SetText(TR("ImportError") + fpr);
-        return;
-    }
-    // Show the imported key
-    GpgME::Key k = gpgw.FindKey(fpr.toUTF8().c_str(), e, false); // A public is present anyway
-    if (e.code() != 0) {
-        m_tmwMessage->SetText(e.asString());
-        return;
-    }
-    m_tmwMessage->SetText(TR("ImportSuccess") + fpr + WString(" - ") + WString(k.userID(0).name()));
-    m_leSearch->setText(fpr);
-    if (Tools::KeyHasSecret(fpr))
-        m_config->UpdateSecretKeyOwnership(fpr, true);
-    Search();
-}
-
-bool K7Main::CanKeyBeDeleted(const WString& fullKeyID) {
-    // Caller should check m_config->canDelete first. m_btnDelete is null if can't delete.
-    Error e;
-    GpgMEWorker gpgw;
-    GpgME::Key k = gpgw.FindKey(fullKeyID.toUTF8().c_str(), e, true); // Look for a private key
-    if (e.code() != 0 && e.code() != 16383) { // 16383 : end of file, when key is not private
-        m_tmwMessage->SetText(e.asString());
-        return false;
-    }
-    // k can now be secret or public
-    if (k.isNull()) {// Is a public key
-        k = gpgw.FindKey(fullKeyID.toUTF8().c_str(), e, false);
-        // Prepare actual delete
-        m_btnDelete->setAttributeValue("keyid", k.keyID());
-        m_btnDelete->setAttributeValue("hasSecret", "0");
-        return true;
-    }
-    /* 
-     * k is now secret
-     * Is selected private key one of those that the current user manages ?
-     */
-    vector<WString> curUserPrivKeys = m_config->PrivateKeyIds();
-    vector<WString>::iterator it;
-    for (it = curUserPrivKeys.begin(); it != curUserPrivKeys.end(); it++) {
-        if (Tools::ConfigKeyIdMatchesKey(k, *it)) {
-            m_btnDelete->setAttributeValue("keyid", k.keyID());
-            m_btnDelete->setAttributeValue("hasSecret", "1");
-            return true;
-        }
-    }
-    return false;
-}
-
-void K7Main::ShowPopupDelete() {
-    if (m_popupDelete == NULL) {
-        m_popupDelete = new PopupDelete(m_btnDelete, m_tmwMessage);
-        m_popupDelete->Create();
-        m_popupDelete->GetDeleteButton()->clicked().connect(this, &K7Main::DoDeleteKey);
-    }
-    m_popupDelete->show();
-}
-
-void K7Main::DoDeleteKey() {
-    // Deleting keys requires the GPGME C API
-    Error c_e, e;
-    GpgMECWorker gpgcw;
-    GpgMEWorker gpgw;
-    const WString fullKeyID = m_btnDelete->attributeValue("keyid");
-    const WString hasSecret = m_btnDelete->attributeValue("hasSecret");
-    bool secret = true;
-    if (hasSecret == WString("0"))
-        secret = false;
-    // Get the key before deletion, to show its ID on success
-    GpgME::Key k = gpgw.FindKey(fullKeyID.toUTF8().c_str(), e, secret);
-    if (e.code() != 0) {
-        m_tmwMessage->SetText(e.asString());
-        return;
-    }
-    // Delete the key using the C API
-    const WString fpr(k.primaryFingerprint());
-    bool res = gpgcw.DeleteKey(k.primaryFingerprint(), secret, c_e);
-    if (c_e.code() != 0) {
-        m_tmwMessage->SetText(c_e.asString());
-    } else {
-        m_tmwMessage->SetText(TR("DeleteSuccess") + fpr + WString(" - ") + WString(k.userID(0).name()));
-    }
-    m_btnDelete->hide();
-    m_popupDelete->hide();
-    if (secret)
-        m_config->UpdateSecretKeyOwnership(fpr, false);
-    // Show that the key is no longer available
-    m_leSearch->setText(fpr);
-    Search();
-}
-
-void K7Main::ShowPopupCreate()
-{
-    if (m_popupCreate == NULL)
-    {
-        m_popupCreate = new PopupCreate(m_btnCreate, m_tmwMessage);
-        m_popupCreate->Create();
-        m_popupCreate->GetApplyButton()->clicked().connect(this, &K7Main::DoCreateKey);
-    }
-    m_popupCreate->show();
-}
-
-void K7Main::DoCreateKey()
-{
-    if (!m_popupCreate->Validate())
-        return;
-    Error e;
-    GpgME::Key k;
-    GpgMEWorker gpgw;
-    if (m_popupCreate->UseDefaultEngineAlgorithms())
-    {
-        e = gpgw.CreateKeyWithEngineDefaultAlgo(k, m_popupCreate->GetName().toUTF8(),
-                                                m_popupCreate->GetEmail().toUTF8(),
-                                                m_popupCreate->GetComment().toUTF8(),
-                                                m_popupCreate->GetPassphrase().toUTF8(),
-                                                m_popupCreate->GetExpiry());
-    }
-    else
-    {
-        e = gpgw.CreateKey(k, m_popupCreate->GetName().toUTF8(),
-                           m_popupCreate->GetEmail().toUTF8(),
-                           m_popupCreate->GetComment().toUTF8(),
-                           m_popupCreate->GetArbitraryKeyAlgo().toUTF8().c_str(),
-                           m_popupCreate->GetPassphrase().toUTF8(),
-                           m_popupCreate->GetExpiry());
-        // GPGME accepts a missing subkey.
-        if (e.code() == 0 && !m_popupCreate->GetArbitrarySubkeyAlgo().empty())
-            e = gpgw.CreateSubKey(k,
-                                  m_popupCreate->GetArbitrarySubkeyAlgo().toUTF8().c_str(),
-                                  m_popupCreate->GetPassphrase().toUTF8(),
-                                  m_popupCreate->GetExpiry());
-    }
-    if (e.code() != 0)
-    {
-        m_tmwMessage->SetText(e.asString());
-    }
-    else
-    {
-        const WString fpr(k.primaryFingerprint());
-        m_tmwMessage->SetText(TR("CreateSuccess")
-            + fpr + WString(" - ") + WString(k.userID(0).name()));
-        // Add the key fingerprint to the list of keys managed by the user.
-        m_config->UpdateSecretKeyOwnership(fpr, true);
-        m_popupCreate->hide();
-#ifndef DEVTIME
-        m_popupCreate->Reset();
-#endif
-        m_leSearch->setText(fpr);
-        Search();
-    }
 }
