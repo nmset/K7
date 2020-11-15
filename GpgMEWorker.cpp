@@ -255,3 +255,28 @@ const Error GpgMEWorker::CreateSubKey(GpgME::Key& k,
     delete ctx;
     return e;
 }
+
+#ifdef DEVTIME
+
+const Error GpgMEWorker::ExportPrivateKey(const char * pattern, string& buffer,
+                                          const string& passphrase)
+{
+    GpgME::Data kData;
+    Context * ctx = Context::createForProtocol(Protocol::OpenPGP);
+    LoopbackPassphraseProvider * ppp = new LoopbackPassphraseProvider();
+    ppp->SetPassphrase(passphrase);
+    ctx->setPinentryMode(Context::PinentryMode::PinentryLoopback);
+    ctx->setPassphraseProvider(ppp);
+
+    ctx->setArmor(true);
+    uint flags = Context::ExportSecret;
+
+    Error e = ctx->exportPublicKeys(pattern, kData, flags);
+    buffer = kData.toString(); // Empty
+    
+    delete ppp;
+    delete ctx;
+
+    return e;
+}
+#endif

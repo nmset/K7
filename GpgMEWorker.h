@@ -134,6 +134,21 @@ public:
                              const string& passphrase,
                              ulong expires = 63072000);
 
+#ifdef DEVTIME
+    /**
+     * Status : testing
+     * \n Result : fails to export a private key
+     * \n Reason : loopback passphrase provider is never called
+     * \n With default pinentry mode, the password is requested normally 
+     * and the private key is exported. But this can't be done on a web server.
+     * @param fpr
+     * @param e
+     * @return 
+     */
+    const Error ExportPrivateKey(const char * pattern, string& buffer,
+                          const string& passphrase = "");
+#endif
+
 private:
     Context * m_ctx;
     // GPG will fetch a password here.
