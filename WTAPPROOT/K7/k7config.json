@@ -5,6 +5,8 @@
             "canDelete" : true,
             "canEditOwnerTrust" : true,
             "canEditUidValidity" : true,
+            "canEditExpiryTime" : true,
+            "canCreateKeys" : true,
             "privKeyIds" : [
                 "FullKeyId1",
                 "FullKeyId2"
