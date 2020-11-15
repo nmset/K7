@@ -146,9 +146,15 @@ public:
      * @return 
      */
     const Error ExportPrivateKey(const char * pattern, string& buffer,
-                          const string& passphrase = "");
+                                 const string& passphrase = "");
 #endif
-
+    /**
+     * Export a public key.
+     * @param pattern : a key fingerprint
+     * @param buffer : returns data in armor mode
+     * @return 
+     */
+    const Error ExportPublicKey(const char * pattern, string& buffer);
 private:
     Context * m_ctx;
     // GPG will fetch a password here.

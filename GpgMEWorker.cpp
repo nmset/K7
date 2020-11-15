@@ -273,10 +273,25 @@ const Error GpgMEWorker::ExportPrivateKey(const char * pattern, string& buffer,
 
     Error e = ctx->exportPublicKeys(pattern, kData, flags);
     buffer = kData.toString(); // Empty
-    
+
     delete ppp;
     delete ctx;
 
     return e;
 }
 #endif
+
+const Error GpgMEWorker::ExportPublicKey(const char* pattern, string& buffer)
+{
+    GpgME::Data kData;
+    Context * ctx = Context::createForProtocol(Protocol::OpenPGP);
+    ctx->setArmor(true);
+    uint flags = Context::ExportDefault;
+
+    Error e = ctx->exportPublicKeys(pattern, kData, flags);
+    buffer = kData.toString();
+
+    delete ctx;
+
+    return e;
+}
