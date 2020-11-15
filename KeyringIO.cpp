@@ -117,7 +117,7 @@ bool KeyringIO::CanKeyBeDeleted(const WString& fullKeyID)
     {// Is a public key
         k = gpgw.FindKey(fullKeyID.toUTF8().c_str(), e, false);
         // Prepare actual delete
-        m_btnDelete->setAttributeValue("keyid", k.keyID());
+        m_btnDelete->setAttributeValue("fpr", k.primaryFingerprint());
         m_btnDelete->setAttributeValue("hasSecret", "0");
         return true;
     }
@@ -131,7 +131,7 @@ bool KeyringIO::CanKeyBeDeleted(const WString& fullKeyID)
     {
         if (Tools::ConfigKeyIdMatchesKey(k, *it))
         {
-            m_btnDelete->setAttributeValue("keyid", k.keyID());
+            m_btnDelete->setAttributeValue("fpr", k.primaryFingerprint());
             m_btnDelete->setAttributeValue("hasSecret", "1");
             return true;
         }
@@ -157,13 +157,13 @@ void KeyringIO::DoDeleteKey()
     Error c_e, e;
     GpgMECWorker gpgcw;
     GpgMEWorker gpgw;
-    const WString fullKeyID = m_btnDelete->attributeValue("keyid");
+    const WString fprToDelete = m_btnDelete->attributeValue("fpr");
     const WString hasSecret = m_btnDelete->attributeValue("hasSecret");
     bool secret = true;
     if (hasSecret == WString("0"))
         secret = false;
     // Get the key before deletion, to show its ID on success
-    GpgME::Key k = gpgw.FindKey(fullKeyID.toUTF8().c_str(), e, secret);
+    GpgME::Key k = gpgw.FindKey(fprToDelete.toUTF8().c_str(), e, secret);
     if (e.code() != 0)
     {
         m_tmwMessage->SetText(e.asString());
