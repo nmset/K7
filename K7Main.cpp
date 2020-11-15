@@ -266,7 +266,7 @@ void K7Main::DisplayKeys(const vector<GpgME::Key>& kList, const WString& grpLabe
         WLink ln;
         ln.setUrl(WString(L"javascript:void(0)").toUTF8());
         WAnchor * anc = new WAnchor(ln, k.shortKeyID());
-        anc->setId(k.shortKeyID());
+        anc->setId(k.primaryFingerprint());
         // We use widget attribute values to buffer properties.
         anc->setAttributeValue("hasSecret", k.hasSecret() ? "1" : "0");
         anc->clicked().connect(std::bind(&K7Main::OnKeyAnchorClicked, this, anc));
