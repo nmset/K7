@@ -56,6 +56,7 @@ private:
     WPushButton * m_btnImport;
     WPushButton * m_btnDelete;
     WPushButton * m_btnCreate;
+    WPushButton * m_btnExport;
     WTreeTable * m_ttbKeys;
     WTreeTable * m_ttbUids;
     WTreeTable * m_ttbSubKeys;

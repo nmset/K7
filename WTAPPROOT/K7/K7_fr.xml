@@ -13,7 +13,7 @@
    <message id='TTTUpload'>Télécharger une nouvelle clé</message>
    <message id='TTTImport'>Ajouter une nouvelle clé au porte clés</message>
    <message id='TTTDelete'>Supprimer la clé sélectionnée</message>
-   <message id='TTTCreate'>Créer une paire de clés</message>
+   <message id='TTTCreate'>Créer une paire de clés - Il est impossible d'exporter une clé secrète. Considérez importer une clé secrète plutôt.</message>
    <message id='TTTSignKey'>Signer la clé sélectionnée avec votre clé secrète si elle est disponible</message>
    <message id='CantUpload'>Ne peut télécharger</message>
    
@@ -129,4 +129,7 @@
     <message id='ValidatePassphraseMissing'>Phrase de passe manquante</message>
     <message id='ValidatePassphraseNoMatch'>Les phrases de passe ne sont pas identiques</message>
     <message id='CreateSuccess'>Création réussie : </message>
+    
+    <message id='Export'>Exporter</message>
+    <message id='TTTExport'>L'export des clés secrètes est techniquement impossible</message>
  </messages>

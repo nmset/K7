@@ -13,7 +13,7 @@
    <message id='TTTUpload'>Upload a new key</message>
    <message id='TTTImport'>Add a new key</message>
    <message id='TTTDelete'>Delete selected key</message>
-   <message id='TTTCreate'>Create a pair of keys</message>
+   <message id='TTTCreate'>Create a pair of keys - It is not possible to export secret keys. Consider importing a secret key rather.</message>
    <message id='TTTSignKey'>Sign selected key with your secret key if available</message>
    <message id='CantUpload'>Can't upload</message>
    
@@ -129,4 +129,7 @@
     <message id='ValidatePassphraseMissing'>Passphrase missing</message>
     <message id='ValidatePassphraseNoMatch'>Passphrase does not match</message>
     <message id='CreateSuccess'>Create success : </message>
+    
+    <message id='Export'>Export</message>
+    <message id='TTTExport'>Exporting secret keys is technically impossible</message>
  </messages>

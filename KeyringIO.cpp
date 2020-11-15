@@ -11,6 +11,10 @@
 #include "GpgMEWorker.h"
 #include "GpgMECWorker.h"
 #include "Tools.h"
+#include <Wt/WLink.h>
+#include <strstream>
+
+using namespace std;
 
 KeyringIO::KeyringIO(K7Main * owner)
 {
@@ -24,6 +28,7 @@ KeyringIO::KeyringIO(K7Main * owner)
     m_btnImport = m_owner->m_btnImport;
     m_btnDelete = m_owner->m_btnDelete;
     m_btnCreate = m_owner->m_btnCreate;
+    m_btnExport = m_owner->m_btnExport;
     m_leSearch = m_owner->m_leSearch;
 
     if (m_config->CanImport())
@@ -243,4 +248,74 @@ void KeyringIO::DoCreateKey()
         m_leSearch->setText(fpr);
         m_owner->Search();
     }
+}
+
+void KeyringIO::PrepareExport(const WString& fpr, bool isSecret)
+{
+    WLink link;
+    shared_ptr<ExportKeyStreamResource> shResource =
+            make_shared<ExportKeyStreamResource>
+            (fpr, isSecret, "appliation/pgp-keys", m_tmwMessage);
+    link.setResource(shResource);
+    m_btnExport->setLink(link);
+    if (isSecret)
+        m_btnExport->hide();
+    else
+        m_btnExport->show();
+}
+
+ExportKeyStreamResource::ExportKeyStreamResource(const WString& fpr,
+                                                 bool isSecret,
+                                                 TransientMessageWidget * tmw)
+: WStreamResource()
+{
+    m_fpr = fpr;
+    m_isSecret = isSecret;
+    m_tmwMessage = tmw;
+}
+
+ExportKeyStreamResource::ExportKeyStreamResource(const WString& fpr,
+                                                 bool isSecret,
+                                                 const string& mimeType,
+                                                 TransientMessageWidget * tmw)
+: WStreamResource(mimeType)
+{
+    m_fpr = fpr;
+    m_isSecret = isSecret;
+    m_tmwMessage = tmw;
+}
+
+ExportKeyStreamResource::~ExportKeyStreamResource()
+{
+    beingDeleted();
+}
+
+void ExportKeyStreamResource::handleRequest(const Http::Request& request,
+                                            Http::Response& response)
+{
+    /*
+     * Private keys cannot be exported with loopback pinentry.
+     * Let's hope it gets better someday.
+     */
+    if (m_isSecret)
+    {
+        m_tmwMessage->SetText(TR("TTTExport"));
+        return;
+    }
+    string buffer;
+    if (!request.continuation()) // Needed for WStreamResource ?
+    {
+        Error e;
+        GpgMEWorker gpgw;
+        e = gpgw.ExportPublicKey(m_fpr.toUTF8().c_str(), buffer);
+        if (e.code() != 0)
+        {
+            m_tmwMessage->SetText(e.asString());
+            return;
+        }
+        suggestFileName(m_fpr + WString(".asc"), ContentDisposition::Attachment);
+    }
+
+    istrstream bufStream(buffer.c_str());
+    handleRequestPiecewise(request, response, bufStream);
 }

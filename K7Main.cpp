@@ -32,6 +32,7 @@ K7Main::K7Main(const WEnvironment& env)
     m_btnImport = NULL;
     m_btnDelete = NULL;
     m_btnCreate = NULL;
+    m_btnExport = NULL;
     WApplication::setTitle(_APPNAME_);
     const WString bundle = WApplication::appRoot() + _APPNAME_;
     WApplication::instance()->messageResourceBundle().use(bundle.toUTF8());
@@ -139,6 +140,11 @@ K7Main::Create()
     }
     vblButtons->addSpacing(150);
     vblButtons->addStretch(1);
+    // Everyone can export a key
+    m_btnExport = new WPushButton(TR("Export"));
+    m_btnExport->setToolTip(TR("TTTExport"));
+    m_btnExport->hide();
+    vblButtons->addWidget(unique_ptr<WPushButton> (m_btnExport));
     if (m_config->CanCreateKeys())
     {
         m_btnCreate = new WPushButton(TR("Create"));
@@ -307,6 +313,8 @@ void K7Main::OnKeyAnchorClicked(WAnchor * source)
     DisplaySubKeys(id, secret);
     if (m_config->CanDelete()) // m_btnDelete is NULL otherwise
         m_btnDelete->setHidden(!m_keyringIO->CanKeyBeDeleted(id));
+    
+    m_keyringIO->PrepareExport(id, secret);
 }
 
 void K7Main::DisplayUids(const WString& fullKeyID, bool secret)

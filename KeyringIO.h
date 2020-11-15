@@ -12,6 +12,7 @@
 
 #include "K7Main.h"
 #include <Wt/WComboBox.h>
+#include <Wt/WStreamResource.h>
 #include "PopupUploader.h"
 #include "PopupDeleter.h"
 #include "PopupCreate.h"
@@ -35,22 +36,23 @@ public:
 private:
     KeyringIO(K7Main * owner);
     virtual ~KeyringIO();
-    
+
     K7Main * m_owner;
     PopupUpload * m_popupUpload;
     PopupDelete * m_popupDelete;
     PopupCreate * m_popupCreate;
-    
+
     // Variables from m_owner mapped here.
     AppConfig * m_config;
     TransientMessageWidget * m_tmwMessage;
     WPushButton * m_btnUpload;
     WPushButton * m_btnImport;
     WPushButton * m_btnDelete;
-    WPushButton * m_btnCreate ;
+    WPushButton * m_btnCreate;
+    WPushButton * m_btnExport;
     WLineEdit * m_leSearch;
 
-    
+
     /**
      * Shows a non-blocking popup to upload a key,
      * with forward confirmation for upload.
@@ -90,6 +92,37 @@ private:
      */
     void OnUploadCompleted(const WString& spool);
 
+    void PrepareExport(const WString& fpr, bool isSecret);
+};
+
+/**
+ * Export a public key for download.
+ * \n Secret keys cannot be exported and are excluded.
+ * @param fpr
+ * @param isSecret
+ * @param tmw
+ */
+class ExportKeyStreamResource : public WStreamResource
+{
+public:
+    ExportKeyStreamResource(const WString& fpr, bool isSecret,
+                            TransientMessageWidget * tmw);
+    ExportKeyStreamResource(const WString& fpr, bool isSecret,
+                            const string& mimeType,
+                            TransientMessageWidget * tmw);
+    virtual ~ExportKeyStreamResource();
+    /**
+     * Actually exports the public key and starts download on success.
+     * @param request
+     * @param response
+     */
+    void handleRequest(const Http::Request& request,
+                       Http::Response& response) override;
+
+private:
+    WString m_fpr;
+    bool m_isSecret;
+    TransientMessageWidget * m_tmwMessage;
 };
 
 #endif /* KEYRINGIO_H */
