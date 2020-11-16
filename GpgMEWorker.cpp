@@ -17,9 +17,11 @@
 
 using namespace std;
 
-#define SPACE " "
-#define LESSTHAN "<"
-#define MORETHAN ">"
+#define SPACE string(" ")
+#define LESSTHAN string("<")
+#define MORETHAN string(">")
+#define LEFT_PARENTHESIS string("(")
+#define RIGHT_PARENTHESIS string(")")
 // From gpgme.h (C API), don't want to include it here for one const.
 #define _CREATE_NOEXPIRE   (1 << 13)
 
@@ -187,10 +189,7 @@ const Error GpgMEWorker::CreateKeyWithEngineDefaultAlgo(GpgME::Key& k,
     ctx->setPinentryMode(Context::PinentryMode::PinentryLoopback);
     ctx->setPassphraseProvider(ppp);
 
-    string uid = name + SPACE
-            + LESSTHAN + email + MORETHAN;
-    if (!comment.empty())
-        uid += SPACE + comment;
+    const string uid =MakeUidString(name, email, comment);
     uint flags = expires
             ? 0 : _CREATE_NOEXPIRE;
 
@@ -218,10 +217,7 @@ const Error GpgMEWorker::CreateKey(GpgME::Key& k,
     ctx->setPinentryMode(Context::PinentryMode::PinentryLoopback);
     ctx->setPassphraseProvider(ppp);
 
-    string uid = name + SPACE
-            + LESSTHAN + email + MORETHAN;
-    if (!comment.empty())
-        uid += SPACE + comment;
+    const string uid = MakeUidString(name, email, comment);
     uint flags = expires
             ? 0 : _CREATE_NOEXPIRE;
 
@@ -294,4 +290,13 @@ const Error GpgMEWorker::ExportPublicKey(const char* pattern, string& buffer)
     delete ctx;
 
     return e;
+}
+
+string GpgMEWorker::MakeUidString(const string& name, const string& email, const string& comment)
+{
+    string uid = name + SPACE
+            + LESSTHAN + email + MORETHAN;
+    if (!comment.empty())
+        uid += SPACE + LEFT_PARENTHESIS + comment + RIGHT_PARENTHESIS;
+    return uid;
 }

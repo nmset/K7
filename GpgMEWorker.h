@@ -159,6 +159,9 @@ private:
     Context * m_ctx;
     // GPG will fetch a password here.
     LoopbackPassphraseProvider * m_ppp;
+
+    string MakeUidString(const string& name, const string& email,
+                         const string& comment);
 };
 
 /**

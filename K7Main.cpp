@@ -332,7 +332,7 @@ void K7Main::DisplayUids(const WString& fullKeyID, bool secret)
     if (m_ttbUids->columnCount() == 1)
     {
         m_ttbUids->addColumn(TR("Email"), 200);
-        m_ttbUids->addColumn(TR("Trust"), 100);
+        m_ttbUids->addColumn(TR("Trust"), 110);
         m_ttbUids->addColumn(TR("Comment"), 300);
     }
     WTreeTableNode * rootNode = new WTreeTableNode(fullKeyID);
