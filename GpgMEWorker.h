@@ -16,6 +16,7 @@
 #include <gpgme++/gpgsetownertrusteditinteractor.h>
 #include <gpgme++/gpgsignkeyeditinteractor.h>
 #include <gpgme++/gpgsetexpirytimeeditinteractor.h>
+#include <gpgme++/gpgadduserideditinteractor.h>
 #include <vector>
 #include "LoopbackPassphraseProvider.h"
 
@@ -84,6 +85,21 @@ public:
     const Error SetExpiryTime(const char * keyFpr,
                               const string& passphrase,
                               const string& timeString = "0");
+    /**
+     * Adds a user identity to a key.
+     * \n The email parameter must have a valid email address format here, else
+     * GPGME will refuse to create the identity. This is not the case when
+     * creating a key, where any string is accepted.
+     * @param keyFpr
+     * @param passphrase
+     * @param name
+     * @param email : string with a valid email format
+     * @param comment
+     * @return 
+     */
+    const Error AddUserID(const char * keyFpr, const string& passphrase,
+                          const string& name, const string& email,
+                          const string& comment);
     /**
      * Creates a pair of secret and public keys with the default engine
      * algorithms. Default expiry time is 2 * 365 days.
@@ -216,5 +232,20 @@ public:
     {
     };
 };
+
+class AddUserIDEditInteractor : public GpgAddUserIDEditInteractor
+{
+public:
+
+    AddUserIDEditInteractor()
+    : GpgAddUserIDEditInteractor()
+    {
+    }
+
+    virtual ~AddUserIDEditInteractor()
+    {
+    };
+};
+
 #endif /* GPGMEWORKER_H */
 

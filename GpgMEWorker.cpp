@@ -172,6 +172,35 @@ const Error GpgMEWorker::SetExpiryTime(const char * keyFpr,
     return e;
 }
 
+const Error GpgMEWorker::AddUserID(const char* keyFpr, const string& passphrase, 
+                                   const string& name, const string& email,
+                                   const string& comment)
+{
+    Error e;
+    Key k = FindKey(keyFpr, e, true);
+    if (e.code() != 0)
+        return e;
+    e = m_ctx->addSigningKey(k);
+    if (e.code() != 0)
+        return e;
+    
+    m_ctx->setPinentryMode(Context::PinentryMode::PinentryLoopback);
+    if (m_ppp == NULL)
+        m_ppp = new LoopbackPassphraseProvider();
+    m_ppp->SetPassphrase(passphrase);
+    m_ctx->setPassphraseProvider(m_ppp);
+    
+    AddUserIDEditInteractor * interactor = new AddUserIDEditInteractor();
+    interactor->setNameUtf8(name);
+    interactor->setEmailUtf8(email);
+    interactor->setCommentUtf8(comment);
+    GpgME::Data d;
+    e = m_ctx->edit(k, std::unique_ptr<AddUserIDEditInteractor> (interactor), d);
+    m_ctx->clearSigningKeys();
+
+    return e;
+}
+
 /*
  * Using a temporary context for key creation. It is altered after secret key
  * creation, and subkey creation fails thereafter. This is observational.
