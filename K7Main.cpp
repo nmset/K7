@@ -250,6 +250,7 @@ void K7Main::Search()
         DisplayKeys(pubkList, TR("Publics"), true);
     if (privkList.size() && m_config->PrivateKeyIds().size() > 0)
         DisplayKeys(privkList, TR("Secrets"), false);
+    m_btnExport->hide();
 }
 
 WString K7Main::MakeDateTimeLabel(time_t ticks)
