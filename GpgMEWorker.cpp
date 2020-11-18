@@ -323,9 +323,10 @@ const Error GpgMEWorker::ExportPublicKey(const char* pattern, string& buffer)
 
 string GpgMEWorker::MakeUidString(const string& name, const string& email, const string& comment)
 {
-    string uid = name + SPACE
-            + LESSTHAN + email + MORETHAN;
+    string uid = name;
     if (!comment.empty())
         uid += SPACE + LEFT_PARENTHESIS + comment + RIGHT_PARENTHESIS;
+    uid += SPACE
+            + LESSTHAN + email + MORETHAN;
     return uid;
 }
