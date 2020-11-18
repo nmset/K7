@@ -101,6 +101,19 @@ public:
                           const string& name, const string& email,
                           const string& comment);
     /**
+     * Revoke a user identity. Does not remove the identity.
+     * \n N.B. : if the uid is revoked a second time, Error::code is 0.
+     * @param keyFpr
+     * @param passphrase
+     * @param name
+     * @param email
+     * @param comment
+     * @return 
+     */
+    const Error RevokeUserID(const char * keyFpr, const string& passphrase,
+                          const string& name, const string& email,
+                          const string& comment);
+    /**
      * Creates a pair of secret and public keys with the default engine
      * algorithms. Default expiry time is 2 * 365 days.
      * @param k : must be a null key

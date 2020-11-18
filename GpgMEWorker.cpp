@@ -201,6 +201,33 @@ const Error GpgMEWorker::AddUserID(const char* keyFpr, const string& passphrase,
     return e;
 }
 
+const Error GpgMEWorker::RevokeUserID(const char* keyFpr,
+                                      const string& passphrase,
+                                      const string& name, const string& email,
+                                      const string& comment)
+{
+    Error e;
+    Key k = FindKey(keyFpr, e, true);
+    if (e.code() != 0)
+        return e;
+    e = m_ctx->addSigningKey(k);
+    if (e.code() != 0)
+        return e;
+    
+    m_ctx->setPinentryMode(Context::PinentryMode::PinentryLoopback);
+    if (m_ppp == NULL)
+        m_ppp = new LoopbackPassphraseProvider();
+    m_ppp->SetPassphrase(passphrase);
+    m_ctx->setPassphraseProvider(m_ppp);
+    
+    const string uid = MakeUidString(name, email, comment);
+    e = m_ctx->revUid(k, uid.c_str());
+    k.update();
+    m_ctx->clearSigningKeys();
+    
+    return e;
+}
+
 /*
  * Using a temporary context for key creation. It is altered after secret key
  * creation, and subkey creation fails thereafter. This is observational.
