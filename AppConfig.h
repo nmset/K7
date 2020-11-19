@@ -68,6 +68,12 @@ public:
      */
     bool CanCreateKeys() const;
     /**
+     * Allows to add or revoke a user identity to a key. It deos not mean
+     * deleting an identity.
+     * @return 
+     */
+    bool CanAddRevokeUid() const;
+    /**
      * Disown the user of the secret key, or grants him ownership. It just adds
      * or remove fpr from the private key array, without any further check. The
      * application must call here when relevant.

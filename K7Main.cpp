@@ -314,7 +314,7 @@ void K7Main::OnKeyAnchorClicked(WAnchor * source)
     DisplaySubKeys(id, secret);
     if (m_config->CanDelete()) // m_btnDelete is NULL otherwise
         m_btnDelete->setHidden(!m_keyringIO->CanKeyBeDeleted(id));
-    
+
     m_keyringIO->PrepareExport(id, secret);
 }
 
@@ -340,20 +340,28 @@ void K7Main::DisplayUids(const WString& fullKeyID, bool secret)
     rootNode->setChildCountPolicy(ChildCountPolicy::Enabled);
     m_ttbUids->setTreeRoot(unique_ptr<WTreeTableNode> (rootNode), TR("UIDs"));
     rootNode->expand();
-    vector<WString> privateKeys = m_config->PrivateKeyIds();
+    vector<WString> ourKeys = m_config->PrivateKeyIds();
+    bool canAddRevokeUid = m_config->CanAddRevokeUid()
+            && Tools::KeyHasSecret(k.primaryFingerprint())
+            && Tools::IsOurKey(k.primaryFingerprint(), ourKeys);
     for (uint i = 0; i < k.numUserIDs(); i++)
     {
         UserID uid = k.userID(i);
         WTreeTableNode * uidNode = new WTreeTableNode(uid.name());
         uidNode->setToolTip(Tools::GetUidStatus(uid));
-        TreeTableNodeText * ttntUidEmail = new TreeTableNodeText(uid.email(), uidNode, 1);
-        uidNode->setColumnWidget(1, unique_ptr<TreeTableNodeText> (ttntUidEmail));
+        WText * lblUidEmail = new WText(uid.email());
+        if (canAddRevokeUid)
+        {
+            lblUidEmail->setToolTip(TR("TTTDoubleCLick"));
+            lblUidEmail->doubleClicked().connect(std::bind(&KeyEdit::OnUidEmailClicked, m_keyEdit, uidNode, WString(k.primaryFingerprint())));
+        }
+        uidNode->setColumnWidget(1, unique_ptr<WText> (lblUidEmail));
         // Show key certify popup on double click
         WText * lblUidValidity = new WText(UidValidities[uid.validity()]);
         if (m_config->CanEditUidValidity())
         {
             lblUidValidity->setToolTip(TR("TTTDoubleCLick"));
-            lblUidValidity->doubleClicked().connect(std::bind(&KeyEdit::OnUidValidityClicked, m_keyEdit, uidNode, privateKeys, WString(k.primaryFingerprint())));
+            lblUidValidity->doubleClicked().connect(std::bind(&KeyEdit::OnUidValidityClicked, m_keyEdit, uidNode, ourKeys, WString(k.primaryFingerprint())));
         }
         uidNode->setColumnWidget(2, unique_ptr<WText> (lblUidValidity));
         TreeTableNodeText * ttntUidComment = new TreeTableNodeText(uid.comment(), uidNode, 3);

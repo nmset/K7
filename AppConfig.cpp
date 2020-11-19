@@ -38,6 +38,7 @@ mutex gs_fileWriteMutex;
             "canEditUidValidity" : true,
             "canEditExpiryTime" : true, 
             "canCreateKeys" : true,
+            "canAddRevokeUids" : true,
             "privKeyIds" : [
                 "fullKeyId1",
                 "fullKeyId2"
@@ -170,6 +171,17 @@ bool AppConfig::CanCreateKeys() const
     if (!cnObject.contains("canCreateKeys"))
         return false;
     return cnObject.get("canCreateKeys");
+}
+
+bool AppConfig::CanAddRevokeUid() const
+{
+    const WString commonName = GetSubjectDnAttribute(WSslCertificate::DnAttributeName::CommonName);
+    if (!m_SubjectCNObject.contains(commonName.toUTF8()))
+        return false;
+    Json::Object cnObject = m_SubjectCNObject.get(commonName.toUTF8());
+    if (!cnObject.contains("canAddRevokeUids"))
+        return false;
+    return cnObject.get("canAddRevokeUids");
 }
 
 bool AppConfig::UpdateSecretKeyOwnership(const WString& fpr, bool own)

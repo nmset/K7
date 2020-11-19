@@ -22,6 +22,7 @@ KeyEdit::KeyEdit(K7Main * owner)
     m_owner = owner;
     m_popupUid = NULL;
     m_popupExpiryTime = NULL;
+    m_popupAddUid = NULL;
     m_targetUidValidityKeyFpr = WString::Empty;
     m_expiryEditedKeyFpr = WString::Empty;
 }
@@ -200,3 +201,60 @@ void KeyEdit::SetExpiryTime()
     m_owner->DisplaySubKeys(m_expiryEditedKeyFpr, true);
 }
 
+void KeyEdit::OnUidEmailClicked(WTreeTableNode* uidNode, const WString& keyFpr)
+{
+    WText * lblEmail = static_cast<WText*> (uidNode->columnWidget(1));
+    if (keyFpr != m_addUidKeyFpr)
+    {
+        delete m_popupAddUid;
+        m_popupAddUid = new PopupAddUid(lblEmail, m_owner->m_tmwMessage);
+        m_popupAddUid->Create();
+        m_addUidKeyFpr = keyFpr;
+        m_popupAddUid->GetApplyButton()->clicked().connect(this, &KeyEdit::AddOrRevokeUid);
+    }
+    WText * lblName = uidNode->label();
+    WText * lblComment = static_cast<WText*> (uidNode->columnWidget(3));
+    m_popupAddUid->SetNodeIdentity(lblName->text(), lblEmail->text(),
+                                   lblComment->text());
+    m_popupAddUid->show();
+}
+
+void KeyEdit::AddOrRevokeUid()
+{
+    if (!m_popupAddUid->Validate())
+    {
+        m_owner->m_tmwMessage->SetText(TR("InvalidInput"));
+        return;
+    }
+    const WString name = m_popupAddUid->GetName();
+    const WString email = m_popupAddUid->GetEmail();
+    const WString comment = m_popupAddUid->GetComment();
+    const WString passphrase = m_popupAddUid->GetPassphrase();
+
+    Error e;
+    GpgMEWorker gpgw;
+    if (m_popupAddUid->WhatToDo() == PopupAddUid::What::Revoke)
+    {
+        e = gpgw.RevokeUserID(m_addUidKeyFpr.toUTF8().c_str(),
+                              passphrase.toUTF8(),
+                              name.toUTF8(), email.toUTF8(), comment.toUTF8());
+    }
+    else
+    {
+        e = gpgw.AddUserID(m_addUidKeyFpr.toUTF8().c_str(),
+                           passphrase.toUTF8(),
+                           name.toUTF8(), email.toUTF8(), comment.toUTF8());
+    }
+    m_popupAddUid->hide();
+    if (e.code() != 0)
+    {
+        m_popupAddUid->ShowPassphrase(true);
+        m_owner->m_tmwMessage->SetText(e.asString());
+    }
+    else
+    {
+        m_popupAddUid->ShowPassphrase(false);
+    }
+    // Key certifications are not listed on this refresh !
+    m_owner->DisplayUids(m_addUidKeyFpr, true);
+}

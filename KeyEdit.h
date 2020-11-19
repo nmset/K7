@@ -15,17 +15,19 @@
 #include <Wt/WComboBox.h>
 #include "PopupCertifyUserId.h"
 #include "PopupExpiryTime.h"
+#include "PopupAddUid.h"
 
 using namespace Wt;
 
 class K7Main;
 
 /**
- * Some key editing functionalities are or will be implemented here. For now,
- * only owner trust level and key certification are implemented.
- * Is a pseudo-extension of K7Main. Both classes are friends to each other, and
+ * Some key editing functionalities are or will be implemented here.
+ * Owner trust level, key certification adding and revoking user identities are
+ * implemented.
+ * \n Is a pseudo-extension of K7Main. Both classes are friends to each other, and
  * everything is private here.
- * Does not manage keyring.
+ * \n Does not manage keyring.
  */
 class KeyEdit : public WObject
 {
@@ -43,6 +45,9 @@ private:
     PopupExpiryTime * m_popupExpiryTime;
     WString m_expiryEditedKeyFpr;
 
+    PopupAddUid * m_popupAddUid;
+    WString m_addUidKeyFpr;
+
     /**
      * Unknown is common.
      * \n If keyHasSecret is true, show only Ultimate level.
@@ -54,6 +59,7 @@ private:
     void FillOwnerTrustCombo(WComboBox * cmb, bool keyHasSecret);
     void CertifyKey();
     void SetExpiryTime();
+    void AddOrRevokeUid();
 
     /**
      * Shows a combobox with all trust levels
@@ -80,6 +86,8 @@ private:
      * @param keyFpr
      */
     void OnExpiryClicked(WTreeTableNode * subkeyNode, const WString& keyFpr);
+
+    void OnUidEmailClicked(WTreeTableNode * uidNode, const WString& keyFpr);
 
 };
 

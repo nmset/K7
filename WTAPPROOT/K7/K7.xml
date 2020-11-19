@@ -132,4 +132,9 @@
     
     <message id='Export'>Export</message>
     <message id='TTTExport'>Exporting secret keys is technically impossible</message>
+    
+    <message id='AddUid'>Add an identity</message>
+    <message id='RevokeUid'>Revoke identity</message>
+    <message id='InvalidInput'>Input is invalid</message>
+    
  </messages>

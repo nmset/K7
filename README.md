@@ -2,9 +2,8 @@
 
 It is developed in C++ as a NetBeans project on the [WebToolkit](https://www.webtoolkit.eu/)(Wt) libraries.
 
-It allows to view, import, export, create, delete keys. Certification trust level, secret key expiry date can also be changed, and user identities can be certified.
+It allows to view, import, export, create, delete keys. Certification trust level, secret key expiry date can also be changed, and user identities can be added, revoked and certified.
 Export concerns public keys only; secret keys cannot be technically exported on a web server.
-Adding user identities is not (yet) implemented.
 
 Available keys can then be used by other Wt applications, or web applications based on other libraries, to encrypt and sign data. As such, it suits my personal needs.
 
