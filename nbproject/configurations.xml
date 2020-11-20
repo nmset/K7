@@ -16,6 +16,7 @@
       <itemPath>PopupCreate.h</itemPath>
       <itemPath>PopupDeleter.h</itemPath>
       <itemPath>PopupExpiryTime.h</itemPath>
+      <itemPath>PopupExportSecretKey.h</itemPath>
       <itemPath>PopupUploader.h</itemPath>
       <itemPath>SensitiveTreeTableNodeText.h</itemPath>
       <itemPath>Tools.h</itemPath>
@@ -45,6 +46,7 @@
       <itemPath>PopupCreate.cpp</itemPath>
       <itemPath>PopupDeleter.cpp</itemPath>
       <itemPath>PopupExpiryTime.cpp</itemPath>
+      <itemPath>PopupExportSecretKey.cpp</itemPath>
       <itemPath>PopupUploader.cpp</itemPath>
       <itemPath>SensitiveTreeTableNodeText.cpp</itemPath>
       <itemPath>Tools.cpp</itemPath>
@@ -141,6 +143,10 @@
       <item path="PopupExpiryTime.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PopupExpiryTime.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PopupExportSecretKey.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="PopupExportSecretKey.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="PopupUploader.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -257,6 +263,10 @@
       <item path="PopupExpiryTime.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PopupExpiryTime.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PopupExportSecretKey.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="PopupExportSecretKey.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="PopupUploader.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -377,6 +387,10 @@
       <item path="PopupExpiryTime.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PopupExpiryTime.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PopupExportSecretKey.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="PopupExportSecretKey.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="PopupUploader.cpp" ex="false" tool="1" flavor2="0">
       </item>

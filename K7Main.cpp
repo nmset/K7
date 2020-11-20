@@ -142,7 +142,6 @@ K7Main::Create()
     vblButtons->addStretch(1);
     // Everyone can export a key
     m_btnExport = new WPushButton(TR("Export"));
-    m_btnExport->setToolTip(TR("TTTExport"));
     m_btnExport->hide();
     vblButtons->addWidget(unique_ptr<WPushButton> (m_btnExport));
     if (m_config->CanCreateKeys())
@@ -314,7 +313,8 @@ void K7Main::OnKeyAnchorClicked(WAnchor * source)
     DisplaySubKeys(id, secret);
     if (m_config->CanDelete()) // m_btnDelete is NULL otherwise
         m_btnDelete->setHidden(!m_keyringIO->CanKeyBeDeleted(id));
-
+    
+    m_btnExport->show();
     m_keyringIO->PrepareExport(id, secret);
 }
 

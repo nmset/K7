@@ -22,6 +22,7 @@ KeyringIO::KeyringIO(K7Main * owner)
     m_popupUpload = NULL;
     m_popupDelete = NULL;
     m_popupCreate = NULL;
+    m_popupExportSecretKey = NULL;
     m_config = m_owner->m_config;
     m_tmwMessage = m_owner->m_tmwMessage;
     m_btnUpload = m_owner->m_btnUpload;
@@ -250,18 +251,54 @@ void KeyringIO::DoCreateKey()
     }
 }
 
+void KeyringIO::ShowPopupExportSecretKey(const WString& fpr)
+{
+    m_popupExportSecretKey = new PopupExportSecretKey(m_btnExport,
+                                                      m_owner->m_tmwMessage);
+    m_popupExportSecretKey->Create();
+    m_popupExportSecretKey->GetPreApplyButton()
+            ->clicked().connect(std::bind(&KeyringIO::OnPreExportSecretKey,
+                                          this, fpr));
+    m_popupExportSecretKey->show();
+}
+
 void KeyringIO::PrepareExport(const WString& fpr, bool isSecret)
 {
+    // K7Main::m_btnExport
+    m_btnExport->setLink(WLink());
+    m_btnExport->clicked().disconnect(m_exportSecretConnection);
+    if (isSecret)
+    {
+        m_exportSecretConnection = m_btnExport->clicked().connect
+                (std::bind(&KeyringIO::ShowPopupExportSecretKey,
+                           this, fpr));
+    }
+    else
+    {
+        WLink link;
+        shared_ptr<ExportKeyStreamResource> shResource =
+                make_shared<ExportKeyStreamResource>
+                (fpr, isSecret, "appliation/pgp-keys", m_tmwMessage);
+        link.setResource(shResource);
+        m_btnExport->setLink(link);
+    }
+    // Never reuse when selecting keys.
+    delete m_popupExportSecretKey;
+    m_popupExportSecretKey = NULL;
+}
+
+void KeyringIO::OnPreExportSecretKey(const WString& fpr)
+{
+    // On preExport button of popup
     WLink link;
     shared_ptr<ExportKeyStreamResource> shResource =
             make_shared<ExportKeyStreamResource>
-            (fpr, isSecret, "appliation/pgp-keys", m_tmwMessage);
+            (fpr, true, "appliation/pgp-keys", m_tmwMessage);
     link.setResource(shResource);
-    m_btnExport->setLink(link);
-    if (isSecret)
-        m_btnExport->hide();
-    else
-        m_btnExport->show();
+    shResource->SetPassphrase(m_popupExportSecretKey->GetPassphrase());
+    m_popupExportSecretKey->GetApplyButton()->setLink(link);
+    m_popupExportSecretKey->GetApplyButton()->enable();
+
 }
 
 ExportKeyStreamResource::ExportKeyStreamResource(const WString& fpr,
@@ -271,6 +308,7 @@ ExportKeyStreamResource::ExportKeyStreamResource(const WString& fpr,
 {
     m_fpr = fpr;
     m_isSecret = isSecret;
+    m_passphrase = WString::Empty;
     m_tmwMessage = tmw;
 }
 
@@ -282,6 +320,7 @@ ExportKeyStreamResource::ExportKeyStreamResource(const WString& fpr,
 {
     m_fpr = fpr;
     m_isSecret = isSecret;
+    m_passphrase = WString::Empty;
     m_tmwMessage = tmw;
 }
 
@@ -294,20 +333,18 @@ void ExportKeyStreamResource::handleRequest(const Http::Request& request,
                                             Http::Response& response)
 {
     /*
-     * Private keys cannot be exported with loopback pinentry.
-     * Let's hope it gets better someday.
+     * Private keys can be exported as from GPGME 1.15.0.
      */
-    if (m_isSecret)
-    {
-        m_tmwMessage->SetText(TR("TTTExport"));
-        return;
-    }
+
     string buffer;
     if (!request.continuation()) // Needed for WStreamResource ?
     {
         Error e;
         GpgMEWorker gpgw;
-        e = gpgw.ExportPublicKey(m_fpr.toUTF8().c_str(), buffer);
+        e = m_isSecret
+                ? gpgw.ExportPrivateKey(m_fpr.toUTF8().c_str(), buffer,
+                                        m_passphrase.toUTF8())
+                : gpgw.ExportPublicKey(m_fpr.toUTF8().c_str(), buffer);
         if (e.code() != 0)
         {
             m_tmwMessage->SetText(e.asString());

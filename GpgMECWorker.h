@@ -31,20 +31,6 @@ public:
      */
     bool DeleteKey(const char * fpr, bool secret, GpgME::Error& e);
 
-#ifdef DEVTIME
-    /**
-     * Status : testing
-     * \n Result : fails to export a private key
-     * \n Reason : passphrase callback is never called
-     * \n With default pinentry mode, the password is requested normally 
-     * and the private key is exported. But this can't be done on a web server.
-     * @param fpr
-     * @param e
-     * @return 
-     */
-    bool ExportPrivateKey(const char* fpr, GpgME::Error& e);
-#endif
-
 private:
     gpgme_ctx_t c_ctx;
 };

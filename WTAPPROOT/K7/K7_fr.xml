@@ -131,7 +131,9 @@
     <message id='CreateSuccess'>Création réussie : </message>
     
     <message id='Export'>Exporter</message>
-    <message id='TTTExport'>L'export des clés secrètes est techniquement impossible</message>
+    <message id='PreExportSecretKey'>Préparer le téléchargement</message>
+    <message id='ExportSecretKey'>Exporter la secrète</message>
+    <message id='TTTExportSecretKey'>Requiert GPGME >= 1.15.0</message>
     
     <message id='AddUid'>Ajouter une identité</message>
     <message id='RevokeUid'>Revoquer une identité</message>

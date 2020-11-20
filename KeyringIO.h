@@ -16,6 +16,7 @@
 #include "PopupUploader.h"
 #include "PopupDeleter.h"
 #include "PopupCreate.h"
+#include "PopupExportSecretKey.h"
 
 using namespace Wt;
 
@@ -41,6 +42,7 @@ private:
     PopupUpload * m_popupUpload;
     PopupDelete * m_popupDelete;
     PopupCreate * m_popupCreate;
+    PopupExportSecretKey * m_popupExportSecretKey;
 
     // Variables from m_owner mapped here.
     AppConfig * m_config;
@@ -51,7 +53,9 @@ private:
     WPushButton * m_btnCreate;
     WPushButton * m_btnExport;
     WLineEdit * m_leSearch;
-
+    
+    // Used to disconnect m_btnExport from previous slot.
+    Signals::connection m_exportSecretConnection;
 
     /**
      * Shows a non-blocking popup to upload a key,
@@ -66,6 +70,10 @@ private:
      * Shows a non-blocking popup to delete a key
      */
     void ShowPopupDelete();
+    /**
+     * Shows a non-blocking popup to export a secret key
+     */
+    void ShowPopupExportSecretKey(const WString& fpr);
     /**
      * All public keys can be deleted.
      * Private keys can be deleted only if the user
@@ -91,8 +99,17 @@ private:
      * @param spool
      */
     void OnUploadCompleted(const WString& spool);
-
+    /**
+     * If isSecret is true, shows a popup for passphrase input befort exporting.
+     * Else, adds a link with a shared resource to the export button.
+     * @param fpr
+     * @param isSecret
+     */
     void PrepareExport(const WString& fpr, bool isSecret);
+    /**
+     * Adds a link with a shared resource to the export button of the popup.
+     */
+    void OnPreExportSecretKey(const WString& fpr);
 };
 
 /**
@@ -118,10 +135,15 @@ public:
      */
     void handleRequest(const Http::Request& request,
                        Http::Response& response) override;
+    void SetPassphrase(const WString& passphrase)
+    {
+        m_passphrase = passphrase;
+    }
 
 private:
     WString m_fpr;
     bool m_isSecret;
+    WString m_passphrase;
     TransientMessageWidget * m_tmwMessage;
 };
 

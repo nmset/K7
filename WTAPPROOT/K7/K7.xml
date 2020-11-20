@@ -131,7 +131,9 @@
     <message id='CreateSuccess'>Create success : </message>
     
     <message id='Export'>Export</message>
-    <message id='TTTExport'>Exporting secret keys is technically impossible</message>
+    <message id='PreExportSecretKey'>Prepare download link</message>
+    <message id='ExportSecretKey'>Export secret key</message>
+    <message id='TTTExportSecretKey'>Requires GPGME >= 1.15.0</message>
     
     <message id='AddUid'>Add an identity</message>
     <message id='RevokeUid'>Revoke identity</message>

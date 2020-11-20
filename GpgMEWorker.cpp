@@ -308,8 +308,6 @@ const Error GpgMEWorker::CreateSubKey(GpgME::Key& k,
     return e;
 }
 
-#ifdef DEVTIME
-
 const Error GpgMEWorker::ExportPrivateKey(const char * pattern, string& buffer,
                                           const string& passphrase)
 {
@@ -324,14 +322,13 @@ const Error GpgMEWorker::ExportPrivateKey(const char * pattern, string& buffer,
     uint flags = Context::ExportSecret;
 
     Error e = ctx->exportPublicKeys(pattern, kData, flags);
-    buffer = kData.toString(); // Empty
+    buffer = kData.toString();
 
     delete ppp;
     delete ctx;
 
     return e;
 }
-#endif
 
 const Error GpgMEWorker::ExportPublicKey(const char* pattern, string& buffer)
 {
