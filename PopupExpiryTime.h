@@ -23,9 +23,24 @@ class PopupExpiryTime : public WPopupWidget
 {
 public:
     PopupExpiryTime(WWidget * anchorWidget, TransientMessageWidget * txtMessage,
-                       const WLength& width = 300);
+                    const WLength& width = 300);
     virtual ~PopupExpiryTime();
     void Create(const WString& keyFpr);
+
+    const WString GetKeyFpr()
+    {
+        return m_keyFpr;
+    }
+
+    void SetSubkeyFpr(const WString& subkeyFpr)
+    {
+        m_subkeyFpr = subkeyFpr;
+    }
+
+    const WString GetSubkeyFpr()
+    {
+        return m_subkeyFpr;
+    }
     /**
      * Controls visibility of passphrase widgets.
      * \n Need not be always visible as the passphrase is cached by gpg-agent.
@@ -34,6 +49,7 @@ public:
      * @param show
      */
     void ShowPassphrase(bool show = true);
+
     /**
      * Used to forward the passphrase to the loopback passphrase provider.
      * @return 
@@ -43,9 +59,15 @@ public:
         return m_lePassphrase->text().toUTF8();
     }
     /**
-     * Returns the new expiry date.
+     * Returns the new expiry date, or 0 if date is invalid.
      */
     const std::string GetExpiryTime() const;
+    /**
+     * Number of seconds from now.
+     * @return 
+     */
+    const ulong GetExpiry() const;
+
     /**
      * Caller binds its function here.
      * @return 
@@ -54,7 +76,7 @@ public:
     {
         return m_btnApply;
     }
-    
+
 private:
     TransientMessageWidget * m_tmwMessage;
     WContainerWidget * m_cwMain;
@@ -63,6 +85,7 @@ private:
     WPushButton * m_btnApply;
     WText * m_lblPassphrase;
     WString m_keyFpr;
+    WString m_subkeyFpr;
 
 };
 

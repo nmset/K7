@@ -77,6 +77,10 @@ public:
                            const char * fprKeyToSign,
                            vector<uint>& userIDsToSign, int options,
                            const string& passphrase);
+    const Error SetSubkeyExpiryTime(const char * keyFpr,
+                                    const char * subkeyFpr,
+                                    const string& passphrase,
+                                    ulong expires = 63072000);
     /**
      * Set new expiry time of a secret key.
      * @param timeString
@@ -111,8 +115,8 @@ public:
      * @return 
      */
     const Error RevokeUserID(const char * keyFpr, const string& passphrase,
-                          const string& name, const string& email,
-                          const string& comment);
+                             const string& name, const string& email,
+                             const string& comment);
     /**
      * Creates a pair of secret and public keys with the default engine
      * algorithms. Default expiry time is 2 * 365 days.

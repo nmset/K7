@@ -85,7 +85,8 @@ private:
      * @param subkeyNode
      * @param keyFpr
      */
-    void OnExpiryClicked(WTreeTableNode * subkeyNode, const WString& keyFpr);
+    void OnExpiryClicked(WTreeTableNode * subkeyNode, const WString& keyFpr,
+                         const WString& subkeyFpr);
 
     void OnUidEmailClicked(WTreeTableNode * uidNode, const WString& keyFpr);
 

@@ -428,7 +428,10 @@ void K7Main::DisplaySubKeys(const WString& fullKeyID, bool secret)
         if (canEditExpiry)
         {
             lblExpiry->setToolTip(TR("TTTDoubleCLick"));
-            lblExpiry->doubleClicked().connect(std::bind(&KeyEdit::OnExpiryClicked, m_keyEdit, skNode, WString(k.primaryFingerprint())));
+            lblExpiry->doubleClicked().connect(std::bind(&KeyEdit::OnExpiryClicked,
+                                                         m_keyEdit, skNode, 
+                                                         WString(k.primaryFingerprint()),
+                                                         WString(sk.fingerprint())));
         }
         skNode->setColumnWidget(2, unique_ptr<WText> (lblExpiry));
         WString usage = sk.canAuthenticate() ? WString("A") : WString::Empty;
