@@ -20,7 +20,7 @@ KeyEdit::KeyEdit(K7Main * owner)
 : WObject()
 {
     m_owner = owner;
-    m_popupUid = NULL;
+    m_popupCertifyUid = NULL;
     m_popupExpiryTime = NULL;
     m_popupAddUid = NULL;
     m_targetUidValidityKeyFpr = WString::Empty;
@@ -29,7 +29,7 @@ KeyEdit::KeyEdit(K7Main * owner)
 
 KeyEdit::~KeyEdit()
 {
-    delete m_popupUid;
+    delete m_popupCertifyUid;
 }
 
 void KeyEdit::OnOwnerTrustDoubleClicked(WTreeTableNode * keyNode, bool keyHasSecret)
@@ -130,67 +130,67 @@ void KeyEdit::OnUidValidityClicked(WTreeTableNode* uidNode, vector<WString>& pri
     if (targetKeyFpr != m_targetUidValidityKeyFpr)
     {
         bool passwordVisibility = true;
-        if (m_popupUid)
-            passwordVisibility = m_popupUid->IsPasswordVisible();
-        delete m_popupUid;
+        if (m_popupCertifyUid)
+            passwordVisibility = m_popupCertifyUid->IsPasswordVisible();
+        delete m_popupCertifyUid;
         WText * lblUidValidity = static_cast<WText*> (uidNode->columnWidget(2));
-        m_popupUid = new PopupCertifyUserId(lblUidValidity, m_owner->m_tmwMessage);
-        m_popupUid->Create(privateKeys, targetKeyFpr);
-        m_popupUid->ShowPassphrase(passwordVisibility);
+        m_popupCertifyUid = new PopupCertifyUserId(lblUidValidity, m_owner->m_tmwMessage);
+        m_popupCertifyUid->Create(privateKeys, targetKeyFpr);
+        m_popupCertifyUid->ShowPassphrase(passwordVisibility);
         m_targetUidValidityKeyFpr = targetKeyFpr;
-        m_popupUid->GetCertifyButton()->clicked().connect(this, &KeyEdit::CertifyKey);
+        m_popupCertifyUid->GetCertifyButton()->clicked().connect(this, &KeyEdit::EditUidValidity);
     }
-    m_popupUid->show();
+    m_popupCertifyUid->show();
 }
 
-void KeyEdit::CertifyKey()
+void KeyEdit::EditUidValidity()
 {
-    vector<uint>& uidsToSign = m_popupUid->GetUidsToSign();
+    vector<uint>& uidsToSign = m_popupCertifyUid->GetUidsToSign();
     if (uidsToSign.size() == 0)
     {
         m_owner->m_tmwMessage->SetText(TR("NoUidSelected"));
         return;
     }
-    const WString signingKey = m_popupUid->GetSelectedKey();
-    const WString keyToSign = m_popupUid->GetKeyToSign();
+    const WString signingKey = m_popupCertifyUid->GetSelectedKey();
+    const WString keyToSign = m_popupCertifyUid->GetKeyToSign();
     GpgMEWorker gpgWorker;
     GpgME::Error e;
-    if (m_popupUid->WhatToDo() == PopupCertifyUserId::CertifyUid)
+    if (m_popupCertifyUid->WhatToDo() == PopupCertifyUserId::CertifyUid)
     {
-        int options = m_popupUid->GetCertifyOptions();
+        int options = m_popupCertifyUid->GetCertifyOptions();
         e = gpgWorker.CertifyKey(signingKey.toUTF8().c_str(),
                                  keyToSign.toUTF8().c_str(),
                                  uidsToSign, options,
-                                 m_popupUid->GetPassphrase());
+                                 m_popupCertifyUid->GetPassphrase());
     }
     else
     {
         vector<GpgME::UserID> uidsToRevoke
-                = m_popupUid->GetUidsToRevokeCertification();
+                = m_popupCertifyUid->GetUidsToRevokeCertification();
         e = gpgWorker.RevokeKeyCertifications(signingKey.toUTF8().c_str(),
                                               keyToSign.toUTF8().c_str(),
                                               uidsToRevoke,
-                                              m_popupUid->GetPassphrase());
+                                              m_popupCertifyUid->GetPassphrase());
     }
     if (e.code() != 0)
     {
-        if (m_popupUid->WhatToDo() == PopupCertifyUserId::CertifyUid)
+        if (m_popupCertifyUid->WhatToDo() == PopupCertifyUserId::CertifyUid)
         {
             m_owner->m_tmwMessage->SetText(e.asString());
-            m_popupUid->ShowPassphrase(true);
+            m_popupCertifyUid->ShowPassphrase(true);
             return;
         }
         else {
             m_owner->m_tmwMessage->SetText(e.asString());
-            m_popupUid->ShowPassphrase(true);
+            m_popupCertifyUid->ShowPassphrase(true);
             return;
         }
     }
-    if (m_popupUid->WhatToDo() == PopupCertifyUserId::CertifyUid)
+    if (m_popupCertifyUid->WhatToDo() == PopupCertifyUserId::CertifyUid)
         m_owner->m_tmwMessage->SetText(TR("CertificationSuccess"));
     else
         m_owner->m_tmwMessage->SetText(TR("RevocationSuccess"));
-    m_popupUid->ShowPassphrase(false);
+    m_popupCertifyUid->ShowPassphrase(false);
     m_owner->DisplayUids(keyToSign);
 }
 

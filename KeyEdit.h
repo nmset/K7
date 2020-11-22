@@ -39,7 +39,7 @@ private:
     virtual ~KeyEdit();
 
     K7Main * m_owner;
-    PopupCertifyUserId * m_popupUid;
+    PopupCertifyUserId * m_popupCertifyUid;
     WString m_targetUidValidityKeyFpr;
 
     PopupExpiryTime * m_popupExpiryTime;
@@ -57,7 +57,7 @@ private:
      * @param keyHasSecret
      */
     void FillOwnerTrustCombo(WComboBox * cmb, bool keyHasSecret);
-    void CertifyKey();
+    void EditUidValidity();
     void SetExpiryTime();
     void AddOrRevokeUid();
 
