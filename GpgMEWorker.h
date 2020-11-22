@@ -77,6 +77,16 @@ public:
                            const char * fprKeyToSign,
                            vector<uint>& userIDsToSign, int options,
                            const string& passphrase);
+    /**
+     * Sets the expiry time of a single subkey. Requires GPGME >= 1.15.0.
+     * \n If no subkey is found (wrong fpr), the expiry time of key is set
+     * instead.
+     * @param keyFpr
+     * @param subkeyFpr
+     * @param passphrase
+     * @param expires : seconds from now. Use 0 for no expiry.
+     * @return 
+     */
     const Error SetSubkeyExpiryTime(const char * keyFpr,
                                     const char * subkeyFpr,
                                     const string& passphrase,
