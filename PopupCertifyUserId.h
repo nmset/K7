@@ -149,6 +149,11 @@ public:
     {
         return m_btnApply;
     }
+    /**
+     * Check required parameters are set and confirmed.
+     * @return 
+     */
+    bool Validate() const;
 private:
     TransientMessageWidget * m_tmwMessage;
     WContainerWidget * m_cwMain;
@@ -163,6 +168,7 @@ private:
     // WCheckBox * m_cbOptionTrust; // Always fails
     WText * m_lblPassphrase;
     WLineEdit * m_lePassphrase;
+    WCheckBox * m_cbConfirm;
     WPushButton * m_btnApply;
 
     vector<uint> m_uidsToSign;

@@ -28,6 +28,7 @@ PopupCertifyUserId::PopupCertifyUserId(WWidget * anchorWidget, TransientMessageW
     m_cbOptionExportable = NULL;
     m_cbOptionNonRevocable = NULL;
     // m_cbOptionTrust = NULL;
+    m_cbConfirm = NULL;
     m_lblPassphrase = NULL;
     m_lePassphrase = NULL;
     m_btnApply = NULL;
@@ -97,6 +98,9 @@ void PopupCertifyUserId::Create(vector<WString>& privateKeys,
     m_bgWhat->addButton(rbRevokeCertification, What::RevokeUidCertification);
     m_bgWhat->setCheckedButton(rbCertifyUid);
     vblMain->addLayout(unique_ptr<WHBoxLayout> (hblWhat));
+
+    m_cbConfirm = new WCheckBox(TR("Confirm"));
+    vblMain->addWidget(unique_ptr<WCheckBox> (m_cbConfirm));
 
     WHBoxLayout * hblButtons = new WHBoxLayout();
     WPushButton * btnClose = new WPushButton(TR("Close"));
@@ -278,4 +282,21 @@ void PopupCertifyUserId::OnButtonGroupWhat(WRadioButton* btn)
     m_gbOptions->setDisabled(m_bgWhat->checkedId()
                              == What::RevokeUidCertification);
 
+}
+
+bool PopupCertifyUserId::Validate() const
+{
+    if (!m_cbConfirm->isChecked() || m_lePassphrase->text().empty())
+        return false;
+    if (m_bgWhat->checkedId() == What::CertifyUid)
+    {
+        if (m_uidsToSign.size() == 0)
+            return false;
+    }
+    else
+    {
+        if (m_uidsToRevokeCertification.size() == 0)
+            return false;
+    }
+    return true;
 }

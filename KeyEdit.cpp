@@ -145,10 +145,9 @@ void KeyEdit::OnUidValidityClicked(WTreeTableNode* uidNode, vector<WString>& pri
 
 void KeyEdit::EditUidValidity()
 {
-    vector<uint>& uidsToSign = m_popupCertifyUid->GetUidsToSign();
-    if (uidsToSign.size() == 0)
+    if (!m_popupCertifyUid->Validate())
     {
-        m_owner->m_tmwMessage->SetText(TR("NoUidSelected"));
+        m_owner->m_tmwMessage->SetText(TR("InvalidInput"));
         return;
     }
     const WString signingKey = m_popupCertifyUid->GetSelectedKey();
@@ -157,6 +156,7 @@ void KeyEdit::EditUidValidity()
     GpgME::Error e;
     if (m_popupCertifyUid->WhatToDo() == PopupCertifyUserId::CertifyUid)
     {
+        vector<uint>& uidsToSign = m_popupCertifyUid->GetUidsToSign();
         int options = m_popupCertifyUid->GetCertifyOptions();
         e = gpgWorker.CertifyKey(signingKey.toUTF8().c_str(),
                                  keyToSign.toUTF8().c_str(),
