@@ -153,19 +153,43 @@ void KeyEdit::CertifyKey()
     }
     const WString signingKey = m_popupUid->GetSelectedKey();
     const WString keyToSign = m_popupUid->GetKeyToSign();
-    int options = m_popupUid->GetCertifyOptions();
     GpgMEWorker gpgWorker;
-    GpgME::Error e = gpgWorker.CertifyKey(signingKey.toUTF8().c_str(),
-                                          keyToSign.toUTF8().c_str(),
-                                          uidsToSign, options,
-                                          m_popupUid->GetPassphrase());
+    GpgME::Error e;
+    if (m_popupUid->WhatToDo() == PopupCertifyUserId::CertifyUid)
+    {
+        int options = m_popupUid->GetCertifyOptions();
+        e = gpgWorker.CertifyKey(signingKey.toUTF8().c_str(),
+                                 keyToSign.toUTF8().c_str(),
+                                 uidsToSign, options,
+                                 m_popupUid->GetPassphrase());
+    }
+    else
+    {
+        vector<GpgME::UserID> uidsToRevoke
+                = m_popupUid->GetUidsToRevokeCertification();
+        e = gpgWorker.RevokeKeyCertifications(signingKey.toUTF8().c_str(),
+                                              keyToSign.toUTF8().c_str(),
+                                              uidsToRevoke,
+                                              m_popupUid->GetPassphrase());
+    }
     if (e.code() != 0)
     {
-        m_owner->m_tmwMessage->SetText(TR("CertificationFailure"));
-        m_popupUid->ShowPassphrase(true);
-        return;
+        if (m_popupUid->WhatToDo() == PopupCertifyUserId::CertifyUid)
+        {
+            m_owner->m_tmwMessage->SetText(e.asString());
+            m_popupUid->ShowPassphrase(true);
+            return;
+        }
+        else {
+            m_owner->m_tmwMessage->SetText(e.asString());
+            m_popupUid->ShowPassphrase(true);
+            return;
+        }
     }
-    m_owner->m_tmwMessage->SetText(TR("CertificationSuccess"));
+    if (m_popupUid->WhatToDo() == PopupCertifyUserId::CertifyUid)
+        m_owner->m_tmwMessage->SetText(TR("CertificationSuccess"));
+    else
+        m_owner->m_tmwMessage->SetText(TR("RevocationSuccess"));
     m_popupUid->ShowPassphrase(false);
     m_owner->DisplayUids(keyToSign);
 }

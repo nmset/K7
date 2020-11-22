@@ -78,6 +78,19 @@ public:
                            vector<uint>& userIDsToSign, int options,
                            const string& passphrase);
     /**
+     * Revoke UserID certifications.
+     * \n Requires GnuPG >= 2.2.24
+     * @param fprSigningKey
+     * @param fprKeyToSign
+     * @param userIDsToRevoke : vector of ::UserID
+     * @param passphrase
+     * @return 
+     */
+    const Error RevokeKeyCertifications(const char * fprSigningKey,
+                           const char * fprKeyToSign,
+                           vector<GpgME::UserID>& userIDsToRevoke,
+                           const string& passphrase);
+    /**
      * Sets the expiry time of a single subkey. Requires GPGME >= 1.15.0.
      * \n If no subkey is found (wrong fpr), the expiry time of key is set
      * instead.

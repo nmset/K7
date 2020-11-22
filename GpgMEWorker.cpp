@@ -145,6 +145,34 @@ const Error GpgMEWorker::CertifyKey(const char* fprSigningKey,
     return e;
 }
 
+const Error GpgMEWorker::RevokeKeyCertifications(const char* fprSigningKey,
+                                                 const char* fprKeyToSign,
+                                                 vector<GpgME::UserID>& userIDsToRevoke,
+                                                 const string& passphrase)
+{
+    Error e;
+    Key signingKey = FindKey(fprSigningKey, e, true);
+    if (e.code() != 0)
+        return e;
+    e = m_ctx->addSigningKey(signingKey); // +++
+    if (e.code() != 0)
+        return e;
+    Key keyToSign = FindKey(fprKeyToSign, e, false);
+    if (e.code() != 0)
+        return e;
+
+    m_ctx->setPinentryMode(Context::PinentryMode::PinentryLoopback);
+    if (m_ppp == NULL)
+        m_ppp = new LoopbackPassphraseProvider();
+    m_ppp->SetPassphrase(passphrase);
+    m_ctx->setPassphraseProvider(m_ppp);
+    
+    e = m_ctx->revokeSignature(keyToSign, signingKey, userIDsToRevoke);
+    m_ctx->clearSigningKeys();
+    
+    return e;
+}
+
 const Error GpgMEWorker::SetSubkeyExpiryTime(const char* keyFpr,
                                              const char* subkeyFpr,
                                              const string& passphrase,

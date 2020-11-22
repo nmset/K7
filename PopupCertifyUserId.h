@@ -19,28 +19,32 @@
 #include <Wt/WLineEdit.h>
 #include <Wt/WVBoxLayout.h>
 #include <Wt/WHBoxLayout.h>
+#include <Wt/WGroupBox.h>
+#include <Wt/WButtonGroup.h>
 #include <vector>
+#include <gpgme++/key.h>
 #include "TransientMessageWidget.h"
 
 using namespace Wt;
 
 /**
- * A popup with required parameters to certify a key :
+ * A popup with required parameters to certify or revoke a key uid :
  * <ul>
  * <li>Signer's private keys</li>
  * <li>Target key user identities (email)</li>
  * <li>Signing options : Exportable and non-revocable</li>
  * <li>Passphrase for selected private key</li>
  * </ul>
- * The passphrase is cached by gpg-agent for default 10 mins.
- * \n The popup hides the passphrase widget until a certify op fails.
- * \n UserID::Validity:: lists many validity levels. How to selectively apply
- * an arbitrary level ? Before signing, it's 'Unknown'. After signing, it's
- * always 'Full'.
+ * \n For revocation, GnuPG >= 2.2.24 is required.
  */
 class PopupCertifyUserId : public WPopupWidget
 {
 public:
+
+    enum What
+    {
+        RevokeUidCertification = 0, CertifyUid
+    };
     PopupCertifyUserId(WWidget * anchorWidget, TransientMessageWidget * txtMessage,
                        const WLength& width = 500);
     virtual ~PopupCertifyUserId();
@@ -103,6 +107,27 @@ public:
     }
 
     /**
+     * Get the certifications to revoke.
+     * \n GPGME >= 1.15.0 is required. It expects
+     * it as a vector of GpgME::UserID, instead of a vector of indices used in
+     * GetUidsToSign().
+     * @return 
+     */
+    vector<GpgME::UserID>& GetUidsToRevokeCertification()
+    {
+        return m_uidsToRevokeCertification;
+    }
+
+    /**
+     * Certify selected user identities or revoke certifications.
+     * @return 
+     */
+    const What WhatToDo() const
+    {
+        return (What) m_bgWhat->checkedId();
+    }
+
+    /**
      * Sum of option values
      * <ul>
      * <li>Exportable : 1</li>
@@ -141,7 +166,10 @@ private:
     WPushButton * m_btnApply;
 
     vector<uint> m_uidsToSign;
+    vector<GpgME::UserID> m_uidsToRevokeCertification;
     int m_certifyOptions;
+    WGroupBox * m_gbOptions;
+    shared_ptr<WButtonGroup> m_bgWhat;
     /**
      * Available private fingerprints in a combobox. The selected item is the 
      * signing key.
@@ -154,15 +182,17 @@ private:
      */
     void PresentEmail();
     /**
-     * Add the identity index in a vector.
+     * Add the identity index in a vector for certification.
+     * \n Add the ::UserID in a vector for signature revocation.
      * @param cb
      */
-    void OnEmailChecked(WCheckBox * cb);
+    void OnEmailChecked(WCheckBox * cb, GpgME::UserID& uid);
     /**
-     * Removes the identity index in a vector.
+     * Removes the identity index from a vector for certification.
+     * \n Removes the ::UserID from a vector for signature revocation.
      * @param cb
      */
-    void OnEmailUnChecked(WCheckBox * cb);
+    void OnEmailUnChecked(WCheckBox * cb, GpgME::UserID& uid);
     /**
      * Adds the option value in m_certifyOptions.
      * @param id
@@ -173,6 +203,11 @@ private:
      * @param id
      */
     void OnCertifyOptionUnChecked(int id);
+    /**
+     * Show certification options if certifying, else hide them.
+     * @param btn
+     */
+    void OnButtonGroupWhat(WRadioButton * btn);
 };
 
 #endif /* POPUPCERTIFYUSERID_H */
