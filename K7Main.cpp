@@ -83,7 +83,9 @@ K7Main::Create()
     WContainerWidget * cwHeader = new WContainerWidget();
     WHBoxLayout * hblHeader = new WHBoxLayout();
     cwHeader->setLayout(unique_ptr<WHBoxLayout> (hblHeader));
-    hblHeader->addWidget(cpp14::make_unique<WText>(_APPNAME_));
+    WText * lblTitle =
+            hblHeader->addWidget(cpp14::make_unique<WText>(_APPNAME_));
+    lblTitle->setStyleClass("title");
     // Error messages will go here
     m_tmwMessage = new TransientMessageWidget();
     m_tmwMessage->setTextAlignment(AlignmentFlag::Right);
@@ -294,6 +296,10 @@ void K7Main::DisplayKeys(const vector<GpgME::Key>& kList, const WString& grpLabe
         }
         keyNode->setColumnWidget(2, unique_ptr<WText> (lblOwnerTrust));
         TreeTableNodeText * ttntFpr = new TreeTableNodeText(k.primaryFingerprint(), keyNode, 3);
+        if (k.isBad())
+            ttntFpr->addStyleClass("red", true);
+        if (!k.hasSecret() && Tools::KeyHasSecret(k.primaryFingerprint()))
+            ttntFpr->addStyleClass("bold", true);
         keyNode->setColumnWidget(3, unique_ptr<TreeTableNodeText> (ttntFpr));
         grpNode->addChildNode(unique_ptr<WTreeTableNode> (keyNode));
     }
@@ -355,6 +361,8 @@ void K7Main::DisplayUids(const WString& fullKeyID, bool secret)
             lblUidEmail->setToolTip(TR("TTTDoubleCLick"));
             lblUidEmail->doubleClicked().connect(std::bind(&KeyEdit::OnUidEmailClicked, m_keyEdit, uidNode, WString(k.primaryFingerprint())));
         }
+        if (uid.isBad())
+            lblUidEmail->setStyleClass("red");
         uidNode->setColumnWidget(1, unique_ptr<WText> (lblUidEmail));
         // Show key certify popup on double click
         WText * lblUidValidity = new WText(UidValidities[uid.validity()]);
@@ -376,6 +384,8 @@ void K7Main::DisplayUids(const WString& fullKeyID, bool secret)
             WTreeTableNode * sigNode = new WTreeTableNode(signer);
             sigNode->setToolTip(Tools::GetSigStatus(sig));
             TreeTableNodeText * ttntEmail = new TreeTableNodeText(sig.signerEmail(), sigNode, 1);
+            if (sig.isBad())
+                ttntEmail->addStyleClass("red", true);
             sigNode->setColumnWidget(1, unique_ptr<TreeTableNodeText> (ttntEmail));
             WString exp = TR("Expiration") + _SPACE_ + _COLON_ + _SPACE_;
             exp += sig.neverExpires() ? TR("Never") : MakeDateTimeLabel(sig.expirationTime());
@@ -422,6 +432,8 @@ void K7Main::DisplaySubKeys(const WString& fullKeyID, bool secret)
         WTreeTableNode * skNode = new WTreeTableNode(sk.keyID());
         skNode->setToolTip(Tools::GetKeyStatus(k));
         TreeTableNodeText * ttntFpr = new TreeTableNodeText(sk.fingerprint(), skNode, 1);
+        if (sk.isBad())
+            ttntFpr->setStyleClass("red");
         skNode->setColumnWidget(1, unique_ptr<TreeTableNodeText> (ttntFpr));
         WString exp = sk.neverExpires() ? TR("Never") : MakeDateTimeLabel(sk.expirationTime());
         WText * lblExpiry = new WText(exp);
@@ -429,7 +441,7 @@ void K7Main::DisplaySubKeys(const WString& fullKeyID, bool secret)
         {
             lblExpiry->setToolTip(TR("TTTDoubleCLick"));
             lblExpiry->doubleClicked().connect(std::bind(&KeyEdit::OnExpiryClicked,
-                                                         m_keyEdit, skNode, 
+                                                         m_keyEdit, skNode,
                                                          WString(k.primaryFingerprint()),
                                                          WString(sk.fingerprint())));
         }

@@ -6,5 +6,15 @@
  *  are all 0.
 */
 div.popup {
-    background-color: lavender;
+    background-color: floralwhite;
 } 
+div.red {
+    color: red;
+}
+div.bold {
+    font-weight: bold;
+}
+span.title {
+    font-size: 125%;
+    font-weight: bold;
+}
