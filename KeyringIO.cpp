@@ -309,19 +309,16 @@ void ExportKeyStreamResource::handleRequest(const Http::Request& request,
         return;
     }
     string buffer;
-    if (!request.continuation()) // Needed for WStreamResource ?
+    Error e;
+    GpgMEWorker gpgw;
+    e = gpgw.ExportPublicKey(m_fpr.toUTF8().c_str(), buffer);
+    if (e.code() != 0)
     {
-        Error e;
-        GpgMEWorker gpgw;
-        e = gpgw.ExportPublicKey(m_fpr.toUTF8().c_str(), buffer);
-        if (e.code() != 0)
-        {
-            m_tmwMessage->SetText(e.asString());
-            LGE(e);
-            return;
-        }
-        suggestFileName(m_fpr + WString(".asc"), ContentDisposition::Attachment);
+        m_tmwMessage->SetText(e.asString());
+        LGE(e);
+        return;
     }
+    suggestFileName(m_fpr + WString(".asc"), ContentDisposition::Attachment);
 
     istrstream bufStream(buffer.c_str());
     handleRequestPiecewise(request, response, bufStream);
