@@ -176,18 +176,10 @@ void KeyEdit::EditUidValidity()
     }
     if (e.code() != 0)
     {
+        m_owner->m_tmwMessage->SetText(e.asString());
+        m_popupCertifyUid->ShowPassphrase(true);
         LGE(e);
-        if (m_popupCertifyUid->WhatToDo() == PopupCertifyUserId::CertifyUid)
-        {
-            m_owner->m_tmwMessage->SetText(e.asString());
-            m_popupCertifyUid->ShowPassphrase(true);
-            return;
-        }
-        else {
-            m_owner->m_tmwMessage->SetText(e.asString());
-            m_popupCertifyUid->ShowPassphrase(true);
-            return;
-        }
+        return;
     }
     if (m_popupCertifyUid->WhatToDo() == PopupCertifyUserId::CertifyUid)
         m_owner->m_tmwMessage->SetText(TR("CertificationSuccess"));
