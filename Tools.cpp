@@ -10,6 +10,7 @@
 #include "Tools.h"
 #include <sstream>
 #include <iostream>
+#include "GpgMELogger.h"
 
 using namespace std;
 
@@ -101,6 +102,7 @@ bool Tools::KeyHasSecret(const WString& fpr)
     GpgME::Key k = gpgw.FindKey(fpr.toUTF8().c_str(), e, true); // Look for a private key
     if (e.code() != 0 && e.code() != 16383)
     { // 16383 : end of file, when key is not private
+        LGE(e);
         return false;
     }
     return (!k.isNull());

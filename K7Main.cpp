@@ -21,6 +21,7 @@
 #include "GpgMECWorker.h"
 #include "Tools.h"
 #include "SensitiveTreeTableNodeText.h"
+#include "GpgMELogger.h"
 
 using namespace std;
 
@@ -207,6 +208,7 @@ void K7Main::Search()
         {
             privkList.clear();
             m_tmwMessage->SetText(e.asString());
+            LGE(e);
             return;
         }
         /*
@@ -232,6 +234,7 @@ void K7Main::Search()
         {
             pubkList.clear();
             m_tmwMessage->SetText(e.asString());
+            LGE(e);
             return;
         }
     }
@@ -334,6 +337,7 @@ void K7Main::DisplayUids(const WString& fullKeyID, bool secret)
     if (e.code() != 0)
     {
         m_tmwMessage->SetText(e.asString());
+        LGE(e);
         return;
     }
     if (m_ttbUids->columnCount() == 1)
@@ -408,6 +412,7 @@ void K7Main::DisplaySubKeys(const WString& fullKeyID, bool secret)
     if (e.code() != 0)
     {
         m_tmwMessage->SetText(e.asString());
+        LGE(e);
         return;
     }
     if (m_ttbSubKeys->columnCount() == 1)

@@ -13,6 +13,7 @@
 #include <Wt/WStandardItem.h>
 #include "GpgMEWorker.h"
 #include "Tools.h"
+#include "GpgMELogger.h"
 
 using namespace std;
 
@@ -91,6 +92,7 @@ void KeyEdit::OnOwnerTrustBlurred(WTreeTableNode* keyNode, bool keyHasSecret)
     {
         lblOwnerTrust->setText(previousTrustLevel);
         m_owner->m_tmwMessage->SetText(TR("OwnerTrustFailure"));
+        LGE(e);
         return;
     }
     m_owner->m_tmwMessage->SetText(TR("OwnerTrustSuccess"));
@@ -174,6 +176,7 @@ void KeyEdit::EditUidValidity()
     }
     if (e.code() != 0)
     {
+        LGE(e);
         if (m_popupCertifyUid->WhatToDo() == PopupCertifyUserId::CertifyUid)
         {
             m_owner->m_tmwMessage->SetText(e.asString());
@@ -226,6 +229,7 @@ void KeyEdit::SetKeyExpiryTime()
     {
         m_owner->m_tmwMessage->SetText(TR("SetExpirationTimeFailure"));
         m_popupExpiryTime->ShowPassphrase(true);
+        LGE(e);
         return;
     }
     m_owner->m_tmwMessage->SetText(TR("SetExpirationTimeSuccess"));
@@ -282,6 +286,7 @@ void KeyEdit::AddOrRevokeUid()
     {
         m_popupAddUid->ShowPassphrase(true);
         m_owner->m_tmwMessage->SetText(e.asString());
+        LGE(e);
     }
     else
     {

@@ -15,6 +15,7 @@
 #include <Wt/WRadioButton.h>
 #include <iostream>
 #include <algorithm>
+#include "GpgMELogger.h"
 
 using namespace std;
 
@@ -135,6 +136,7 @@ void PopupCertifyUserId::FillPrivateKeyComboBox(vector<WString>& privateKeys)
         if (e.code() != 0)
         {
             m_tmwMessage->SetText(e.asString());
+            LGE(e);
             return;
         }
         /*
@@ -177,6 +179,7 @@ void PopupCertifyUserId::PresentEmail()
     if (e.code() != 0)
     {
         m_tmwMessage->SetText(e.asString());
+        LGE(e);
         return;
     }
     if (lst.size() != 1)
