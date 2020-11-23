@@ -204,31 +204,24 @@ void KeyEdit::OnExpiryClicked(WTreeTableNode* subkeyNode, const WString& keyFpr,
         m_popupExpiryTime = new PopupExpiryTime(lblExpiry, m_owner->m_tmwMessage);
         m_popupExpiryTime->Create(keyFpr);
         m_expiryEditedKeyFpr = keyFpr;
-        m_popupExpiryTime->GetApplyButton()->clicked().connect(this, &KeyEdit::SetExpiryTime);
+        m_popupExpiryTime->GetApplyButton()->clicked().connect(this, &KeyEdit::SetKeyExpiryTime);
     }
     m_popupExpiryTime->SetSubkeyFpr(subkeyFpr);
     m_popupExpiryTime->show();
 }
 
-void KeyEdit::SetExpiryTime()
+void KeyEdit::SetKeyExpiryTime()
 {
     GpgMEWorker gpgWorker;
     GpgME::Error e;
     const WString keyFpr = m_popupExpiryTime->GetKeyFpr();
-    const WString subkeyFpr = m_popupExpiryTime->GetSubkeyFpr();
+    WString subkeyFpr = m_popupExpiryTime->GetSubkeyFpr();
     if (keyFpr == subkeyFpr)
-    {
-        e = gpgWorker.SetExpiryTime(keyFpr.toUTF8().c_str(),
-                                    m_popupExpiryTime->GetPassphrase(),
-                                    m_popupExpiryTime->GetExpiryTime());
-    }
-    else
-    {
-        e = gpgWorker.SetSubkeyExpiryTime(keyFpr.toUTF8().c_str(),
-                                          subkeyFpr.toUTF8().c_str(),
-                                          m_popupExpiryTime->GetPassphrase(),
-                                          m_popupExpiryTime->GetExpiry());
-    }
+        subkeyFpr = WString::Empty;
+    e = gpgWorker.SetKeyExpiryTime(keyFpr.toUTF8().c_str(),
+                                      subkeyFpr.toUTF8().c_str(),
+                                      m_popupExpiryTime->GetPassphrase(),
+                                      m_popupExpiryTime->GetExpiry());
     if (e.code() != 0)
     {
         m_owner->m_tmwMessage->SetText(TR("SetExpirationTimeFailure"));

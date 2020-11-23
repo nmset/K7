@@ -91,27 +91,19 @@ public:
                            vector<GpgME::UserID>& userIDsToRevoke,
                            const string& passphrase);
     /**
-     * Sets the expiry time of a single subkey. Requires GPGME >= 1.15.0.
-     * \n If no subkey is found (wrong fpr), the expiry time of key is set
-     * instead.
+     * Sets the expiry time of a single (sub)key. Requires GPGME >= 1.15.0.
+     * \n If no subkey is found (wrong fpr) or not provided, the expiry time of 
+     * key is set instead.
      * @param keyFpr
      * @param subkeyFpr
      * @param passphrase
      * @param expires : seconds from now. Use 0 for no expiry.
      * @return 
      */
-    const Error SetSubkeyExpiryTime(const char * keyFpr,
+    const Error SetKeyExpiryTime(const char * keyFpr,
                                     const char * subkeyFpr,
                                     const string& passphrase,
                                     ulong expires = 63072000);
-    /**
-     * Set new expiry time of a secret key.
-     * @param timeString
-     * @return 
-     */
-    const Error SetExpiryTime(const char * keyFpr,
-                              const string& passphrase,
-                              const string& timeString = "0");
     /**
      * Adds a user identity to a key.
      * \n The email parameter must have a valid email address format here, else
@@ -257,20 +249,6 @@ public:
     {
     };
 
-};
-
-class SetExpiryTimeEditInteractor : public GpgSetExpiryTimeEditInteractor
-{
-public:
-
-    SetExpiryTimeEditInteractor(const std::string& timeString = "0")
-    : GpgSetExpiryTimeEditInteractor(timeString)
-    {
-    };
-
-    virtual ~SetExpiryTimeEditInteractor()
-    {
-    };
 };
 
 class AddUserIDEditInteractor : public GpgAddUserIDEditInteractor

@@ -58,7 +58,7 @@ private:
      */
     void FillOwnerTrustCombo(WComboBox * cmb, bool keyHasSecret);
     void EditUidValidity();
-    void SetExpiryTime();
+    void SetKeyExpiryTime();
     void AddOrRevokeUid();
 
     /**
