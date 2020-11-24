@@ -297,6 +297,18 @@ void KeyringIO::OnPreExportSecretKey(const WString& fpr)
 {
     // On preExport button of popup
     WLink link;
+    GpgMEWorker gpgw;
+    Error e = gpgw.CheckPassphrase(fpr.toUTF8().c_str(),
+                                   m_popupExportSecretKey->GetPassphrase());
+    if (e.code() != 0)
+    {
+        m_tmwMessage->SetText(e.asString());
+        m_popupExportSecretKey->GetApplyButton()->setLink(link);
+        m_popupExportSecretKey->GetApplyButton()->disable();
+        LGE(e);
+        return;
+    }
+    
     shared_ptr<ExportKeyStreamResource> shResource =
             make_shared<ExportKeyStreamResource>
             (fpr, true, "appliation/pgp-keys", m_tmwMessage);

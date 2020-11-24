@@ -87,9 +87,9 @@ public:
      * @return 
      */
     const Error RevokeKeyCertifications(const char * fprSigningKey,
-                           const char * fprKeyToSign,
-                           vector<GpgME::UserID>& userIDsToRevoke,
-                           const string& passphrase);
+                                        const char * fprKeyToSign,
+                                        vector<GpgME::UserID>& userIDsToRevoke,
+                                        const string& passphrase);
     /**
      * Sets the expiry time of a single (sub)key. Requires GPGME >= 1.15.0.
      * \n If no subkey is found (wrong fpr) or not provided, the expiry time of 
@@ -101,9 +101,9 @@ public:
      * @return 
      */
     const Error SetKeyExpiryTime(const char * keyFpr,
-                                    const char * subkeyFpr,
-                                    const string& passphrase,
-                                    ulong expires = 63072000);
+                                 const char * subkeyFpr,
+                                 const string& passphrase,
+                                 ulong expires = 63072000);
     /**
      * Adds a user identity to a key.
      * \n The email parameter must have a valid email address format here, else
@@ -181,6 +181,21 @@ public:
                              const char * algo,
                              const string& passphrase,
                              ulong expires = 63072000);
+    /**
+     * Checks that passphrase can unlock secret key with fingerprint fpr.
+     * \n This is a workaround when exporting secret keys.
+     * \n To date, with GnuPG 2.2.23 and GpgME 1.1.15, a secret key can be
+     * exported when the right passphrase is provided. With a bad passphrase,
+     * application crashes.
+     * \n See https://dev.gnupg.org/T5151
+     * \n Application may validate a passphrase before invoking engine.
+     * \n Until it is hopefully fixed in upstream and available in mainstream.
+     * @param fpr
+     * @param passphrase
+     * @return 
+     */
+    const Error CheckPassphrase(const char * fpr,
+                                const string& passphrase);
     /**
      * Export a secret key.
      * @param pattern : a key fingerprint

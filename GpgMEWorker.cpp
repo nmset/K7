@@ -11,6 +11,7 @@
 #include <gpgme++/keylistresult.h>
 #include <gpgme++/importresult.h>
 #include <gpgme++/keygenerationresult.h>
+#include <gpgme++/signingresult.h>
 #include <locale>
 #include <iostream>
 #include <gpgme++/data.h>
@@ -343,6 +344,32 @@ const Error GpgMEWorker::CreateSubKey(GpgME::Key& k,
     k.update();
     delete ppp;
     delete ctx;
+    return e;
+}
+
+const Error GpgMEWorker::CheckPassphrase(const char* fpr,
+                                         const string& passphrase)
+{
+    Error e;
+    Context * ctx = Context::createForProtocol(Protocol::OpenPGP);
+    LoopbackPassphraseProvider * ppp = new LoopbackPassphraseProvider(passphrase);
+    ctx->setPinentryMode(Context::PinentryMode::PinentryLoopback);
+    ctx->setPassphraseProvider(ppp);
+
+    Key k = FindKey(fpr, e, true);
+    if (e.code() != 0)
+        return e;
+    e = ctx->addSigningKey(k);
+    if (e.code() != 0)
+        return e;
+    Data plain("dummy");
+    Data signature;
+    SigningResult result = ctx->sign(plain, signature, SignatureMode::Detached);
+    e = result.error();
+
+    delete ppp;
+    delete ctx;
+    
     return e;
 }
 
