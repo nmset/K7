@@ -58,13 +58,19 @@ public:
                           WTreeTableNode * node, uint colIndex);
     virtual ~TreeTableNodeLineEdit();
     /**
-     * Creates back a TreeTableNodeText replacing this TreeTableNodeLineEdit.
+     * Move back the original TreeTableNodeText replacing this
+     * TreeTableNodeLineEdit.
      */
     void OnBlurred();
+    /**
+     * Keep the original TreeTableNodeText verbatim.
+     * @param text
+     */
+    void HoldSourceWidget(std::unique_ptr<WWidget> sourceWidget);
 private:
     WTreeTableNode * m_node;
     uint m_colIndex;
-    TreeTableNodeText * m_text;
+    std::unique_ptr<WWidget> m_sourceWidget;
 
     void Init(WTreeTableNode * node, uint colIndex);
 };

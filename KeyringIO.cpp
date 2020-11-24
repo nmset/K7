@@ -13,6 +13,7 @@
 #include "Tools.h"
 #include <Wt/WLink.h>
 #include <strstream>
+#include "GpgMELogger.h"
 
 using namespace std;
 
@@ -81,6 +82,7 @@ void KeyringIO::DoImportKey()
     if (e.code() != 0)
     {
         m_tmwMessage->SetText(e.asString());
+        LGE(e);
         return;
     }
     if (fpr.empty())
@@ -93,6 +95,7 @@ void KeyringIO::DoImportKey()
     if (e.code() != 0)
     {
         m_tmwMessage->SetText(e.asString());
+        LGE(e);
         return;
     }
     m_tmwMessage->SetText(TR("ImportSuccess") + fpr + WString(" - ") + WString(k.userID(0).name()));
@@ -111,6 +114,7 @@ bool KeyringIO::CanKeyBeDeleted(const WString& fullKeyID)
     if (e.code() != 0 && e.code() != 16383)
     { // 16383 : end of file, when key is not private
         m_tmwMessage->SetText(e.asString());
+        LGE(e);
         return false;
     }
     // k can now be secret or public
@@ -168,6 +172,7 @@ void KeyringIO::DoDeleteKey()
     if (e.code() != 0)
     {
         m_tmwMessage->SetText(e.asString());
+        LGE(e);
         return;
     }
     // Delete the key using the C API
@@ -234,6 +239,7 @@ void KeyringIO::DoCreateKey()
     if (e.code() != 0)
     {
         m_tmwMessage->SetText(e.asString());
+        LGE(e);
     }
     else
     {
@@ -337,21 +343,19 @@ void ExportKeyStreamResource::handleRequest(const Http::Request& request,
      */
 
     string buffer;
-    if (!request.continuation()) // Needed for WStreamResource ?
-    {
-        Error e;
-        GpgMEWorker gpgw;
-        e = m_isSecret
+    Error e;
+    GpgMEWorker gpgw;
+    e = m_isSecret
                 ? gpgw.ExportPrivateKey(m_fpr.toUTF8().c_str(), buffer,
                                         m_passphrase.toUTF8())
                 : gpgw.ExportPublicKey(m_fpr.toUTF8().c_str(), buffer);
-        if (e.code() != 0)
-        {
-            m_tmwMessage->SetText(e.asString());
-            return;
-        }
-        suggestFileName(m_fpr + WString(".asc"), ContentDisposition::Attachment);
+    if (e.code() != 0)
+    {
+        m_tmwMessage->SetText(e.asString());
+        LGE(e);
+        return;
     }
+    suggestFileName(m_fpr + WString(".asc"), ContentDisposition::Attachment);
 
     istrstream bufStream(buffer.c_str());
     handleRequestPiecewise(request, response, bufStream);

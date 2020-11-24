@@ -145,9 +145,38 @@ const Error GpgMEWorker::CertifyKey(const char* fprSigningKey,
     return e;
 }
 
-const Error GpgMEWorker::SetExpiryTime(const char * keyFpr,
-                                       const string& passphrase,
-                                       const string& timeString)
+const Error GpgMEWorker::RevokeKeyCertifications(const char* fprSigningKey,
+                                                 const char* fprKeyToSign,
+                                                 vector<GpgME::UserID>& userIDsToRevoke,
+                                                 const string& passphrase)
+{
+    Error e;
+    Key signingKey = FindKey(fprSigningKey, e, true);
+    if (e.code() != 0)
+        return e;
+    e = m_ctx->addSigningKey(signingKey); // +++
+    if (e.code() != 0)
+        return e;
+    Key keyToSign = FindKey(fprKeyToSign, e, false);
+    if (e.code() != 0)
+        return e;
+
+    m_ctx->setPinentryMode(Context::PinentryMode::PinentryLoopback);
+    if (m_ppp == NULL)
+        m_ppp = new LoopbackPassphraseProvider();
+    m_ppp->SetPassphrase(passphrase);
+    m_ctx->setPassphraseProvider(m_ppp);
+    
+    e = m_ctx->revokeSignature(keyToSign, signingKey, userIDsToRevoke);
+    m_ctx->clearSigningKeys();
+    
+    return e;
+}
+
+const Error GpgMEWorker::SetKeyExpiryTime(const char* keyFpr,
+                                             const char* subkeyFpr,
+                                             const string& passphrase,
+                                             ulong expires)
 {
     Error e;
     Key k = FindKey(keyFpr, e, true);
@@ -157,17 +186,26 @@ const Error GpgMEWorker::SetExpiryTime(const char * keyFpr,
     if (e.code() != 0)
         return e;
 
+    vector<GpgME::Subkey> subkey;
+    for (uint i = 0; i < k.subkeys().size(); i++)
+    {
+        GpgME::Subkey sk = k.subkey(i);
+        if (string(sk.fingerprint()) == string(subkeyFpr))
+        {
+            subkey.push_back(sk);
+            break;
+        }
+    }
+    // There should always be at least one subkey (the key itself).
+    
     m_ctx->setPinentryMode(Context::PinentryMode::PinentryLoopback);
     if (m_ppp == NULL)
         m_ppp = new LoopbackPassphraseProvider();
     m_ppp->SetPassphrase(passphrase);
     m_ctx->setPassphraseProvider(m_ppp);
 
-    SetExpiryTimeEditInteractor * interactor
-            = new SetExpiryTimeEditInteractor(timeString);
-    GpgME::Data d;
-    e = m_ctx->edit(k, std::unique_ptr<SetExpiryTimeEditInteractor> (interactor), d);
-    m_ctx->clearSigningKeys();
+    // setExpire() allows to expire all subkeys at once. Not implemented here.
+    e = m_ctx->setExpire(k, expires, subkey);
 
     return e;
 }

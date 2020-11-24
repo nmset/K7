@@ -78,13 +78,32 @@ public:
                            vector<uint>& userIDsToSign, int options,
                            const string& passphrase);
     /**
-     * Set new expiry time of a secret key.
-     * @param timeString
+     * Revoke UserID certifications.
+     * \n Requires GnuPG >= 2.2.24
+     * @param fprSigningKey
+     * @param fprKeyToSign
+     * @param userIDsToRevoke : vector of ::UserID
+     * @param passphrase
      * @return 
      */
-    const Error SetExpiryTime(const char * keyFpr,
-                              const string& passphrase,
-                              const string& timeString = "0");
+    const Error RevokeKeyCertifications(const char * fprSigningKey,
+                           const char * fprKeyToSign,
+                           vector<GpgME::UserID>& userIDsToRevoke,
+                           const string& passphrase);
+    /**
+     * Sets the expiry time of a single (sub)key. Requires GPGME >= 1.15.0.
+     * \n If no subkey is found (wrong fpr) or not provided, the expiry time of 
+     * key is set instead.
+     * @param keyFpr
+     * @param subkeyFpr
+     * @param passphrase
+     * @param expires : seconds from now. Use 0 for no expiry.
+     * @return 
+     */
+    const Error SetKeyExpiryTime(const char * keyFpr,
+                                    const char * subkeyFpr,
+                                    const string& passphrase,
+                                    ulong expires = 63072000);
     /**
      * Adds a user identity to a key.
      * \n The email parameter must have a valid email address format here, else
@@ -111,8 +130,8 @@ public:
      * @return 
      */
     const Error RevokeUserID(const char * keyFpr, const string& passphrase,
-                          const string& name, const string& email,
-                          const string& comment);
+                             const string& name, const string& email,
+                             const string& comment);
     /**
      * Creates a pair of secret and public keys with the default engine
      * algorithms. Default expiry time is 2 * 365 days.
@@ -223,20 +242,6 @@ public:
     {
     };
 
-};
-
-class SetExpiryTimeEditInteractor : public GpgSetExpiryTimeEditInteractor
-{
-public:
-
-    SetExpiryTimeEditInteractor(const std::string& timeString = "0")
-    : GpgSetExpiryTimeEditInteractor(timeString)
-    {
-    };
-
-    virtual ~SetExpiryTimeEditInteractor()
-    {
-    };
 };
 
 class AddUserIDEditInteractor : public GpgAddUserIDEditInteractor

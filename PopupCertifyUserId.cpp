@@ -12,7 +12,10 @@
 #include "Tools.h"
 #include <Wt/WStandardItem.h>
 #include <Wt/WStandardItemModel.h>
+#include <Wt/WRadioButton.h>
 #include <iostream>
+#include <algorithm>
+#include "GpgMELogger.h"
 
 using namespace std;
 
@@ -26,6 +29,7 @@ PopupCertifyUserId::PopupCertifyUserId(WWidget * anchorWidget, TransientMessageW
     m_cbOptionExportable = NULL;
     m_cbOptionNonRevocable = NULL;
     // m_cbOptionTrust = NULL;
+    m_cbConfirm = NULL;
     m_lblPassphrase = NULL;
     m_lePassphrase = NULL;
     m_btnApply = NULL;
@@ -63,10 +67,10 @@ void PopupCertifyUserId::Create(vector<WString>& privateKeys,
     m_hblPreferences->addLayout(unique_ptr<WVBoxLayout> (m_vblEmail));
     PresentEmail();
     // Column 1
+    m_gbOptions = new WGroupBox(TR("Options"));
     WVBoxLayout * vblOptions = new WVBoxLayout();
-    m_hblPreferences->addLayout(unique_ptr<WVBoxLayout> (vblOptions));
-    WText * lblOptions = new WText(TR("Options"));
-    vblOptions->addWidget(unique_ptr<WText> (lblOptions));
+    m_gbOptions->setLayout(unique_ptr<WVBoxLayout> (vblOptions));
+    m_hblPreferences->addWidget(unique_ptr<WGroupBox> (m_gbOptions));
     m_cbOptionExportable = new WCheckBox(TR("ExportableCertification"));
     m_cbOptionExportable->setToolTip(TR("OneWayHint"));
     vblOptions->addWidget(unique_ptr<WCheckBox> (m_cbOptionExportable));
@@ -74,7 +78,7 @@ void PopupCertifyUserId::Create(vector<WString>& privateKeys,
     m_cbOptionNonRevocable->setToolTip(TR("OneWayHint"));
     vblOptions->addWidget(unique_ptr<WCheckBox> (m_cbOptionNonRevocable));
     /*m_cbOptionTrust = new WCheckBox(TR("TrustCertification"));
-    vblOptions->addWidget(unique_ptr<WCheckBox> (m_cbOptionTrust));*/
+    gbOptions->addWidget(unique_ptr<WCheckBox> (m_cbOptionTrust));*/
 
     WHBoxLayout * hblPassphrase = new WHBoxLayout();
     m_lblPassphrase = new WText(TR("Passphrase"));
@@ -83,6 +87,21 @@ void PopupCertifyUserId::Create(vector<WString>& privateKeys,
     m_lePassphrase->setEchoMode(EchoMode::Password);
     hblPassphrase->addWidget(unique_ptr<WLineEdit> (m_lePassphrase), 1);
     vblMain->addLayout(unique_ptr<WHBoxLayout> (hblPassphrase));
+
+    WHBoxLayout * hblWhat = new WHBoxLayout();
+    WRadioButton * rbCertifyUid = new WRadioButton(TR("CertifyUid"));
+    hblWhat->addWidget(unique_ptr<WRadioButton> (rbCertifyUid));
+    WRadioButton * rbRevokeCertification =
+            new WRadioButton(TR("RevokeUidCertification"));
+    hblWhat->addWidget(unique_ptr<WRadioButton> (rbRevokeCertification));
+    m_bgWhat = make_shared<WButtonGroup>();
+    m_bgWhat->addButton(rbCertifyUid, What::CertifyUid);
+    m_bgWhat->addButton(rbRevokeCertification, What::RevokeUidCertification);
+    m_bgWhat->setCheckedButton(rbCertifyUid);
+    vblMain->addLayout(unique_ptr<WHBoxLayout> (hblWhat));
+
+    m_cbConfirm = new WCheckBox(TR("Confirm"));
+    vblMain->addWidget(unique_ptr<WCheckBox> (m_cbConfirm));
 
     WHBoxLayout * hblButtons = new WHBoxLayout();
     WPushButton * btnClose = new WPushButton(TR("Close"));
@@ -99,6 +118,7 @@ void PopupCertifyUserId::Create(vector<WString>& privateKeys,
     m_cbOptionNonRevocable->unChecked().connect(std::bind(&PopupCertifyUserId::OnCertifyOptionUnChecked, this, 2));
     // m_cbOptionTrust->unChecked().connect(std::bind(&PopupCertifyUserId::OnCertifyOptionUnChecked, this, 4));
     btnClose->clicked().connect(this, &WPopupWidget::hide);
+    m_bgWhat->checkedChanged().connect(this, &PopupCertifyUserId::OnButtonGroupWhat);
 }
 
 void PopupCertifyUserId::FillPrivateKeyComboBox(vector<WString>& privateKeys)
@@ -116,6 +136,7 @@ void PopupCertifyUserId::FillPrivateKeyComboBox(vector<WString>& privateKeys)
         if (e.code() != 0)
         {
             m_tmwMessage->SetText(e.asString());
+            LGE(e);
             return;
         }
         /*
@@ -158,6 +179,7 @@ void PopupCertifyUserId::PresentEmail()
     if (e.code() != 0)
     {
         m_tmwMessage->SetText(e.asString());
+        LGE(e);
         return;
     }
     if (lst.size() != 1)
@@ -175,8 +197,8 @@ void PopupCertifyUserId::PresentEmail()
         WCheckBox * cbEmail = new WCheckBox(it->email());
         m_vblEmail->addWidget(unique_ptr<WCheckBox> (cbEmail));
         cbEmail->setId(std::to_string(id));
-        cbEmail->checked().connect(std::bind(&PopupCertifyUserId::OnEmailChecked, this, cbEmail));
-        cbEmail->unChecked().connect(std::bind(&PopupCertifyUserId::OnEmailUnChecked, this, cbEmail));
+        cbEmail->checked().connect(std::bind(&PopupCertifyUserId::OnEmailChecked, this, cbEmail, (*it)));
+        cbEmail->unChecked().connect(std::bind(&PopupCertifyUserId::OnEmailUnChecked, this, cbEmail, (*it)));
         id++;
     }
 }
@@ -220,25 +242,32 @@ void PopupCertifyUserId::ShowPassphrase(bool show)
     }
 }
 
-void PopupCertifyUserId::OnEmailChecked(WCheckBox* cb)
+void PopupCertifyUserId::OnEmailChecked(WCheckBox* cb, GpgME::UserID& uid)
 {
     int id = Tools::ToInt(cb->id());
     m_uidsToSign.push_back(id);
+    m_uidsToRevokeCertification.push_back(uid);
 }
 
-void PopupCertifyUserId::OnEmailUnChecked(WCheckBox* cb)
+void PopupCertifyUserId::OnEmailUnChecked(WCheckBox* cb, GpgME::UserID& uid)
 {
-    // Any tip to locate a known value in a vector without iterating over?
     const uint id = Tools::ToInt(cb->id());
-    vector<uint>::iterator it;
-    for (it = m_uidsToSign.begin(); it != m_uidsToSign.end(); it++)
+    vector<uint>::iterator it =
+            std::find(m_uidsToSign.begin(), m_uidsToSign.end(), id);
+    if (it != m_uidsToSign.end())
+        m_uidsToSign.erase(it);
+
+    vector<GpgME::UserID>::iterator uit;
+    for (uit = m_uidsToRevokeCertification.begin();
+            uit != m_uidsToRevokeCertification.end(); uit++)
     {
-        if ((*it) == id)
+        if ((*uit).uidhash() == uid.uidhash())
         {
-            m_uidsToSign.erase(it);
-            return;
+            m_uidsToRevokeCertification.erase(uit);
+            break;
         }
     }
+
 }
 
 void PopupCertifyUserId::OnCertifyOptionChecked(int id)
@@ -249,4 +278,28 @@ void PopupCertifyUserId::OnCertifyOptionChecked(int id)
 void PopupCertifyUserId::OnCertifyOptionUnChecked(int id)
 {
     m_certifyOptions -= id;
+}
+
+void PopupCertifyUserId::OnButtonGroupWhat(WRadioButton* btn)
+{
+    m_gbOptions->setDisabled(m_bgWhat->checkedId()
+                             == What::RevokeUidCertification);
+
+}
+
+bool PopupCertifyUserId::Validate() const
+{
+    if (!m_cbConfirm->isChecked() || m_lePassphrase->text().empty())
+        return false;
+    if (m_bgWhat->checkedId() == What::CertifyUid)
+    {
+        if (m_uidsToSign.size() == 0)
+            return false;
+    }
+    else
+    {
+        if (m_uidsToRevokeCertification.size() == 0)
+            return false;
+    }
+    return true;
 }

@@ -22,6 +22,7 @@ PopupExpiryTime::PopupExpiryTime(WWidget * anchorWidget, TransientMessageWidget 
     m_tmwMessage = txtMessage;
     m_cwMain = NULL;
     m_keyFpr = WString::Empty;
+    m_subkeyFpr = WString::Empty;
     /*
      * Trade-off.
      * When the calendar of WDateEdit is clicked, this popup gets hidden,
@@ -80,6 +81,11 @@ const string PopupExpiryTime::GetExpiryTime() const
     if (m_deExpiry->text().empty())
         return "0";
     return m_deExpiry->text().toUTF8();
+}
+
+const ulong PopupExpiryTime::GetExpiry() const
+{
+    return ((WDate::currentDate().daysTo(m_deExpiry->date())) * 24 * 3600);
 }
 
 void PopupExpiryTime::ShowPassphrase(bool show)

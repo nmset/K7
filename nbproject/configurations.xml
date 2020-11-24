@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>AppConfig.h</itemPath>
       <itemPath>GpgMECWorker.h</itemPath>
+      <itemPath>GpgMELogger.h</itemPath>
       <itemPath>GpgMEWorker.h</itemPath>
       <itemPath>K7Main.h</itemPath>
       <itemPath>KeyEdit.h</itemPath>
@@ -103,6 +104,8 @@
       <item path="GpgMECWorker.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="GpgMECWorker.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GpgMELogger.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="GpgMEWorker.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -223,6 +226,8 @@
       <item path="GpgMECWorker.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="GpgMECWorker.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GpgMELogger.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="GpgMEWorker.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -347,6 +352,8 @@
       <item path="GpgMECWorker.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="GpgMECWorker.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GpgMELogger.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="GpgMEWorker.cpp" ex="false" tool="1" flavor2="0">
       </item>

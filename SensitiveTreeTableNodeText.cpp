@@ -51,6 +51,7 @@ void TreeTableNodeText::OnClick()
     m_lineEdit->setReadOnly(true);
     m_lineEdit->blurred().connect(m_lineEdit, &TreeTableNodeLineEdit::OnBlurred);
     m_lineEdit->setSelection(0, text().toUTF8().length());
+    m_lineEdit->HoldSourceWidget(removeFromParent());
     m_node->setColumnWidget(m_colIndex, unique_ptr<WLineEdit> (m_lineEdit));
     m_lineEdit->setFocus(true); // +++
 }
@@ -78,13 +79,15 @@ void TreeTableNodeLineEdit::Init(WTreeTableNode* node, uint colIndex)
 {
     m_node = node;
     m_colIndex = colIndex;
-    m_text = NULL;
     clicked().connect(this, &TreeTableNodeLineEdit::OnBlurred);
 }
 
 void TreeTableNodeLineEdit::OnBlurred()
 {
-    m_text = new TreeTableNodeText(text(), m_node, m_colIndex);
-    m_text->clicked().connect(m_text, &TreeTableNodeText::OnClick);
-    m_node->setColumnWidget(m_colIndex, unique_ptr<TreeTableNodeText> (m_text));
+    m_node->setColumnWidget(m_colIndex, std::move(m_sourceWidget));
+}
+
+void TreeTableNodeLineEdit::HoldSourceWidget(std::unique_ptr<WWidget> sourceWidget)
+{
+    m_sourceWidget.swap(sourceWidget);
 }

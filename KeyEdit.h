@@ -39,7 +39,7 @@ private:
     virtual ~KeyEdit();
 
     K7Main * m_owner;
-    PopupCertifyUserId * m_popupUid;
+    PopupCertifyUserId * m_popupCertifyUid;
     WString m_targetUidValidityKeyFpr;
 
     PopupExpiryTime * m_popupExpiryTime;
@@ -57,8 +57,8 @@ private:
      * @param keyHasSecret
      */
     void FillOwnerTrustCombo(WComboBox * cmb, bool keyHasSecret);
-    void CertifyKey();
-    void SetExpiryTime();
+    void EditUidValidity();
+    void SetKeyExpiryTime();
     void AddOrRevokeUid();
 
     /**
@@ -85,7 +85,8 @@ private:
      * @param subkeyNode
      * @param keyFpr
      */
-    void OnExpiryClicked(WTreeTableNode * subkeyNode, const WString& keyFpr);
+    void OnExpiryClicked(WTreeTableNode * subkeyNode, const WString& keyFpr,
+                         const WString& subkeyFpr);
 
     void OnUidEmailClicked(WTreeTableNode * uidNode, const WString& keyFpr);
 

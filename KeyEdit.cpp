@@ -13,6 +13,7 @@
 #include <Wt/WStandardItem.h>
 #include "GpgMEWorker.h"
 #include "Tools.h"
+#include "GpgMELogger.h"
 
 using namespace std;
 
@@ -20,7 +21,7 @@ KeyEdit::KeyEdit(K7Main * owner)
 : WObject()
 {
     m_owner = owner;
-    m_popupUid = NULL;
+    m_popupCertifyUid = NULL;
     m_popupExpiryTime = NULL;
     m_popupAddUid = NULL;
     m_targetUidValidityKeyFpr = WString::Empty;
@@ -29,7 +30,7 @@ KeyEdit::KeyEdit(K7Main * owner)
 
 KeyEdit::~KeyEdit()
 {
-    delete m_popupUid;
+    delete m_popupCertifyUid;
 }
 
 void KeyEdit::OnOwnerTrustDoubleClicked(WTreeTableNode * keyNode, bool keyHasSecret)
@@ -91,6 +92,7 @@ void KeyEdit::OnOwnerTrustBlurred(WTreeTableNode* keyNode, bool keyHasSecret)
     {
         lblOwnerTrust->setText(previousTrustLevel);
         m_owner->m_tmwMessage->SetText(TR("OwnerTrustFailure"));
+        LGE(e);
         return;
     }
     m_owner->m_tmwMessage->SetText(TR("OwnerTrustSuccess"));
@@ -130,47 +132,65 @@ void KeyEdit::OnUidValidityClicked(WTreeTableNode* uidNode, vector<WString>& pri
     if (targetKeyFpr != m_targetUidValidityKeyFpr)
     {
         bool passwordVisibility = true;
-        if (m_popupUid)
-            passwordVisibility = m_popupUid->IsPasswordVisible();
-        delete m_popupUid;
+        if (m_popupCertifyUid)
+            passwordVisibility = m_popupCertifyUid->IsPasswordVisible();
+        delete m_popupCertifyUid;
         WText * lblUidValidity = static_cast<WText*> (uidNode->columnWidget(2));
-        m_popupUid = new PopupCertifyUserId(lblUidValidity, m_owner->m_tmwMessage);
-        m_popupUid->Create(privateKeys, targetKeyFpr);
-        m_popupUid->ShowPassphrase(passwordVisibility);
+        m_popupCertifyUid = new PopupCertifyUserId(lblUidValidity, m_owner->m_tmwMessage);
+        m_popupCertifyUid->Create(privateKeys, targetKeyFpr);
+        m_popupCertifyUid->ShowPassphrase(passwordVisibility);
         m_targetUidValidityKeyFpr = targetKeyFpr;
-        m_popupUid->GetCertifyButton()->clicked().connect(this, &KeyEdit::CertifyKey);
+        m_popupCertifyUid->GetCertifyButton()->clicked().connect(this, &KeyEdit::EditUidValidity);
     }
-    m_popupUid->show();
+    m_popupCertifyUid->show();
 }
 
-void KeyEdit::CertifyKey()
+void KeyEdit::EditUidValidity()
 {
-    vector<uint>& uidsToSign = m_popupUid->GetUidsToSign();
-    if (uidsToSign.size() == 0)
+    if (!m_popupCertifyUid->Validate())
     {
-        m_owner->m_tmwMessage->SetText(TR("NoUidSelected"));
+        m_owner->m_tmwMessage->SetText(TR("InvalidInput"));
         return;
     }
-    const WString signingKey = m_popupUid->GetSelectedKey();
-    const WString keyToSign = m_popupUid->GetKeyToSign();
-    int options = m_popupUid->GetCertifyOptions();
+    const WString signingKey = m_popupCertifyUid->GetSelectedKey();
+    const WString keyToSign = m_popupCertifyUid->GetKeyToSign();
     GpgMEWorker gpgWorker;
-    GpgME::Error e = gpgWorker.CertifyKey(signingKey.toUTF8().c_str(),
-                                          keyToSign.toUTF8().c_str(),
-                                          uidsToSign, options,
-                                          m_popupUid->GetPassphrase());
+    GpgME::Error e;
+    if (m_popupCertifyUid->WhatToDo() == PopupCertifyUserId::CertifyUid)
+    {
+        vector<uint>& uidsToSign = m_popupCertifyUid->GetUidsToSign();
+        int options = m_popupCertifyUid->GetCertifyOptions();
+        e = gpgWorker.CertifyKey(signingKey.toUTF8().c_str(),
+                                 keyToSign.toUTF8().c_str(),
+                                 uidsToSign, options,
+                                 m_popupCertifyUid->GetPassphrase());
+    }
+    else
+    {
+        vector<GpgME::UserID> uidsToRevoke
+                = m_popupCertifyUid->GetUidsToRevokeCertification();
+        e = gpgWorker.RevokeKeyCertifications(signingKey.toUTF8().c_str(),
+                                              keyToSign.toUTF8().c_str(),
+                                              uidsToRevoke,
+                                              m_popupCertifyUid->GetPassphrase());
+    }
     if (e.code() != 0)
     {
-        m_owner->m_tmwMessage->SetText(TR("CertificationFailure"));
-        m_popupUid->ShowPassphrase(true);
+        m_owner->m_tmwMessage->SetText(e.asString());
+        m_popupCertifyUid->ShowPassphrase(true);
+        LGE(e);
         return;
     }
-    m_owner->m_tmwMessage->SetText(TR("CertificationSuccess"));
-    m_popupUid->ShowPassphrase(false);
+    if (m_popupCertifyUid->WhatToDo() == PopupCertifyUserId::CertifyUid)
+        m_owner->m_tmwMessage->SetText(TR("CertificationSuccess"));
+    else
+        m_owner->m_tmwMessage->SetText(TR("RevocationSuccess"));
+    m_popupCertifyUid->ShowPassphrase(false);
     m_owner->DisplayUids(keyToSign);
 }
 
-void KeyEdit::OnExpiryClicked(WTreeTableNode* subkeyNode, const WString& keyFpr)
+void KeyEdit::OnExpiryClicked(WTreeTableNode* subkeyNode, const WString& keyFpr,
+                              const WString& subkeyFpr)
 {
     if (keyFpr != m_expiryEditedKeyFpr)
     {
@@ -179,21 +199,29 @@ void KeyEdit::OnExpiryClicked(WTreeTableNode* subkeyNode, const WString& keyFpr)
         m_popupExpiryTime = new PopupExpiryTime(lblExpiry, m_owner->m_tmwMessage);
         m_popupExpiryTime->Create(keyFpr);
         m_expiryEditedKeyFpr = keyFpr;
-        m_popupExpiryTime->GetApplyButton()->clicked().connect(this, &KeyEdit::SetExpiryTime);
+        m_popupExpiryTime->GetApplyButton()->clicked().connect(this, &KeyEdit::SetKeyExpiryTime);
     }
+    m_popupExpiryTime->SetSubkeyFpr(subkeyFpr);
     m_popupExpiryTime->show();
 }
 
-void KeyEdit::SetExpiryTime()
+void KeyEdit::SetKeyExpiryTime()
 {
     GpgMEWorker gpgWorker;
-    GpgME::Error e = gpgWorker.SetExpiryTime(m_expiryEditedKeyFpr.toUTF8().c_str(),
-                                             m_popupExpiryTime->GetPassphrase(),
-                                             m_popupExpiryTime->GetExpiryTime());
+    GpgME::Error e;
+    const WString keyFpr = m_popupExpiryTime->GetKeyFpr();
+    WString subkeyFpr = m_popupExpiryTime->GetSubkeyFpr();
+    if (keyFpr == subkeyFpr)
+        subkeyFpr = WString::Empty;
+    e = gpgWorker.SetKeyExpiryTime(keyFpr.toUTF8().c_str(),
+                                      subkeyFpr.toUTF8().c_str(),
+                                      m_popupExpiryTime->GetPassphrase(),
+                                      m_popupExpiryTime->GetExpiry());
     if (e.code() != 0)
     {
         m_owner->m_tmwMessage->SetText(TR("SetExpirationTimeFailure"));
         m_popupExpiryTime->ShowPassphrase(true);
+        LGE(e);
         return;
     }
     m_owner->m_tmwMessage->SetText(TR("SetExpirationTimeSuccess"));
@@ -250,6 +278,7 @@ void KeyEdit::AddOrRevokeUid()
     {
         m_popupAddUid->ShowPassphrase(true);
         m_owner->m_tmwMessage->SetText(e.asString());
+        LGE(e);
     }
     else
     {
