@@ -3,7 +3,6 @@
 It is developed in C++ as a NetBeans project on the [WebToolkit](https://www.webtoolkit.eu/)(Wt) libraries.
 
 It allows to view, import, export, create, delete keys. Certification trust level, secret key expiry date can also be changed, and user identities can be added, revoked and certified.
-Export concerns public keys only; secret keys cannot be technically exported on a web server.
 
 Available keys can then be used by other Wt applications, or web applications based on other libraries, to encrypt and sign data. As such, it suits my personal needs.
 
@@ -11,7 +10,7 @@ K7 is released under the GPL version 2 license. It does not intend nor need to b
 
 **BUILDING**
 
-As a NetBeans project, a Makefile exists in the project root.
+As a NetBeans project, a Makefile exists in project root.
 
 cd /path/to/K7
 
