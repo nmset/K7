@@ -182,21 +182,6 @@ public:
                              const string& passphrase,
                              ulong expires = 63072000);
     /**
-     * Checks that passphrase can unlock secret key with fingerprint fpr.
-     * \n This is a workaround when exporting secret keys.
-     * \n To date, with GnuPG 2.2.23 and GpgME 1.1.15, a secret key can be
-     * exported when the right passphrase is provided. With a bad passphrase,
-     * application crashes.
-     * \n See https://dev.gnupg.org/T5151
-     * \n Application may validate a passphrase before invoking engine.
-     * \n Until it is hopefully fixed in upstream and available in mainstream.
-     * @param fpr
-     * @param passphrase
-     * @return 
-     */
-    const Error CheckPassphrase(const char * fpr,
-                                const string& passphrase);
-    /**
      * Export a secret key.
      * @param pattern : a key fingerprint
      * @param buffer : returns data in armor mode
