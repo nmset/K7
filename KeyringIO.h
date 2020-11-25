@@ -53,7 +53,7 @@ private:
     WPushButton * m_btnCreate;
     WPushButton * m_btnExport;
     WLineEdit * m_leSearch;
-    
+
     // Used to disconnect m_btnExport from previous slot.
     Signals::connection m_exportSecretConnection;
 
@@ -122,9 +122,11 @@ private:
 class ExportKeyStreamResource : public WStreamResource
 {
 public:
-    ExportKeyStreamResource(const WString& fpr, bool isSecret,
+    ExportKeyStreamResource(const string& keyData,
+                            const WString& fpr,
                             TransientMessageWidget * tmw);
-    ExportKeyStreamResource(const WString& fpr, bool isSecret,
+    ExportKeyStreamResource(const string& keyData,
+                            const WString& fpr,
                             const string& mimeType,
                             TransientMessageWidget * tmw);
     virtual ~ExportKeyStreamResource();
@@ -135,15 +137,10 @@ public:
      */
     void handleRequest(const Http::Request& request,
                        Http::Response& response) override;
-    void SetPassphrase(const WString& passphrase)
-    {
-        m_passphrase = passphrase;
-    }
 
 private:
     WString m_fpr;
-    bool m_isSecret;
-    WString m_passphrase;
+    string m_keyData;
     TransientMessageWidget * m_tmwMessage;
 };
 

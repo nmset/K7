@@ -281,10 +281,20 @@ void KeyringIO::PrepareExport(const WString& fpr, bool isSecret)
     }
     else
     {
+        string keyData;
+        Error e;
+        GpgMEWorker gpgw;
+        e = gpgw.ExportPublicKey(fpr.toUTF8().c_str(), keyData);
+        if (e.code() != 0)
+        {
+            m_tmwMessage->SetText(e.asString());
+            LGE(e);
+            return;
+        }
         WLink link;
         shared_ptr<ExportKeyStreamResource> shResource =
                 make_shared<ExportKeyStreamResource>
-                (fpr, isSecret, "appliation/pgp-keys", m_tmwMessage);
+                (keyData, fpr, "application/pgp-keys", m_tmwMessage);
         link.setResource(shResource);
         m_btnExport->setLink(link);
     }
@@ -297,48 +307,55 @@ void KeyringIO::OnPreExportSecretKey(const WString& fpr)
 {
     // On preExport button of popup
     WLink link;
+    /*
+     * Private keys can be exported as from GPGME 1.15.0.
+     */
+    string keyData;
+    Error e;
     GpgMEWorker gpgw;
-    Error e = gpgw.CheckPassphrase(fpr.toUTF8().c_str(),
-                                   m_popupExportSecretKey->GetPassphrase());
+    e = gpgw.ExportPrivateKey(fpr.toUTF8().c_str(), keyData,
+                              m_popupExportSecretKey->GetPassphrase());
+    // With bad passphrase, e.code() is still 0.
     if (e.code() != 0)
     {
         m_tmwMessage->SetText(e.asString());
-        m_popupExportSecretKey->GetApplyButton()->setLink(link);
-        m_popupExportSecretKey->GetApplyButton()->disable();
         LGE(e);
         return;
     }
-    
+    // But keyData.size() is 0.
+    if (keyData.size() == 0)
+    {
+        m_tmwMessage->SetText(TR("NoKeyData"));
+        m_popupExportSecretKey->GetApplyButton()->setLink(link);
+        m_popupExportSecretKey->GetApplyButton()->disable();
+        return;
+    }
     shared_ptr<ExportKeyStreamResource> shResource =
             make_shared<ExportKeyStreamResource>
-            (fpr, true, "appliation/pgp-keys", m_tmwMessage);
+            (keyData, fpr, "application/pgp-keys", m_tmwMessage);
     link.setResource(shResource);
-    shResource->SetPassphrase(m_popupExportSecretKey->GetPassphrase());
     m_popupExportSecretKey->GetApplyButton()->setLink(link);
     m_popupExportSecretKey->GetApplyButton()->enable();
-
 }
 
-ExportKeyStreamResource::ExportKeyStreamResource(const WString& fpr,
-                                                 bool isSecret,
+ExportKeyStreamResource::ExportKeyStreamResource(const string& keyData,
+                                                 const WString& fpr,
                                                  TransientMessageWidget * tmw)
 : WStreamResource()
 {
     m_fpr = fpr;
-    m_isSecret = isSecret;
-    m_passphrase = WString::Empty;
+    m_keyData = keyData;
     m_tmwMessage = tmw;
 }
 
-ExportKeyStreamResource::ExportKeyStreamResource(const WString& fpr,
-                                                 bool isSecret,
+ExportKeyStreamResource::ExportKeyStreamResource(const string& keyData,
+                                                 const WString& fpr,
                                                  const string& mimeType,
                                                  TransientMessageWidget * tmw)
 : WStreamResource(mimeType)
 {
     m_fpr = fpr;
-    m_isSecret = isSecret;
-    m_passphrase = WString::Empty;
+    m_keyData = keyData;
     m_tmwMessage = tmw;
 }
 
@@ -350,25 +367,8 @@ ExportKeyStreamResource::~ExportKeyStreamResource()
 void ExportKeyStreamResource::handleRequest(const Http::Request& request,
                                             Http::Response& response)
 {
-    /*
-     * Private keys can be exported as from GPGME 1.15.0.
-     */
-
-    string buffer;
-    Error e;
-    GpgMEWorker gpgw;
-    e = m_isSecret
-                ? gpgw.ExportPrivateKey(m_fpr.toUTF8().c_str(), buffer,
-                                        m_passphrase.toUTF8())
-                : gpgw.ExportPublicKey(m_fpr.toUTF8().c_str(), buffer);
-    if (e.code() != 0)
-    {
-        m_tmwMessage->SetText(e.asString());
-        LGE(e);
-        return;
-    }
     suggestFileName(m_fpr + WString(".asc"), ContentDisposition::Attachment);
 
-    istrstream bufStream(buffer.c_str());
+    istrstream bufStream(m_keyData.c_str());
     handleRequestPiecewise(request, response, bufStream);
 }

@@ -134,8 +134,9 @@
     
     <message id='Export'>Exporter</message>
     <message id='PreExportSecretKey'>Préparer le téléchargement</message>
-    <message id='ExportSecretKey'>Exporter la secrète</message>
+    <message id='ExportSecretKey'>Exporter la clé secrète</message>
     <message id='TTTExportSecretKey'>Requiert GPGME >= 1.15.0</message>
+    <message id='NoKeyData'>Aucune donnée</message>
     
     <message id='AddUid'>Ajouter une identité</message>
     <message id='RevokeUid'>Revoquer une identité</message>

@@ -136,6 +136,7 @@
     <message id='PreExportSecretKey'>Prepare download link</message>
     <message id='ExportSecretKey'>Export secret key</message>
     <message id='TTTExportSecretKey'>Requires GPGME >= 1.15.0</message>
+    <message id='NoKeyData'>No data</message>
     
     <message id='AddUid'>Add an identity</message>
     <message id='RevokeUid'>Revoke identity</message>
