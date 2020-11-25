@@ -47,7 +47,7 @@ static void LogGpgMEError(const GpgME::Error& e)
     WLogger logger;
     logger.setFile(logfile);
     logger.entry("") << WLogger::timestamp
-            << WLogger::sep << subjectCommonName
+            << WLogger::sep << WString("[") << subjectCommonName << WString("]")
             << WLogger::sep << WApplication::instance()->environment().userAgent()
             << WLogger::sep << std::to_string(e.code())
             << WLogger::sep << e.asString();
