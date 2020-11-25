@@ -13,8 +13,8 @@
    <message id='TTTUpload'>Télécharger une nouvelle clé</message>
    <message id='TTTImport'>Ajouter une nouvelle clé au porte clés</message>
    <message id='TTTDelete'>Supprimer la clé sélectionnée</message>
-   <message id='TTTCreate'>Créer une paire de clés - Il est impossible d'exporter une clé secrète. Considérez importer une clé secrète plutôt.</message>
-   <message id='TTTSignKey'>Signer la clé sélectionnée avec votre clé secrète si elle est disponible</message>
+   <message id='TTTCreate'>Créer une paire de clés</message>
+   <message id='TTTSignKey'>Signer la clé sélectionnée avec votre clé secrète</message>
    <message id='CantUpload'>Ne peut télécharger</message>
    
    <message id='CantLoadConfig'>Ne peut charger le fichier de configuration</message>
