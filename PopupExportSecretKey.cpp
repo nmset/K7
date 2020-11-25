@@ -54,5 +54,6 @@ void PopupExportSecretKey::Create()
     m_btnApply->setToolTip(TR("TTTExportSecretKey"));
     vblMain->addWidget(unique_ptr<WPushButton> (m_btnApply));
     
-    m_lePassphrase->keyPressed().connect(m_btnApply, &WPushButton::disable);
+    // With keyPressed(), backspace is ignored.
+    m_lePassphrase->keyWentDown().connect(m_btnApply, &WPushButton::disable);
 }
