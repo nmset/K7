@@ -14,13 +14,13 @@
 LoopbackPassphraseProvider::LoopbackPassphraseProvider()
 : PassphraseProvider()
 {
-    m_passphrase = strdup("");
+    m_passphrase = "";
 }
 
 LoopbackPassphraseProvider::LoopbackPassphraseProvider(const string& passphrase)
 : PassphraseProvider()
 {
-    m_passphrase = strdup(passphrase.c_str());
+    m_passphrase = passphrase;
 }
 
 LoopbackPassphraseProvider::~LoopbackPassphraseProvider()
@@ -42,7 +42,10 @@ char* LoopbackPassphraseProvider::getPassphrase(const char* useridHint,
     cout << previousWasBad << endl; // Always 0, even with bad password
     cout << canceled << endl; // Always 0
      */
-    return m_passphrase;
+    /*
+     * See https://dev.gnupg.org/T5151#139421
+     */
+    return strdup(m_passphrase.c_str());
 }
 
 void LoopbackPassphraseProvider::SetPassphrase(const string& passphrase)
@@ -50,7 +53,7 @@ void LoopbackPassphraseProvider::SetPassphrase(const string& passphrase)
     /*
      * Memory leak here ?
      */
-    m_passphrase = strdup(passphrase.c_str());
+    m_passphrase = passphrase;
 }
 
 const string LoopbackPassphraseProvider::GetPassphrase()

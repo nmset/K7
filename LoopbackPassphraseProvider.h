@@ -48,7 +48,13 @@ public:
     const string GetPassphrase();
 
 private:
-    char * m_passphrase;
+    /*
+     * Don't use char* m_passphrase. It is manipulated by gpg and exporting
+     * secret keys become messy, to the point of crashing the application if
+     * passphrase is bad.
+     * See https://dev.gnupg.org/T5151#139421
+    */
+    string m_passphrase;
 
 };
 
