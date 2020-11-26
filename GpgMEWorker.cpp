@@ -11,8 +11,6 @@
 #include <gpgme++/keylistresult.h>
 #include <gpgme++/importresult.h>
 #include <gpgme++/keygenerationresult.h>
-#include <gpgme++/signingresult.h>
-#include <locale>
 #include <iostream>
 #include <gpgme++/data.h>
 
