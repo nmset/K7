@@ -290,11 +290,11 @@ const Error GpgMEWorker::CreateKeyWithEngineDefaultAlgo(GpgME::Key& k,
 
     KeyGenerationResult kgr = ctx->createKeyEx(uid.c_str(), "default",
                                                0, expires, k, flags);
-    delete ppp;
-    delete ctx;
     if (kgr.error().code() == 0)
         // Why is k not assigned the newly created key ?!
-        k = FindKey(kgr.fingerprint(), e, true);
+        k = ctx->key(kgr.fingerprint(), e, true);
+    delete ppp;
+    delete ctx;
     return kgr.error();
 }
 
@@ -318,11 +318,12 @@ const Error GpgMEWorker::CreateKey(GpgME::Key& k,
 
     KeyGenerationResult kgr = ctx->createKeyEx(uid.c_str(), algo,
                                                0, expires, k, flags);
-    delete ppp;
-    delete ctx;
+
     if (kgr.error().code() == 0)
         // Why is k not assigned the newly created key ?!
-        k = FindKey(kgr.fingerprint(), e, true);
+        k = ctx->key(kgr.fingerprint(), e, true);
+    delete ppp;
+    delete ctx;
     return kgr.error();
 }
 
