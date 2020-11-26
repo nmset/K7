@@ -8,6 +8,7 @@
  */
 
 #include <cstdlib>
+#include <locale>
 #include "K7Main.h"
 #include <gpgme++/global.h>
 #include <Wt/WApplication.h>
@@ -25,6 +26,9 @@ unique_ptr<WApplication> createApplication(const WEnvironment& env)
 
 int main(int argc, char** argv)
 {
+    // To get localized GpgME error strings.
+    locale::global(locale(""));
+    
     GpgME::initializeLibrary();
     return WRun(argc, argv, &createApplication);
 }
