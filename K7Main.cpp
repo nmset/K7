@@ -277,7 +277,7 @@ void K7Main::DisplayKeys(const vector<GpgME::Key>& kList, const WString& grpLabe
         WLink ln;
         ln.setUrl(WString(L"javascript:void(0)").toUTF8());
         WAnchor * anc = new WAnchor(ln, k.shortKeyID());
-        anc->setId(k.primaryFingerprint());
+        anc->setObjectName(k.primaryFingerprint());
         // We use widget attribute values to buffer properties.
         anc->setAttributeValue("hasSecret", k.hasSecret() ? "1" : "0");
         anc->clicked().connect(std::bind(&K7Main::OnKeyAnchorClicked, this, anc));
@@ -316,7 +316,7 @@ void K7Main::OnKeyAnchorClicked(WAnchor * source)
     bool secret = true;
     if (hasSecret == WString("0"))
         secret = false;
-    const string id = source->id();
+    const string id = source->objectName();
     // With secret = false, key signatures can be retrieved.
     DisplayUids(id);
     DisplaySubKeys(id, secret);

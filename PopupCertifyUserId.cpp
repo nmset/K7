@@ -196,7 +196,7 @@ void PopupCertifyUserId::PresentEmail()
     {
         WCheckBox * cbEmail = new WCheckBox(it->email());
         m_vblEmail->addWidget(unique_ptr<WCheckBox> (cbEmail));
-        cbEmail->setId(std::to_string(id));
+        cbEmail->setObjectName(std::to_string(id));
         cbEmail->checked().connect(std::bind(&PopupCertifyUserId::OnEmailChecked, this, cbEmail, (*it)));
         cbEmail->unChecked().connect(std::bind(&PopupCertifyUserId::OnEmailUnChecked, this, cbEmail, (*it)));
         id++;
@@ -244,14 +244,14 @@ void PopupCertifyUserId::ShowPassphrase(bool show)
 
 void PopupCertifyUserId::OnEmailChecked(WCheckBox* cb, GpgME::UserID& uid)
 {
-    int id = Tools::ToInt(cb->id());
+    int id = Tools::ToInt(cb->objectName());
     m_uidsToSign.push_back(id);
     m_uidsToRevokeCertification.push_back(uid);
 }
 
 void PopupCertifyUserId::OnEmailUnChecked(WCheckBox* cb, GpgME::UserID& uid)
 {
-    const uint id = Tools::ToInt(cb->id());
+    const uint id = Tools::ToInt(cb->objectName());
     vector<uint>::iterator it =
             std::find(m_uidsToSign.begin(), m_uidsToSign.end(), id);
     if (it != m_uidsToSign.end())
