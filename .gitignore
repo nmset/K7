@@ -1,4 +1,6 @@
-dist/
 build/
-nbproject/private/private.xml
+.kdev4
+K7.kdev4
+resources/
+
 
