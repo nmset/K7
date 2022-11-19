@@ -1,8 +1,8 @@
 /* 
  * File:   LoopbackPassphraseProvider.cpp
- * Author: SET - nmset@yandex.com
+ * Author: Saleem Edah-Tally - nmset@yandex.com
  * License : GPL v2
- * Copyright SET - © 2019
+ * Copyright Saleem Edah-Tally - © 2019
  * 
  * Created on November 2, 2020, 2:57 PM
  */

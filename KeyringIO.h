@@ -1,8 +1,8 @@
 /* 
  * File:   KeyringIO.h
- * Author: SET - nmset@yandex.com
+ * Author: Saleem Edah-Tally - nmset@yandex.com
  * License : GPL v2
- * Copyright SET - © 2019
+ * Copyright Saleem Edah-Tally - © 2019
  *
  * Created on November 13, 2020, 6:46 PM
  */

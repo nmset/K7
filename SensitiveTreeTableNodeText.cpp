@@ -1,8 +1,8 @@
 /* 
  * File:   SensitiveTreeTableNodeText.cpp
- * Author: SET - nmset@yandex.com
+ * Author: Saleem Edah-Tally - nmset@yandex.com
  * License : LGPL v2.1
- * Copyright SET - © 2019
+ * Copyright Saleem Edah-Tally - © 2019
  * 
  * Created on November 3, 2020, 8:26 PM
  */

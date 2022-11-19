@@ -1,8 +1,8 @@
 /* 
  * File:   K7Main.h
- * Author: SET - nmset@yandex.com
+ * Author: Saleem Edah-Tally - nmset@yandex.com
  * License : GPL v2
- * Copyright SET - © 2019
+ * Copyright Saleem Edah-Tally - © 2019
  *
  * Created on 7 octobre 2019, 21:29
  */
